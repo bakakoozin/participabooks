@@ -1,0 +1,136 @@
+import pool from "../config/db.js";
+
+class Work {
+
+    //============================== SELECT =======================================//
+    
+      static async findAll() {
+        const SELECT_ALL = `SELECT 
+          works.id AS works_id, 
+          works.name AS works_name,
+          works.edition AS works_edition,
+          works.type As works_type,
+          works.format AS works_format,
+          COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name,
+          COALESCE(AVG(reviews.score), 0) AS works_score,
+          (SELECT medias.url 
+            FROM volumes
+            LEFT JOIN medias ON medias.volumes_id = volumes.id
+            WHERE volumes.works_id = works.id
+            ORDER BY volumes.number ASC
+            LIMIT 1) AS cover_url
+        FROM works
+        LEFT JOIN volumes ON volumes.works_id = works.id
+        LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
+        LEFT JOIN authors ON authors.id = volumes_authors.authors_id
+        LEFT JOIN reviews ON reviews.volumes_id = volumes.id
+        GROUP BY works.id, works.name`;
+        return await pool.query(SELECT_ALL);
+      }
+    
+      static async findOne(id) {
+        const SELECT_WORK = `SELECT 
+          works.id AS works_id,
+          works.name AS works_name,
+          works.edition AS works_edition,
+          works.type AS works_type,
+          volumes.number AS vol_num,
+          volumes.title AS vol_title,
+          volumes.isbn AS vol_isbn,
+          volumes.summary AS vol_summary,
+          volumes.status AS vol_status,
+          volumes.created_at AS created_at,
+          volumes.creator_visibility AS creator_visibility,
+          users.id AS user_id,
+          COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name,
+          medias.url AS url_media,
+          COALESCE(AVG(reviews.score),0) AS vol_score
+        FROM works 
+        LEFT JOIN volumes ON volumes.works_id = works.id
+        LEFT JOIN users ON volumes.users_id = users.id
+        LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
+        LEFT JOIN authors ON authors.id = volumes_authors.authors_id
+        LEFT JOIN medias ON medias.volumes_id = volumes.id
+        LEFT JOIN reviews ON reviews.volumes_id = volumes.id
+        WHERE works.id = ?
+        GROUP BY volumes.id, works.id, users.id, medias.url
+        ORDER BY vol_num`;
+        return await pool.query(SELECT_WORK, [id]);
+      }
+    
+      static async findBySearch(search = "") {
+        const SEARCH_ONE = `SELECT 
+              works.id AS works_id, 
+              works.name AS works_name,
+              works.edition AS works_edition,
+              works.type AS works_type,
+              works.format AS works_format,
+              COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ', '), 'Inconnu') AS authors_name,
+              COALESCE(AVG(reviews.score), 0) AS works_score,
+              (SELECT medias.url 
+               FROM volumes 
+               LEFT JOIN medias ON medias.volumes_id = volumes.id
+               WHERE volumes.works_id = works.id
+               ORDER BY volumes.number ASC
+               LIMIT 1) AS cover_url
+          FROM works
+          LEFT JOIN volumes ON volumes.works_id = works.id
+          LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
+          LEFT JOIN authors ON authors.id = volumes_authors.authors_id
+          LEFT JOIN reviews ON reviews.volumes_id = volumes.id
+          WHERE 
+              (? IS NULL OR works.name LIKE CONCAT(?) OR volumes.title LIKE CONCAT(?))
+          GROUP BY works.id, works.name
+          HAVING 
+              (? IS NULL OR authors_name LIKE CONCAT(?))`;
+        return await pool.query(SEARCH_ONE, [
+          search || null,
+          `%${search}%`,
+          `%${search}%`,
+          search || null,
+          `%${search}%`,
+        ]);
+      }
+
+      static async findWork({ name, edition, type, format }) {
+        const FIND_WORK = `SELECT id FROM works WHERE name = ? AND edition = ? AND type = ? AND format = ? LIMIT 1`;
+        const [rows] = await pool.execute(FIND_WORK, [name, edition, type, format]);
+        return rows.length > 0 ? rows[0].id : null;
+      }
+    
+    //============================== INSERT =======================================//
+    
+      static async insertWork({ name, edition, type, format }) {
+        const INSERT_WORK = `INSERT INTO works (name, edition, type, format) VALUES (?, ?, ?, ?)`;
+        const [result] = await pool.execute(INSERT_WORK, [name, edition, type, format]);
+        return result.insertId; // Récupére l'ID de l'oeuvre insérée
+      }
+    
+      static async findOrCreateWork(props) {
+        const worksId = await Work.findWork(props);
+        return worksId || await Work.insertWork(props);
+      }
+    
+    //============================== UPDATE =======================================//
+    
+    static async updateWork({ worksId, ...fields }) {
+      try {
+        const setClause = Object.keys(fields).map((key) => `${key} = ?`).join(', ');
+        const values = Object.values(fields);
+        const QUERY = `UPDATE works SET ${setClause} WHERE id = ?`;
+        await pool.execute(QUERY, [...values, worksId]);
+      } catch (error) {
+        console.error("Erreur updateWork:", error);
+        throw error;
+      }
+    }
+    
+    //============================== DELETE =======================================//
+    
+      static async deleteWork(id) {
+        const DELETE_WORK = `DELETE FROM works WHERE id =?`;
+        return await pool.execute(DELETE_WORK, [id]);
+      }
+    }
+    
+    export default Work;
