@@ -5,7 +5,7 @@ import Volume from "../models/volumes.model.js";
 import Work from "../models/works.model.js";
 import Media from "../models/medias.model.js";
 import Author from "../models/authors.model.js";
-import { sendResponse } from "../helpers/response.js";
+import sendResponse from "../helpers/sendResponse.js";
 
 //============================== GET =======================================//
 

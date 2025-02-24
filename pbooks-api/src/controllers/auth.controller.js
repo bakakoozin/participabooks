@@ -1,6 +1,6 @@
 // import { hash, genSalt, compare } from "bcrypt";
 
-import Auth from "../models/auth.model";
+import Auth from "../models/auth.model.js";
 
 const register = async (req, res, next) => {
   const { email, pseudo, password } = req.body;

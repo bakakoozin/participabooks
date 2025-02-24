@@ -2,7 +2,7 @@ import formidable from "formidable";
 import path from "path";
 import fs from "fs";
 import User from "../models/users.model.js";
-import sendResponse from "../helpers.sendResponse.js";
+import sendResponse from "../helpers/sendResponse.js";
 
 //============================== GET =======================================//
 

@@ -3,7 +3,7 @@ import { Router } from "express";
 import authRoutes from "./auth.routes.js";
 import userRoutes from "./user.routes.js";
 import libraryRoutes from "./library.routes.js";
-import adminRoutes from "./admin.routes.js";
+// import adminRoutes from "./admin.routes.js";
 
 // import verifyToken from "./middlewares/verifyToken.js";
 
@@ -12,7 +12,7 @@ const router = Router();
 router.use("/auth", authRoutes);
 router.use("/user", userRoutes);
 router.use("/", libraryRoutes);
-router.use("/admin", adminRoutes);
+// router.use("/admin", adminRoutes);
 
 
 export default router;
