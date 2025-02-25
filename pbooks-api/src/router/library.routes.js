@@ -4,17 +4,17 @@ import { getAll, getOne, getBySearch, getAuthorsBySearch, create, update, update
 
 const router = Router();
 
-router.get("/works", getAll);
-router.get("/works/search", getBySearch);
-router.get("/works/:id", getOne);
+router.get("/", getAll);
+router.get("/search", getBySearch);
+router.get("/:id", getOne);
 
-router.post("/works/create", create);
-router.delete("/works/:id", removeWork);
-router.patch("/works/:id", update);
+router.post("/create", create);
+router.delete("/:id", removeWork);
+router.patch("/:id", update);
 
 router.patch("/volumes/:id/status", updateStatus);
 router.delete("/volumes/:id", removeVolume);
 
-router.get("/authors/search", getAuthorsBySearch)
+router.get("/authors/search", getAuthorsBySearch);
 
 export default router;

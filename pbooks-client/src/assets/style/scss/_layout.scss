@@ -1,0 +1,83 @@
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
+  }
+  
+  .header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: $primary-color;
+	padding: 15px;
+	color: white;
+	font-size: 1.8rem;
+  
+	.nav-links {
+	  display: none;
+	  gap: 15px;
+	  text-transform: uppercase;
+	  button {
+		border: none;
+		background-color: transparent;
+		text-transform: uppercase;
+		font-size: 1.8rem;
+		cursor: pointer;
+	  }
+  
+	  a {
+		color: $dark-color;
+		&:hover,
+		&.active {
+		  text-decoration: underline;
+		}
+	  }
+	  &.active {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		position: fixed;
+		top: 0;
+		left: 0;
+		background-color: #fff;
+		width: 60vw;
+		height: 80vh;
+		z-index: 1000;
+	  }
+	}
+  
+	.burger-menu {
+	  cursor: pointer;
+	  display: block;
+	}
+  }
+  
+  @media (min-width: 768px) {
+	.header {
+	  .burger-menu {
+		display: none;
+	  }
+  
+	  .nav-links {
+		display: flex;
+		flex-direction: row;
+		position: static;
+		width: auto;
+		height: auto;
+		background-color: transparent;
+	  }
+	}
+  }
+  
+  .footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 40px;
+	text-align: center;
+	padding: 10px;
+	background-color: #333;
+	color: #fff;
+  }

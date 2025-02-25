@@ -1,0 +1,73 @@
+.slider-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 20px 0;
+
+  .slider {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none; // Masquer la scrollbar pour Firefox
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none; // Masquer la scrollbar pour Chrome/Safari
+    }
+  }
+
+  .work-card {
+    flex: 0 0 100%; // Chaque article prend 100% de la largeur du conteneur
+    background: $card-bg;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: $card-shadow;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: $button-bg;
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 10;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+
+    &.left {
+      left: 10px;
+    }
+
+    &.right {
+      right: 10px;
+    }
+
+    &:hover {
+      background: $button-hover-bg;
+    }
+  }
+}
+
+// Media queries pour les écrans plus larges
+@media (min-width: 768px) {
+  .work-card {
+    flex: 0 0 50%; // Chaque article prend 50% de la largeur du conteneur
+  }
+}
+
+@media (min-width: 1024px) {
+  .work-card {
+    flex: 0 0 33.33%; // Chaque article prend 33.33% de la largeur du conteneur
+  }
+}

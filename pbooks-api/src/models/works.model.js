@@ -34,6 +34,8 @@ class Work {
           works.name AS works_name,
           works.edition AS works_edition,
           works.type AS works_type,
+          works.format AS works_format,
+          volumes.id AS vol_id,
           volumes.number AS vol_num,
           volumes.title AS vol_title,
           volumes.isbn AS vol_isbn,
