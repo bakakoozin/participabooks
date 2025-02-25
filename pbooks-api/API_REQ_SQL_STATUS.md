@@ -20,7 +20,7 @@
   - SELECT_WORK -> *(GET un)*                ✔️
   - INSERT_VOLUME -> *(POST créer)*          ✔️
   - UPDATE_WORK / UPDATE_VOLUME -> *(PATCH)* ✔️
-  - UPDATE_STATUS -> *(PATCH)* **à faire** ❗
+  - UPDATE_STATUS -> *(PATCH)*               ✔️
   - DELETE_WORK -> *(DELETE)*                ✔️
   - DELETE_VOLUME -> *(DELETE)*              ✔️
 

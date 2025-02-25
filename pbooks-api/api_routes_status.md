@@ -56,12 +56,12 @@
   - insertMedia -> *(INSERT)* ✔️
   - updateMedia -> *(UPDATE)* ✔️
 
-- shelfs.model -> **à faire** ❗
+- shelfs.model -> **en cours** 🚧
   - findAll -> *(SELECT tous)* **à faire** ❗
   - findBySearch -> *(SELECT rechercher)* **à faire** ❗
   - findOne -> *(SELECT un)* **à faire** ❗
-  - addWork -> *(UPDATE)* **à faire** ❗
-  - delete -> *(DELETE)* -> **à faire** ❗
+  - addVolume -> *(INSERT)*               ✔️
+  - deleteVolume -> *(DELETE)* ->         ✔️
 
 - users.model -> **terminé** ✔️
   - findAll -> *(SELECT tous)*            ✔️
@@ -87,6 +87,14 @@
   - findOrCreateWork -> *(SELECT / INSERT)* ✔️
   - updateWork -> *(UPDATE)*                ✔️
   - deleteWork -> *(DELETE)*                ✔️
+
+- reviews.model -> **à faire** ❗
+  - findAll -> *(SELECT tous)* **à faire** ❗
+  - findBySearch -> *(SELECT rechercher)* **à faire** ❗
+  - insert -> *(INSERT)* **à faire** ❗
+  - updateScore -> *(UPDATE)* **à faire** ❗
+  - delete -> *(DELETE)* **à faire** ❗
+
 
 
 **terminé** ✔️
