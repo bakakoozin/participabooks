@@ -4,7 +4,13 @@ class Volume {
 
 //============================== SELECT =======================================//
 
-  
+static async findAllByWorkId(works_id) {
+  const FIND_ALL_VOLUMES = `
+    SELECT id FROM volumes WHERE works_id = ?
+  `;
+  const [rows] = await pool.query(FIND_ALL_VOLUMES, [works_id]);
+  return rows;
+}
 
 //============================== INSERT =======================================//
 

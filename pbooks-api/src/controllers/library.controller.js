@@ -5,6 +5,7 @@ import Volume from "../models/volumes.model.js";
 import Work from "../models/works.model.js";
 import Media from "../models/medias.model.js";
 import Author from "../models/authors.model.js";
+import Review from "../models/reviews.model.js";
 import sendResponse from "../helpers/sendResponse.js";
 
 //============================== GET =======================================//
@@ -66,6 +67,21 @@ const getAuthorsBySearch = async (req, res, next) => {
 
     const authors = await Author.findByName(searchTerm);
     res.status(200).json(authors);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getReviews = async (req, res, next) => {
+  try {
+    const [response] = await Review.findByVolumes(req.params.id);
+
+    if (response.length) {
+      sendResponse(res, "Avis récupérés.", 200, response);
+      return;
+    }
+    sendResponse(res, "Aucun avis récupéré.", 400);
+    return;
   } catch (error) {
     next(error);
   }
@@ -330,6 +346,7 @@ export {
   getBySearch,
   getOne,
   getAuthorsBySearch,
+  getReviews,
   create,
   update,
   updateStatus,

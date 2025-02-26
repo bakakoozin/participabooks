@@ -1,6 +1,17 @@
 import { Router } from "express";
 
-import { getAll, getOne, getBySearch, getAuthorsBySearch, create, update, updateStatus, removeWork, removeVolume } from "../controllers/library.controller.js";
+import {
+  getAll,
+  getOne,
+  getBySearch,
+  getAuthorsBySearch,
+  getReviews,
+  create,
+  update,
+  updateStatus,
+  removeWork,
+  removeVolume,
+} from "../controllers/library.controller.js";
 
 const router = Router();
 
@@ -13,6 +24,7 @@ router.delete("/:id", removeWork);
 router.patch("/:id", update);
 
 router.patch("/volumes/:id/status", updateStatus);
+router.patch("/volumes/:id/reviews", getReviews);
 router.delete("/volumes/:id", removeVolume);
 
 router.get("/authors/search", getAuthorsBySearch);

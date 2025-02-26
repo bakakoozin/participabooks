@@ -186,11 +186,11 @@ const remove = async (req, res, next) => {
 };
 
 export {
-  update,
-  updateByAdmin,
   getAll,
   getInfos,
   getBySearch,
-  remove,
+  update,
+  updateByAdmin,
   uploadAvatar,
+  remove,
 };

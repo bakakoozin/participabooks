@@ -7,27 +7,37 @@
   - /refresh-login -> *(POST)*       **en cours** 🟠
 
 - /user -> **en cours** 🟠 `token requis`
-  - /                -> *(GET)*       **en cours** 🟠
-  - /profile         -> *(PATCH)*     **en cours** 🟠
-  - /profile/avatar  -> *(PATCH)*     **en cours** 🟠
-  - /profile         -> *(DELETE)*    **en cours** 🟠
+  - /                    -> *(GET)*           **en cours** 🟠
+  - /profile             -> *(PATCH)*         **en cours** 🟠
+  - /profile             -> *(DELETE)*        **en cours** 🟠
+  - /profile/avatar      -> *(PATCH)*         **en cours** 🟠
+  - /shelf               -> *(GET tous)*      **en cours** 🟠
+  - /shelf/search        -> *(GET recherche)* **en cours** 🟠
+  - /shelf/volume        -> *(POST ajouter)*  **en cours** 🟠
+  - /shelf/volume/status -> *(PATCH)*         **en cours** 🟠
+  - /shelf/volume/:id    -> *(DELETE)*        **en cours** 🟠
+  - /shelf/volumes/:id/reviews -> *(POST)*    **en cours** 🟠
+  - /shelf/work          -> *(POST ajouter)*  **en cours** 🟠
+  - /shelf/work/:id      -> *(GET une)*       **en cours** 🟠
+  - /shelf/work/:id      -> *(DELETE)*        **en cours** 🟠  
 
 - /library -> **en cours** 🟠
-  - /works        -> *(GET tous)*                               **en cours** 🟠
+  - /works        -> *(GET tous)*                               **en cours** ✔️
   - /works/search -> *(GET recherche)*                          **en cours** 🟠
-  - /works/:id    -> *(GET une)*                                **en cours** 🟠
+  - /works/:id    -> *(GET une)*                                **en cours** ✔️
   - /works/create -> *(POST créer)*              `token requis` **en cours** 🟠
   - /works/:id -> *(PATCH)*                      `token requis` **en cours** 🟠
   - /works/:id -> *(DELETE)*                     `token requis` **en cours** 🟠
   - /volumes/:id/status -> *(PATCH)* `token requis` `moderator` **en cours** 🟠
+  - /volumes/:id/reviews -> *(GET)*                             **en cours** 🟠
   - /volumes/:id -> *(DELETE)*                   `token requis` **en cours** 🟠
   - /authors/search -> *(GET recherche)*                        **en cours** 🟠
 
 - /admin -> **en cours** 🟠 `token requis` `admin`
   - /       -> *(GET tous)* **en cours** 🟠
-  - /search -> *(GET)*      **en cours** 🟠
   - /       -> *(PATCH)*    **en cours** 🟠
   - /       -> *(DELETE)*   **en cours** 🟠
+  - /search -> *(GET)*      **en cours** 🟠
 
 ✅ -> accomplie
 🟠 -> priorité dépendante d'une autre tâche
@@ -56,12 +66,14 @@
   - insertMedia -> *(INSERT)* ✔️
   - updateMedia -> *(UPDATE)* ✔️
 
-- shelfs.model -> **en cours** 🚧
-  - findAll -> *(SELECT tous)* **à faire** ❗
-  - findBySearch -> *(SELECT rechercher)* **à faire** ❗
-  - findOne -> *(SELECT un)* **à faire** ❗
-  - addVolume -> *(INSERT)*               ✔️
+- shelfs.model -> **terminé** ✔️
+  - findAll -> *(SELECT tous)*            ✔️
+  - findOne -> *(SELECT un)*              ✔️
+  - findBySearch -> *(SELECT rechercher)* ✔️
+  - insertVolume -> *(INSERT)*            ✔️
+  - updateStatus -> *(UPDATE)*            ✔️
   - deleteVolume -> *(DELETE)* ->         ✔️
+  - deleteAllVolumes -> *(DELETE all)* -> ✔️
 
 - users.model -> **terminé** ✔️
   - findAll -> *(SELECT tous)*            ✔️
@@ -73,10 +85,11 @@
   - delete -> *(DELETE)*                  ✔️
 
 - volumes.model -> **terminé** ✔️
-  - insertVolume -> *(INSERT)* ✔️
-  - updateVolume -> *(UPDATE)* ✔️
-  - updateStatus -> *(UPDATE)* ✔️
-  - deleteVolume -> *(DELETE)* ✔️
+  - findAllByWorkId -> *(SELECT)* ✔️
+  - insertVolume -> *(INSERT)*    ✔️
+  - updateVolume -> *(UPDATE)*    ✔️
+  - updateStatus -> *(UPDATE)*    ✔️
+  - deleteVolume -> *(DELETE)*    ✔️
 
 - works.model -> **terminé** ✔️
   - findAll -> *(SELECT tous)*              ✔️
@@ -88,12 +101,12 @@
   - updateWork -> *(UPDATE)*                ✔️
   - deleteWork -> *(DELETE)*                ✔️
 
-- reviews.model -> **à faire** ❗
-  - findAll -> *(SELECT tous)* **à faire** ❗
-  - findBySearch -> *(SELECT rechercher)* **à faire** ❗
-  - insert -> *(INSERT)* **à faire** ❗
-  - updateScore -> *(UPDATE)* **à faire** ❗
-  - delete -> *(DELETE)* **à faire** ❗
+- reviews.model -> **terminé** ✔️
+  - findByVolume -> *(SELECT)*  ✔️
+  - addReview -> *(INSERT)*     ✔️
+  - updateScore -> *(UPDATE)*   ✔️
+  - updateComment -> *(UPDATE)* ✔️
+  - deleteReview -> *(DELETE)*  ✔️
 
 
 
