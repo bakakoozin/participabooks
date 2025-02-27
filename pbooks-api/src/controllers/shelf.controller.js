@@ -138,6 +138,30 @@ const updateStatusOnShelf = async (req, res, next) => {
   }
 };
 
+const updateScore = async (req, res, next) => {
+  try {
+    const [response] = await Review.updateScore( req.body.score, req.params.id );
+    if (response.affectedRows) {
+      res.json({ message: "Note mise à jour."});
+    }
+    res.status(400).json({ message: "Erreur lors de la mise à jour de la note." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateComment = async (req, res, next) => {
+  try {
+    const [response] = await Review.updateComment( req.body.comment, req.params.id );
+    if (response.affectedRows) {
+      res.json({ message: "Commentaire mis à jour."});
+    }
+    res.status(400).json({ message: "Erreur lors de la mise à jour du commentaire." });
+  } catch (error) {
+    next(error);
+  }
+};
+
 //============================== DELETE =======================================//
 
 const removeVolumeFromShelf = async (req, res, next) => {
@@ -168,6 +192,21 @@ const removeWorkFromShelf = async (req, res, next) => {
   }
 };
 
+const removeReview = async (req, res, next) => {
+  try {
+    const [response] = await Review.deleteReview(req.params.id);
+    if (response.affectedRows) {
+      res.json({ message: "Avis supprimé." });
+      return;
+    }
+    res.status(400).json({ message: "Cet avis n'existe pas." });
+    return;
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 export {
   getAllUserWorks,
   getOneUserWork,
@@ -176,6 +215,9 @@ export {
   addAllVolumesToShelf,
   addReview,
   updateStatusOnShelf,
+  updateComment,
+  updateScore,
   removeVolumeFromShelf,
   removeWorkFromShelf,
+  removeReview,
 };

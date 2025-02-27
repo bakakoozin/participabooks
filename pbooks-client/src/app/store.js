@@ -8,6 +8,6 @@ const store = configureStore({
         auth: authReducer,
         menu: menuReducer,
     },
-})
+});
 
 export default store;

@@ -1,38 +1,48 @@
 # API ROUTES STATUS
 
 - /auth -> **en cours** 🟠
-  - /register      -> *(POST créer)* **en cours** 🟠
-  - /login         -> *(POST)*       **en cours** 🟠
-  - /logout        -> *(POST)*       **en cours** 🟠
+  - /register      -> *(POST créer)* `validate` ✅
+  - /login         -> *(POST)* `validate`       ✅
+  - /logout        -> *(POST)*                  ✅
   - /refresh-login -> *(POST)*       **en cours** 🟠
 
 - /user -> **en cours** 🟠 `token requis`
-  - /                    -> *(GET)*           **en cours** 🟠
-  - /profile             -> *(PATCH)*         **en cours** 🟠
-  - /profile             -> *(DELETE)*        **en cours** 🟠
-  - /profile/avatar      -> *(PATCH)*         **en cours** 🟠
-  - /shelf               -> *(GET tous)*      **en cours** 🟠
-  - /shelf/search        -> *(GET recherche)* **en cours** 🟠
-  - /shelf/volume        -> *(POST ajouter)*  **en cours** 🟠
-  - /shelf/volume/status -> *(PATCH)*         **en cours** 🟠
-  - /shelf/volume/:id    -> *(DELETE)*        **en cours** 🟠
-  - /shelf/volumes/:id/reviews -> *(POST)*    **en cours** 🟠
-  - /shelf/work          -> *(POST ajouter)*  **en cours** 🟠
-  - /shelf/work/:id      -> *(GET une)*       **en cours** 🟠
-  - /shelf/work/:id      -> *(DELETE)*        **en cours** 🟠  
+  - /                    -> *(GET)*                 **en cours** 🟠
+  PROFILE
+  - /profile             -> *(PATCH)*               **en cours** 🟠
+  - /profile             -> *(DELETE)*              **en cours** 🟠
+  - /profile/avatar      -> *(PATCH)*               **en cours** 🟠
+  SHELF
+  - /shelf               -> *(GET tous)*            **en cours** 🟠
+  - /shelf/search        -> *(GET recherche)*       **en cours** 🟠
+  - /shelf/volume        -> *(POST ajouter)*        **en cours** 🟠
+  - /shelf/volume/status -> *(PATCH)*               **en cours** 🟠
+  - /shelf/volume/:id    -> *(DELETE)*              **en cours** 🟠
+  - /shelf/work          -> *(POST ajouter)*        **en cours** 🟠
+  - /shelf/work/:id      -> *(GET une)*             **en cours** 🟠
+  - /shelf/work/:id      -> *(DELETE)*              **en cours** 🟠
+  REVIEWS
+  - /shelf/volumes/:id/reviews -> *(POST)*          **en cours** 🟠
+  - /shelf/volumes/:id/reviews/comment -> *(PATCH)* **en cours** 🟠
+  - /shelf/volumes/:id/reviews/score -> *(PATCH)*   **en cours** 🟠
+  - /shelf/volumes/:id/reviews/:id -> *(PDELETE)*   **en cours** 🟠
 
 - /library -> **en cours** 🟠
-  - /works        -> *(GET tous)*                               **en cours** ✔️
+  PUBLIC
+  - /works        -> *(GET tous)*                               ✅
   - /works/search -> *(GET recherche)*                          **en cours** 🟠
-  - /works/:id    -> *(GET une)*                                **en cours** ✔️
+  - /works/:id    -> *(GET une)*                                ✅
+  - /volumes/:id/reviews -> *(GET)*                             **en cours** 🟠
+  USERS
   - /works/create -> *(POST créer)*              `token requis` **en cours** 🟠
   - /works/:id -> *(PATCH)*                      `token requis` **en cours** 🟠
   - /works/:id -> *(DELETE)*                     `token requis` **en cours** 🟠
-  - /volumes/:id/status -> *(PATCH)* `token requis` `moderator` **en cours** 🟠
-  - /volumes/:id/reviews -> *(GET)*                             **en cours** 🟠
   - /volumes/:id -> *(DELETE)*                   `token requis` **en cours** 🟠
-  - /authors/search -> *(GET recherche)*                        **en cours** 🟠
-
+  MODERATOR
+  - /volumes/:id/status -> *(PATCH)* `token requis` `moderator` **en cours** 🟠
+  ADMIN
+  - /authors/search -> *(GET recherche)* `token requis` `admin` **en cours** 🟠
+ 
 - /admin -> **en cours** 🟠 `token requis` `admin`
   - /       -> *(GET tous)* **en cours** 🟠
   - /       -> *(PATCH)*    **en cours** 🟠

@@ -64,9 +64,8 @@ const getAuthorsBySearch = async (req, res, next) => {
         .status(400)
         .json({ message: "Paramètre de recherche requis." });
     }
-
     const authors = await Author.findByName(searchTerm);
-    res.status(200).json(authors);
+    res.json(authors);
   } catch (error) {
     next(error);
   }

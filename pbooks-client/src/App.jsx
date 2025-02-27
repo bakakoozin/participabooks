@@ -1,30 +1,19 @@
-import { useLocation } from "react-router-dom";
-
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
-// import { useDispatch } from "react-redux";
 import AppRoutes from "./routes/AppRoutes";
+import { ToastContainer } from "react-toastify";
+import { useSession } from "./hooks/useSession";
 
 function App() {
-  const location = useLocation();
-  // const dispatch = useDispatch();
-  // const cart = useSelector((state) => state.cart);
-  // const isLogged = useSelector((state) => state.auth);
-
-  function handlePathname() {
-    return location.pathname === "/"
-      ? "home"
-      : location.pathname.slice(1, location.pathname.length);
-  }
-
+  useSession();
   return (
     <div className="App">
       <Header />
-      <main className="container" id={handlePathname()}>
+      <main className="container">
         <AppRoutes />
       </main>
-
       <Footer />
+      <ToastContainer />
     </div>
   );
 }

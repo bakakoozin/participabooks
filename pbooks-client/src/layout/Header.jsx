@@ -1,23 +1,31 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 import { toggleMenu } from "../features/menuSlice";
-// import useCloseMenu from "../hooks/useCloseMenu";
+import { logout } from "../features/authSlice";
 
 function Header() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
-  // const cart = useSelector((state) => state.cart);
+  const navigate = useNavigate();
   const { isLogged } = useSelector((state) => state.auth);
   const { isMenuOpen } = useSelector((state) => state.menu);
 
-  // useCloseMenu();
+  async function handleLogout() {
+    const response = await fetch(`${API_URL}/auth/logout`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      dispatch(logout());
+      navigate("/");
+    }
+  }
 
   function handleClick() {
     dispatch(toggleMenu());
-}
+  }
 
   return (
     <header className="header">
@@ -29,14 +37,14 @@ function Header() {
         </NavLink>
         {!isLogged ? (
           <NavLink to="auth/login" end onClick={handleClick}>
-            Connexion
+            Se connecter
           </NavLink>
         ) : (
           <>
             <NavLink to="dashboard" end onClick={handleClick}>
               Profil
             </NavLink>
-            {/* <button onClick={handleLogout}>Déconnexion</button> */}
+            <button onClick={handleLogout}>Se déconnecter</button>
           </>
         )}
       </nav>

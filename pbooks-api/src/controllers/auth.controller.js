@@ -1,18 +1,20 @@
-// import { hash, genSalt, compare } from "bcrypt";
+import { hash, genSalt, compare } from "bcrypt";
 
+import createToken from "../utils/token.js";
 import Auth from "../models/auth.model.js";
 
 const register = async (req, res, next) => {
   const { email, pseudo, password } = req.body;
 
   try {
+    const hashedPassword = await hash(password, await genSalt());
     const response = await Auth.createUser({
       email,
       pseudo,
-      password,
+      password: hashedPassword,
     });
     res.status(201).json({
-      success: "Utilisateur créé.",
+      msg: "Utilisateur créé.",
       data: response,
     });
   } catch (error) {
@@ -23,51 +25,42 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
+  // console.log("Email:", email);
+  // console.log("Password:", password);
+
   try {
     const [[user]] = await Auth.findUserForAuth(email);
+    // console.log("User:", user);
+
     if (user && (await compare(password, user.password))) {
-      res.json({
-        success: "Utilisateur connecté.",
-        user: {
-          email: user.email,
-          pseudo: user.pseudo,
-          role: user.role,
-          avatar: user.avatar,
-          theme: user.theme,
-          status: user.status,
-        },
+      const token = createToken(user);
+
+      return res.json({
+        token,
       });
-      return;
     }
-    res.status(400).json({
+    return res.status(400).json({
       msg: "Identifiants invalides.",
     });
-    return;
   } catch (error) {
+    console.error("Erreur lors de la connexion:", error);
     next(error);
   }
 };
 
 const logout = async (req, res, next) => {
-  try {
-    res.json({ success: "Utilisateur déconnecté." });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const refreshLogin = async (req, res, next) => {
-  res.json({
-    success: "Autorrisé à se reconnecter.",
-    user: {
-      email: req.user.email,
-      pseudo: req.user.pseudo,
-      role: req.user.role,
-      avatar: req.user.avatar,
-      theme: req.user.theme,
-      status: req.user.status,
-    },
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
+  res.json({ msg: "Utilisateur déconnecté." });
 };
 
-export { register, login, logout, refreshLogin };
+const session = async (req, res, next) => {
+ 
+  return res.json(req.user);
+  };
+
+
+export { register, login, logout, session };
