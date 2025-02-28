@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 
+import { API_URL } from "../utils/constants";
 import scrollSlider from "../utils/slider";
 import notFoundCover from "/not-found.png";
 
 function Home() {
-  const API_URL = import.meta.env.VITE_API_URL;
   const [works, setWorks] = useState([]);
   const sliderRef = useRef(null);
 
@@ -23,7 +23,7 @@ function Home() {
     }
 
     fetchWorks();
-  }, [API_URL]);
+  }, []);
 
   function handleCover(work) {
     return work.cover_url ? `/medias/${work.cover_url}` : notFoundCover;

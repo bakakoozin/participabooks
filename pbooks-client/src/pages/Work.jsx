@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { API_URL } from "../utils/constants";
 import notFoundCover from "/not-found.png";
 
 function Work() {
   const { id } = useParams();
-  const API_URL = import.meta.env.VITE_API_URL;
   const [volumes, setVolumes] = useState([]);
   const [error, setError] = useState(null);
 
@@ -25,7 +25,7 @@ function Work() {
       }
     }
     fetchWork();
-  }, [API_URL, id]);
+  }, []);
 
   function handleCover(volume) {
     if (volume.url_media) {
@@ -41,7 +41,6 @@ function Work() {
   const workInfo = volumes.length > 0 ? volumes[0] : {};
 
   return (
-    <>
       <section>
         <h1>Bibliothèque Public</h1>
 
@@ -70,7 +69,6 @@ function Work() {
           </aside>
         ))}
       </section>
-    </>
   );
 }
 

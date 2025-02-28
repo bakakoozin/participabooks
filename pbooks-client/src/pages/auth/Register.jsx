@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { API_URL } from "../../utils/constants";
+
 const minAliasLength = 3;
 const minPasswordLength = 8;
 
 function Register() {
-  const API_URL = import.meta.env.VITE_API_URL;
   const [pseudo, setPseudo] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

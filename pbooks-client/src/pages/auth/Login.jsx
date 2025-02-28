@@ -1,11 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import { TOKEN } from "../../utils/constants";
+import { TOKEN, API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { login } from "../../features/authSlice";
 
 function Login() {
-  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -34,8 +36,11 @@ function Login() {
         const resJson = await response.json();
 
         localStorage.setItem(TOKEN, resJson.token);
+        dispatch(login(resJson.user));
+        toast.success("Connexion réussie.");
         navigate("/");
-      } catch {
+      } catch (error){
+        console.error("Erreur lors de la connexion:", error);
         toast.error("Erreur lors de la connexion.");
       }
     } else {
@@ -52,12 +57,14 @@ function Login() {
           id="email"
           ref={emailRef}
           placeholder="Entrer votre email"
+          required
         />
         <input
           type="password"
           id="password"
           ref={passwordRef}
           placeholder="Entrer votre mot de passe"
+          required
         />
 
         {message && <p className="auth-alert">{message}</p>}

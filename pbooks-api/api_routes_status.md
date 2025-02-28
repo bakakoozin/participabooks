@@ -1,15 +1,15 @@
 # API ROUTES STATUS
 
-- /auth -> **en cours** 🟠
+- /auth -> **terminé** ✅
   - /register      -> *(POST créer)* `validate` ✅
-  - /login         -> *(POST)* `validate`       ✅
+  - /login         -> *(POST)*       `validate` ✅
   - /logout        -> *(POST)*                  ✅
-  - /refresh-login -> *(POST)*       **en cours** 🟠
+  - /session -> *(GET)*          `token requis` ✅
 
 - /user -> **en cours** 🟠 `token requis`
   - /                    -> *(GET)*                 **en cours** 🟠
   PROFILE
-  - /profile             -> *(PATCH)*               **en cours** 🟠
+  - /profile             -> *(PATCH)*               **en cours** 🔴
   - /profile             -> *(DELETE)*              **en cours** 🟠
   - /profile/avatar      -> *(PATCH)*               **en cours** 🟠
   SHELF

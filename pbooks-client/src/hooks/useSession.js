@@ -16,7 +16,7 @@ export function useSession() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
         },
       });
       const resJSON = await response.json();

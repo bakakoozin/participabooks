@@ -5,9 +5,9 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 import { toggleMenu } from "../features/menuSlice";
 import { logout } from "../features/authSlice";
+import { API_URL, TOKEN } from "../utils/constants";
 
 function Header() {
-  const API_URL = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLogged } = useSelector((state) => state.auth);
@@ -18,6 +18,7 @@ function Header() {
       method: "POST",
     });
     if (response.ok) {
+      localStorage.removeItem(TOKEN);
       dispatch(logout());
       navigate("/");
     }
