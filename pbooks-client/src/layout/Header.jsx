@@ -5,7 +5,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 import { toggleMenu } from "../features/menuSlice";
 import { logout } from "../features/authSlice";
-import { API_URL, TOKEN } from "../utils/constants";
+import { API_URL } from "../utils/constants";
 
 function Header() {
   const dispatch = useDispatch();
@@ -16,9 +16,9 @@ function Header() {
   async function handleLogout() {
     const response = await fetch(`${API_URL}/auth/logout`, {
       method: "POST",
+      credentials: "include",
     });
     if (response.ok) {
-      localStorage.removeItem(TOKEN);
       dispatch(logout());
       navigate("/");
     }

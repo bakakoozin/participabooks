@@ -14,6 +14,7 @@ const userSlice = createSlice({
             state.infos.pseudo = action.payload.pseudo;
             state.infos.avatar = action.payload.avatar;
             state.infos.email = action.payload.email;
+            state.infos.id = action.payload.id;
         },
         logout() {
             return initialState;
@@ -21,6 +22,6 @@ const userSlice = createSlice({
     },
 });
 
-export const { login, logout, updateUsername } = userSlice.actions;
+export const { login, logout, updateUser } = userSlice.actions;
 
 export default userSlice.reducer;

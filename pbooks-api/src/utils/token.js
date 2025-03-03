@@ -1,20 +1,20 @@
 import jwt from "jsonwebtoken";
 
-const createToken = (user) => {
+const SECRET = process.env.JWT_SECRET;
+
+export default ({ id, pseudo, email, role, avatar, theme, status }) => {
   const payload = {
-    userId: user.id,
-    pseudo: user.pseudo,
-    email: user.email,
-    role: user.role,
-    avatar: user.avatar,
-    theme: user.theme,
-    status: user.status,
+    id,
+    pseudo,
+    email,
+    role,
+    avatar,
+    theme,
+    status,
   };
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+  const options = {
     expiresIn: "1d",
-  });
+  };
 
-  return token;
+  return jwt.sign(payload, SECRET, options);
 };
-
-export default createToken;

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import { TOKEN, API_URL } from "../../utils/constants";
+import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { login } from "../../features/authSlice";
@@ -27,6 +27,7 @@ function Login() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ email, password }),
+          credentials: "include",
         });
 
         if (!response.ok) {
@@ -34,8 +35,6 @@ function Login() {
         }
 
         const resJson = await response.json();
-
-        localStorage.setItem(TOKEN, resJson.token);
         dispatch(login(resJson.user));
         toast.success("Connexion réussie.");
         navigate("/");

@@ -28,9 +28,9 @@ FROM users WHERE id = ?`;
     const connection = await pool.getConnection();
     try {
       await connection.beginTransaction();
-      await connection.execute(query, values);
+      const [result] = await connection.execute(query, values);
       await connection.commit();
-      return { success: "Mise à jour réussie." };
+      return { success: "Mise à jour réussie.", result };
     } catch (error) {
       await connection.rollback();
       return { error: "Erreur lors de la mise à jour.", details: error };

@@ -4,6 +4,7 @@ import {
   update,
   remove,
   uploadAvatar,
+  updateTheme,
 } from "../controllers/user.controller.js";
 import {
   getAllUserWorks,
@@ -28,6 +29,7 @@ router.get("/", getInfos);
 router.patch("/profile", update);
 router.delete("/profile", remove);
 router.patch("/profile/avatar", uploadAvatar);
+router.patch("/profile/theme", updateTheme);
 
 //SHELF
 router.get("/shelf", getAllUserWorks);

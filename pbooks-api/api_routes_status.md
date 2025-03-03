@@ -11,7 +11,8 @@
   PROFILE
   - /profile             -> *(PATCH)*               **en cours** 🔴
   - /profile             -> *(DELETE)*              **en cours** 🟠
-  - /profile/avatar      -> *(PATCH)*               **en cours** 🟠
+  - /profile/avatar      -> *(PATCH)*               **en cours** 🔴
+  - /profile/theme       -> *(PATCH)*               ✅
   SHELF
   - /shelf               -> *(GET tous)*            **en cours** 🟠
   - /shelf/search        -> *(GET recherche)*       **en cours** 🟠

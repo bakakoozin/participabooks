@@ -1,6 +1,7 @@
 import formidable from "formidable";
 import path from "path";
 import fs from "fs";
+import { hash, genSalt } from "bcrypt";
 import User from "../models/users.model.js";
 import sendResponse from "../helpers/sendResponse.js";
 
@@ -54,7 +55,10 @@ const update = async (req, res, next) => {
   const userInfos = {};
   if (email) userInfos.email = email;
   if (pseudo) userInfos.pseudo = pseudo;
-  if (password) userInfos.password = password;
+  if (password) {
+    const hashedPassword = await hash(password, await genSalt());
+    userInfos.password = hashedPassword;
+  }
 
   if (Object.keys(userInfos).length === 0) {
     return res.status(400).json({ message: "Aucune mise à jour à effectuer." });
@@ -77,6 +81,7 @@ const update = async (req, res, next) => {
 
     res.json({ success: "Utilisateur mis à jour." });
   } catch (error) {
+    console.error("Erreur lors de la mise à jour de l'utilisateur:", error);
     next(error);
   }
 };
@@ -169,6 +174,29 @@ const updateByAdmin = async (req, res, next) => {
   }
 };
 
+const updateTheme = async (req, res, next) => {
+  const {id, theme } = req.body;
+console.log("id", id)
+console.log("theme", theme)
+
+  if (!theme) {
+    return res.status(400).json({ message: "Thème manquant." });
+  }
+
+  try {
+    const result = await User.userTheme(theme, id);
+
+    if (result.error) {
+      return res.status(500).json(result);
+    }
+
+    res.json({ success: "Thème mis à jour.", theme });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du thème:", error);
+    next(error);
+  }
+};
+
 //============================== DELETE =======================================//
 
 const remove = async (req, res, next) => {
@@ -192,5 +220,6 @@ export {
   update,
   updateByAdmin,
   uploadAvatar,
+  updateTheme,
   remove,
 };
