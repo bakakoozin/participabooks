@@ -7,10 +7,10 @@
   - /session -> *(GET)*          `token requis` ✅
 
 - /user -> **en cours** 🟠 `token requis`
-  - /                    -> *(GET)*                 **en cours** 🟠
+  - /                    -> *(GET)*                 ✅
   PROFILE
-  - /profile             -> *(PATCH)*               **en cours** 🔴
-  - /profile             -> *(DELETE)*              **en cours** 🟠
+  - /profile             -> *(PATCH)*               ✅
+  - /profile             -> *(DELETE)*              ✅
   - /profile/avatar      -> *(PATCH)*               **en cours** 🔴
   - /profile/theme       -> *(PATCH)*               ✅
   SHELF

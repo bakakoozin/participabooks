@@ -40,7 +40,7 @@ function Login() {
         navigate("/");
       } catch (error){
         console.error("Erreur lors de la connexion:", error);
-        toast.error("Erreur lors de la connexion.");
+        toast.error("Adresse email ou mot de passe invalide.");
       }
     } else {
       setMessage("Veuillez remplir tous les champs.");

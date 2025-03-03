@@ -20,6 +20,7 @@ function Header() {
     });
     if (response.ok) {
       dispatch(logout());
+      dispatch(toggleMenu());
       navigate("/");
     }
   }

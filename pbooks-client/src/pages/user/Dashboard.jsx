@@ -1,32 +1,15 @@
-// import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { logout, login } from "../../features/authSlice";
 import { API_URL } from "../../utils/constants";
+import { toast } from "react-toastify";
 
 function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { infos } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(infos.theme);
-
-  async function handleDeleteAccount() {
-    if (confirm("Etes-vous sûr de vouloir supprimer votre compte ?")) {
-      try {
-        const response = await fetch(`${API_URL}/user/profile`, {
-          method: "DELETE",
-          credentials: "include",
-        });
-        if (response.ok) {
-          dispatch(logout());
-          navigate("/");
-        }
-      } catch (error) {
-        console.error("Erreur lors de la suppression du compte.", error);
-      }
-    }
-  }
 
   async function handleThemeChange(newTheme) {
     try {
@@ -54,6 +37,24 @@ function Dashboard() {
   function toggleTheme() {
     const newTheme = theme === "clair" ? "sombre" : "clair";
     handleThemeChange(newTheme);
+  }
+
+  async function handleDeleteAccount() {
+    if (confirm("Etes-vous sûr de vouloir supprimer votre compte ?")) {
+      try {
+        const response = await fetch(`${API_URL}/user/profile`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        if (response.ok) {
+          dispatch(logout());
+          toast.success("Compte supprimé avec succès.");
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la suppression du compte.", error);
+      }
+    }
   }
 
   return (

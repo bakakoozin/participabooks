@@ -50,7 +50,8 @@ const getBySearch = async (req, res, next) => {
 //============================== PATCH =======================================//
 
 const update = async (req, res, next) => {
-  const { id, email, pseudo, password } = req.body;
+  const { email, pseudo, password } = req.body;
+  const userId = req.user.id;
 
   const userInfos = {};
   if (email) userInfos.email = email;
@@ -68,7 +69,7 @@ const update = async (req, res, next) => {
     .map((field) => `${field} = ?`)
     .join(", ");
   const values = Object.values(userInfos);
-  values.push(id);
+  values.push(userId);
 
   const UPDATE_USER = `UPDATE users SET ${fields} WHERE id = ?`;
 
@@ -175,21 +176,15 @@ const updateByAdmin = async (req, res, next) => {
 };
 
 const updateTheme = async (req, res, next) => {
-  const {id, theme } = req.body;
-console.log("id", id)
-console.log("theme", theme)
-
+  const { id, theme } = req.body;
   if (!theme) {
     return res.status(400).json({ message: "Thème manquant." });
   }
-
   try {
     const result = await User.userTheme(theme, id);
-
     if (result.error) {
       return res.status(500).json(result);
     }
-
     res.json({ success: "Thème mis à jour.", theme });
   } catch (error) {
     console.error("Erreur lors de la mise à jour du thème:", error);
@@ -201,8 +196,13 @@ console.log("theme", theme)
 
 const remove = async (req, res, next) => {
   try {
-    const [response] = await User.delete(req.user.userId);
+    const [response] = await User.delete(req.user.id);
     if (response.affectedRows) {
+      res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      });
       res.json({ message: "Compte supprimé." });
       return;
     }

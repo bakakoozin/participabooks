@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { API_URL } from "../../utils/constants";
+import { toast } from "react-toastify";
 
-const minAliasLength = 3;
-const minPasswordLength = 8;
+const pseudoRegex = /^[a-zA-Z0-9_]{3,}$/; // Au moins 3 caractères, lettres, chiffres et underscores
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Format d'email basique
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // Au moins 8 caractères, une lettre et un chiffre
 
 function Register() {
   const [pseudo, setPseudo] = useState("");
@@ -18,30 +20,21 @@ function Register() {
   const navigate = useNavigate();
 
   function handleChangePseudo(e) {
+    const value = e.target.value;
     setPseudo(e.target.value);
-    if (e.target.value.length < minAliasLength) {
-      setIsPseudoValid(false);
-    } else {
-      setIsPseudoValid(true);
-    }
+    setIsPseudoValid(pseudoRegex.test(value));
   }
 
   function handleChangeEmail(e) {
-    setEmail(e.target.value);
-    if (e.target.value.includes("@")) {
-      setIsEmailValid(true);
-    } else {
-      setIsEmailValid(false);
-    }
+    const value = e.target.value;
+    setEmail(value);
+    setIsEmailValid(emailRegex.test(value));
   }
 
   function handleChangePassword(e) {
-    setPassword(e.target.value);
-    if (e.target.value.length < minPasswordLength) {
-      setIsPasswordValid(false);
-    } else {
-      setIsPasswordValid(true);
-    }
+    const value = e.target.value;
+    setPassword(value);
+    setIsPasswordValid(passwordRegex.test(value));
   }
 
   async function handleSubmit(e) {
@@ -60,6 +53,9 @@ function Register() {
 
         if (response.ok) {
           setMessage(resJSON.msg);
+          toast.success(
+            "Compte créé avec succès. Vous pouvez maintenant vous connecter."
+          );
           navigate("/auth/login");
           return;
         }
@@ -82,6 +78,12 @@ function Register() {
           placeholder="Entrer votre pseudo"
           required
         />
+        {!isPseudoValid && pseudo && (
+          <p className="auth-alert">
+            Le pseudo doit contenir au moins 3 caractères, lettres, chiffres et
+            underscores.
+          </p>
+        )}
         <input
           type="email"
           id="email"
@@ -90,6 +92,9 @@ function Register() {
           placeholder="Entrer votre email"
           required
         />
+        {!isEmailValid && email && (
+          <p className="auth-alert">Veuillez entrer un email valide.</p>
+        )}
         <input
           type="password"
           id="password"
@@ -98,26 +103,18 @@ function Register() {
           placeholder="Choisir un mot de passe"
           required
         />
+        {!isPasswordValid && password && (
+          <p className="auth-alert">
+            Le mot de passe doit contenir au moins 8 caractères, une lettre et
+            un chiffre.
+          </p>
+        )}
         <button type="submit">Créer compte</button>
         {message && <p className="auth-alert">{message}</p>}
       </form>
       <p>
         Déjà inscrit ? <Link to="/auth/login">Se connecter</Link>
       </p>
-      {/* <aside className="validation password">
-				<p>Le pseudo doit contenir :</p>
-				<ul>
-					<li className={!isPseudoValid ? "alert" : "success"}>
-						{minPseudolength} caractères minimum
-					</li>
-				</ul>
-				<p>Le mot de passe doit contenir :</p>
-				<ul>
-					<li className={!isPasswordValid ? "alert" : "success"}>
-						{minPasswordlength} caractères minimum
-					</li>
-				</ul>
-			</aside> */}
     </main>
   );
 }
