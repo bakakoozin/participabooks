@@ -10,7 +10,7 @@ import { API_URL } from "../utils/constants";
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLogged } = useSelector((state) => state.auth);
+  const { isLogged, pseudo } = useSelector((state) => state.auth);
   const { isMenuOpen } = useSelector((state) => state.menu);
 
   async function handleLogout() {
@@ -28,6 +28,10 @@ function Header() {
   function handleClick() {
     dispatch(toggleMenu());
   }
+
+  //  function handleAvatar(user) {
+  //     return user.cover_url ? `/medias/${user.avatar}` : notFoundAvatar;
+  //   }
 
   return (
     <header className="header">
@@ -52,6 +56,10 @@ function Header() {
       </nav>
       <div className={`burger-menu`} onClick={handleClick}>
         <FontAwesomeIcon icon={faBars} />
+      </div>
+      <div className="user-infos">
+      {/* <img src={handleAvatar(user)} alt="avatar" /> */}
+        <p>{isLogged ? pseudo : "non connecté"}</p>
       </div>
     </header>
   );

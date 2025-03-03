@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isLogged: false,
-    infos: {pseudo: "visiteur", avatar: "", email: ""},
+    infos: {pseudo: "non connecté", avatar: "", email: ""},
 };
 
 const userSlice = createSlice({
