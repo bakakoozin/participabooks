@@ -60,7 +60,7 @@ function Header() {
         ) : (
           <img src={infos.avatar} alt={pseudo} />
         )}
-        <p>{isLogged ? pseudo : "non connecté"}</p>
+        <p>{isLogged ? infos.pseudo : "non connecté"}</p>
       </div>
     </header>
   );

@@ -1,4 +1,5 @@
 import formidable from "formidable";
+import sharp from "sharp";
 import path from "path";
 import fs from "fs";
 import { hash, genSalt } from "bcrypt";
@@ -102,7 +103,7 @@ const uploadAvatar = async (req, res) => {
       return res.status(500).json({ message: "Erreur lors de l'upload." });
     }
 
-    const userId = fields.userId?.[0];
+    const userId = req.user.id;
     if (!userId) {
       return res.status(400).json({ message: "ID utilisateur manquant." });
     }
@@ -112,34 +113,58 @@ const uploadAvatar = async (req, res) => {
       return res.status(400).json({ message: "Aucun fichier reçu." });
     }
 
-    const oldPath = files.avatar.filepath;
-    const fileExt = path.extname(avatarFile.originalFilename);
+    const oldPath = avatarFile.filepath;
+    if (!oldPath) {
+      console.error("Chemin du fichier temporaire manquant.");
+      return res.status(400).json({ message: "Chemin du fichier temporaire manquant." });
+    }
+
+    const originalFilename = avatarFile.originalFilename || '';
+    const fileExt = path.extname(originalFilename).toLowerCase();
+    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+
+    if (!validExtensions.includes(fileExt)) {
+      fs.unlink(oldPath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
+        }
+      });
+      return res.status(400).json({ message: "Extension de fichier invalide." });
+    }
+
     const newFileName = `avatar_${userId}${fileExt}`;
     const newPath = path.join(uploadDir, newFileName);
 
-    fs.rename(oldPath, newPath, async (err) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ message: "Erreur lors du déplacement du fichier" });
-      }
+    try {
+      // Redimensionner l'image avant de l'enregistrer
+      await sharp(oldPath)
+        .resize(200, 200) // Redimensionner l'image à 200x200 pixels
+        .toFile(newPath);
+
+      // Supprimer l'ancien fichier temporaire
+      fs.unlink(oldPath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
+        }
+      });
 
       const avatarUrl = `/uploads/avatars/${newFileName}`;
 
-      try {
-        await User.updateAvatar(avatarUrl, userId);
+      await User.updateAvatar(avatarUrl, userId);
 
-        return res.json({
-          message: "Avatar mis à jour avec succès !",
-          avatarUrl,
-        });
-      } catch (dbError) {
-        console.error("Erreur lors de la mise à jour de l'avatar:", dbError);
-        return res
-          .status(500)
-          .json({ message: "Erreur de mise à jour en base" });
-      }
-    });
+      return res.json({
+        message: "Avatar mis à jour avec succès !",
+        avatarUrl,
+      });
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de l'avatar:", error);
+      fs.unlink(oldPath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
+        }
+      });
+      return res.status(500).json({ message: "Erreur de mise à jour en base" });
+    }
   });
 };
 
