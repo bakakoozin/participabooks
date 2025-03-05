@@ -23,6 +23,7 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
     "/medias",
     express.static(path.join(process.cwd(), "public", "uploads", "/medias"))

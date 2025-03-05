@@ -1,4 +1,4 @@
-import formidable from "formidable";
+import { handleUpload } from "../config/formidable.js";
 import sharp from "sharp";
 import path from "path";
 import fs from "fs";
@@ -88,27 +88,18 @@ const update = async (req, res, next) => {
   }
 };
 
-const uploadAvatar = async (req, res) => {
-  const uploadDir = path.join(process.cwd(), "public", "uploads", "avatars");
+const uploadAvatar = async (req, res, next) => {
+  console.log("Début du traitement de l'upload");
 
-  const form = formidable({
-    uploadDir: uploadDir,
-    keepExtensions: true,
-    multiples: false,
-  });
-
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      console.error("Erreur formidable :", err);
-      return res.status(500).json({ message: "Erreur lors de l'upload." });
-    }
+  handleUpload(req, res, async () => {
+    console.log("Fichier reçu par Formidable");
 
     const userId = req.user.id;
     if (!userId) {
       return res.status(400).json({ message: "ID utilisateur manquant." });
     }
 
-    const avatarFile = files.avatar;
+    const avatarFile = req.files.avatar;
     if (!avatarFile) {
       return res.status(400).json({ message: "Aucun fichier reçu." });
     }
@@ -116,53 +107,92 @@ const uploadAvatar = async (req, res) => {
     const oldPath = avatarFile.filepath;
     if (!oldPath) {
       console.error("Chemin du fichier temporaire manquant.");
-      return res.status(400).json({ message: "Chemin du fichier temporaire manquant." });
+      return res
+        .status(400)
+        .json({ message: "Chemin du fichier temporaire manquant." });
     }
 
-    const originalFilename = avatarFile.originalFilename || '';
+    const originalFilename = avatarFile.originalFilename || "";
     const fileExt = path.extname(originalFilename).toLowerCase();
-    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+    const validExtensions = [".jpg", ".jpeg", ".png", ".gif"];
 
     if (!validExtensions.includes(fileExt)) {
       fs.unlink(oldPath, (unlinkErr) => {
         if (unlinkErr) {
-          console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
+          console.error(
+            "Erreur lors de la suppression du fichier temporaire:",
+            unlinkErr
+          );
         }
       });
-      return res.status(400).json({ message: "Extension de fichier invalide." });
+      return res
+        .status(400)
+        .json({ message: "Extension de fichier invalide." });
     }
 
     const newFileName = `avatar_${userId}${fileExt}`;
-    const newPath = path.join(uploadDir, newFileName);
+    const newPath = path.join(
+      process.cwd(),
+      "public/uploads/avatars",
+      newFileName
+    );
+
+    console.log("Fichier redimensionné et sauvegardé à :", newPath);
 
     try {
       // Redimensionner l'image avant de l'enregistrer
       await sharp(oldPath)
-        .resize(200, 200) // Redimensionner l'image à 200x200 pixels
+        .resize(200, 200) // Utiliser la taille que vous souhaitez
         .toFile(newPath);
 
       // Supprimer l'ancien fichier temporaire
       fs.unlink(oldPath, (unlinkErr) => {
         if (unlinkErr) {
-          console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
+          console.error(
+            "Erreur lors de la suppression du fichier temporaire:",
+            unlinkErr
+          );
         }
       });
 
+      // Mettre à jour le chemin du fichier dans req.files
+      avatarFile.filepath = newPath;
+
       const avatarUrl = `/uploads/avatars/${newFileName}`;
+      console.log("Mise à jour de l'avatar avec l'URL:", avatarUrl);
+      console.log("ID de l'utilisateur à mettre à jour:", id);
+      
+      const result = await User.updateAvatar(avatarUrl, id);
+      console.log("Résultat de la mise à jour de l'avatar:", result);
 
-      await User.updateAvatar(avatarUrl, userId);
+      // Vérification du résultat
+      if (result === null) {
+        return res
+          .status(500)
+          .json({
+            message:
+              "Erreur lors de la mise à jour de l'avatar dans la base de données.",
+          });
+      }
 
+      // Réponse avec l'URL du nouvel avatar
       return res.json({
         message: "Avatar mis à jour avec succès !",
         avatarUrl,
       });
     } catch (error) {
       console.error("Erreur lors de la mise à jour de l'avatar:", error);
+
+      // Supprimer le fichier temporaire en cas d'erreur
       fs.unlink(oldPath, (unlinkErr) => {
         if (unlinkErr) {
-          console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
+          console.error(
+            "Erreur lors de la suppression du fichier temporaire:",
+            unlinkErr
+          );
         }
       });
+
       return res.status(500).json({ message: "Erreur de mise à jour en base" });
     }
   });
@@ -248,70 +278,3 @@ export {
   updateTheme,
   remove,
 };
-
-// const uploadAvatar = async (req, res, next) => {
-//   handleUpload(req, res, async () => {
-//     const userId = req.user.id;
-//     if (!userId) {
-//       return res.status(400).json({ message: "ID utilisateur manquant." });
-//     }
-
-//     const avatarFile = req.files.avatar;
-//     if (!avatarFile) {
-//       return res.status(400).json({ message: "Aucun fichier reçu." });
-//     }
-
-//     const oldPath = avatarFile.filepath;
-//     if (!oldPath) {
-//       console.error("Chemin du fichier temporaire manquant.");
-//       return res.status(400).json({ message: "Chemin du fichier temporaire manquant." });
-//     }
-
-//     const originalFilename = avatarFile.originalFilename || '';
-//     const fileExt = path.extname(originalFilename).toLowerCase();
-//     const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
-
-//     if (!validExtensions.includes(fileExt)) {
-//       fs.unlink(oldPath, (unlinkErr) => {
-//         if (unlinkErr) {
-//           console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
-//         }
-//       });
-//       return res.status(400).json({ message: "Extension de fichier invalide." });
-//     }
-
-//     const newFileName = `avatar_${userId}${fileExt}`;
-//     const newPath = path.join(process.cwd(), "public/uploads/avatars", newFileName);
-
-//     try {
-//       // Redimensionner l'image avant de l'enregistrer
-//       await sharp(oldPath)
-//         .resize(200, 200) // Redimensionner l'image à 200x200 pixels
-//         .toFile(newPath);
-
-//       // Supprimer l'ancien fichier temporaire
-//       fs.unlink(oldPath, (unlinkErr) => {
-//         if (unlinkErr) {
-//           console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
-//         }
-//       });
-
-//       const avatarUrl = `/uploads/avatars/${newFileName}`;
-
-//       await User.updateAvatar(avatarUrl, userId);
-
-//       return res.json({
-//         message: "Avatar mis à jour avec succès !",
-//         avatarUrl,
-//       });
-//     } catch (error) {
-//       console.error("Erreur lors de la mise à jour de l'avatar:", error);
-//       fs.unlink(oldPath, (unlinkErr) => {
-//         if (unlinkErr) {
-//           console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
-//         }
-//       });
-//       return res.status(500).json({ message: "Erreur de mise à jour en base" });
-//     }
-//   });
-// };

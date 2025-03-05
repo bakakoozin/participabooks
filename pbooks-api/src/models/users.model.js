@@ -39,14 +39,25 @@ FROM users WHERE id = ?`;
     }
   }
 
-  static async userTheme(theme, id) {
-    const UPDATE_THEME = `UPDATE users SET theme = ? WHERE id = ?`;
-    return await pool.execute(UPDATE_THEME, [theme, id]);
-  }
-
-  static async updateAvatar(avatar, id) {
+  static async updateAvatar(avatarUrl, id) {
+    console.log("Tentative de mise à jour de l'avatar pour l'ID:", id, "avec l'URL:", avatarUrl);
+  
     const UPDATE_AVATAR = `UPDATE users SET avatar = ? WHERE id = ?`;
-    return await pool.execute(UPDATE_AVATAR, [avatar, id]);
+    try {
+      const [result] = await pool.execute(UPDATE_AVATAR, [avatarUrl, id]);
+      console.log("Résultat de la mise à jour de l'avatar:", result);
+  
+      if (result.affectedRows === 0) {
+        console.log("Aucune ligne affectée. Vérifie l'ID utilisateur.");
+        return null;
+      }
+  
+      console.log(`Avatar mis à jour pour l'utilisateur avec l'ID: ${id}`);
+      return result;
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de l'avatar:", error);
+      throw error;
+    }
   }
 
 //============================== DELETE =======================================//
