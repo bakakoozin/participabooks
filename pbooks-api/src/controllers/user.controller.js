@@ -248,3 +248,70 @@ export {
   updateTheme,
   remove,
 };
+
+// const uploadAvatar = async (req, res, next) => {
+//   handleUpload(req, res, async () => {
+//     const userId = req.user.id;
+//     if (!userId) {
+//       return res.status(400).json({ message: "ID utilisateur manquant." });
+//     }
+
+//     const avatarFile = req.files.avatar;
+//     if (!avatarFile) {
+//       return res.status(400).json({ message: "Aucun fichier reçu." });
+//     }
+
+//     const oldPath = avatarFile.filepath;
+//     if (!oldPath) {
+//       console.error("Chemin du fichier temporaire manquant.");
+//       return res.status(400).json({ message: "Chemin du fichier temporaire manquant." });
+//     }
+
+//     const originalFilename = avatarFile.originalFilename || '';
+//     const fileExt = path.extname(originalFilename).toLowerCase();
+//     const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+
+//     if (!validExtensions.includes(fileExt)) {
+//       fs.unlink(oldPath, (unlinkErr) => {
+//         if (unlinkErr) {
+//           console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
+//         }
+//       });
+//       return res.status(400).json({ message: "Extension de fichier invalide." });
+//     }
+
+//     const newFileName = `avatar_${userId}${fileExt}`;
+//     const newPath = path.join(process.cwd(), "public/uploads/avatars", newFileName);
+
+//     try {
+//       // Redimensionner l'image avant de l'enregistrer
+//       await sharp(oldPath)
+//         .resize(200, 200) // Redimensionner l'image à 200x200 pixels
+//         .toFile(newPath);
+
+//       // Supprimer l'ancien fichier temporaire
+//       fs.unlink(oldPath, (unlinkErr) => {
+//         if (unlinkErr) {
+//           console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
+//         }
+//       });
+
+//       const avatarUrl = `/uploads/avatars/${newFileName}`;
+
+//       await User.updateAvatar(avatarUrl, userId);
+
+//       return res.json({
+//         message: "Avatar mis à jour avec succès !",
+//         avatarUrl,
+//       });
+//     } catch (error) {
+//       console.error("Erreur lors de la mise à jour de l'avatar:", error);
+//       fs.unlink(oldPath, (unlinkErr) => {
+//         if (unlinkErr) {
+//           console.error("Erreur lors de la suppression du fichier temporaire:", unlinkErr);
+//         }
+//       });
+//       return res.status(500).json({ message: "Erreur de mise à jour en base" });
+//     }
+//   });
+// };
