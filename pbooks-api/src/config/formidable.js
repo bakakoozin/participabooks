@@ -5,10 +5,10 @@ import fs from "fs";
 
 export const handleUpload = (req, res, next) => {
   const form = formidable({
-    multiples: true,
-    uploadDir: path.join(process.cwd(), "public/uploads/temp"), // Répertoire temporaire
+    multiples: false,
+    uploadDir: path.join(process.cwd(), "public/uploads/temp"),
     keepExtensions: true,
-    maxFileSize: 5 * 1024 * 1024, // Limite de 5 Mo
+    maxFileSize: 5 * 1024 * 1024, // 5 Mo max
     allowEmptyFiles: false,
   });
 
@@ -18,47 +18,48 @@ export const handleUpload = (req, res, next) => {
       return res.status(400).json({ message: "Erreur lors de l'upload", error: err.message });
     }
 
-    // Ajout des logs pour vérifier la structure des fichiers
-    console.log("Champs reçus:", fields);
-    console.log("Fichiers reçus:", files);
+    req.body = fields;
+    req.files = files;
 
-    req.body = fields;  // Champs du formulaire
-    req.files = files;  // Fichiers téléchargés
-
-    // Vérification si un fichier avatar est présent
     if (!files.avatar || !files.avatar[0]) {
       return res.status(400).json({ message: "Fichier avatar manquant." });
     }
 
-    const avatarFile = files.avatar[0];  // Accéder au premier fichier dans le tableau
+    const avatarFile = files.avatar[0];
 
-    // Vérification de la présence du chemin du fichier
-    if (!avatarFile || !avatarFile.filepath) {
+    if (!avatarFile.filepath) {
       return res.status(400).json({ message: "Chemin du fichier temporaire manquant." });
     }
 
-    // Redimensionnement et déplacement du fichier
-    const outputFilePath = path.join(process.cwd(), "public/uploads/avatars", avatarFile.newFilename);
+    // Définition du chemin final du fichier
+    const fileExt = path.extname(avatarFile.originalFilename || "").toLowerCase();
+    const validExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+    if (!validExtensions.includes(fileExt)) {
+      fs.unlink(avatarFile.filepath, () => {}); // Supprime le fichier temporaire
+      return res.status(400).json({ message: "Extension de fichier invalide." });
+    }
+
+    const newFileName = `avatar_${Date.now()}${fileExt}`;
+    const outputFilePath = path.join(process.cwd(), "public/uploads/avatars", newFileName);
+
     try {
-      console.log("Tentative de redimensionnement du fichier:", avatarFile.filepath);
-      
+      // Redimensionner et enregistrer l'image
       await sharp(avatarFile.filepath)
         .resize(200, 200)
         .toFile(outputFilePath);
-      
-      console.log('Fichier redimensionné et sauvegardé à :', outputFilePath);
-      
-      // Mise à jour de la propriété filepath après le redimensionnement
-      avatarFile.filepath = outputFilePath;
-      
-      // Envoyer la réponse de succès
-      res.json({
-        message: "Avatar mis à jour avec succès !",
-        avatarUrl: `/uploads/avatars/${avatarFile.newFilename}`,
-      });
+
+      // Supprimer l'ancien fichier temporaire
+      fs.unlink(avatarFile.filepath, () => {});
+
+      // Ajouter le chemin final à la requête pour utilisation dans `uploadAvatar`
+      req.avatarUrl = newFileName;
+
+      // Passer au middleware suivant (uploadAvatar)
+      next();
     } catch (error) {
       console.error("Erreur lors du redimensionnement:", error);
-      return res.status(500).json({ message: "Erreur lors du redimensionnement", error: error.message });
+      return res.status(500).json({ message: "Erreur lors du traitement de l'image", error: error.message });
     }
   });
 };
+

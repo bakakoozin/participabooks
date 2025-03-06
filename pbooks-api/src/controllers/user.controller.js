@@ -89,113 +89,31 @@ const update = async (req, res, next) => {
 };
 
 const uploadAvatar = async (req, res, next) => {
-  console.log("Début du traitement de l'upload");
+  console.log("Début de l'upload d'avatar");
 
-  handleUpload(req, res, async () => {
-    console.log("Fichier reçu par Formidable");
+  const userId = req.user.id;
+  if (!userId) {
+    return res.status(400).json({ message: "ID utilisateur manquant." });
+  }
 
-    const userId = req.user.id;
-    if (!userId) {
-      return res.status(400).json({ message: "ID utilisateur manquant." });
+  if (!req.avatarUrl) {
+    return res.status(400).json({ message: "Aucune image traitée." });
+  }
+
+  try {
+    const result = await User.updateAvatar(req.avatarUrl, userId);
+    if (!result) {
+      return res.status(500).json({ message: "Erreur lors de la mise à jour de l'avatar en base." });
     }
 
-    const avatarFile = req.files.avatar;
-    if (!avatarFile) {
-      return res.status(400).json({ message: "Aucun fichier reçu." });
-    }
-
-    const oldPath = avatarFile.filepath;
-    if (!oldPath) {
-      console.error("Chemin du fichier temporaire manquant.");
-      return res
-        .status(400)
-        .json({ message: "Chemin du fichier temporaire manquant." });
-    }
-
-    const originalFilename = avatarFile.originalFilename || "";
-    const fileExt = path.extname(originalFilename).toLowerCase();
-    const validExtensions = [".jpg", ".jpeg", ".png", ".gif"];
-
-    if (!validExtensions.includes(fileExt)) {
-      fs.unlink(oldPath, (unlinkErr) => {
-        if (unlinkErr) {
-          console.error(
-            "Erreur lors de la suppression du fichier temporaire:",
-            unlinkErr
-          );
-        }
-      });
-      return res
-        .status(400)
-        .json({ message: "Extension de fichier invalide." });
-    }
-
-    const newFileName = `avatar_${userId}${fileExt}`;
-    const newPath = path.join(
-      process.cwd(),
-      "public/uploads/avatars",
-      newFileName
-    );
-
-    console.log("Fichier redimensionné et sauvegardé à :", newPath);
-
-    try {
-      // Redimensionner l'image avant de l'enregistrer
-      await sharp(oldPath)
-        .resize(200, 200) // Utiliser la taille que vous souhaitez
-        .toFile(newPath);
-
-      // Supprimer l'ancien fichier temporaire
-      fs.unlink(oldPath, (unlinkErr) => {
-        if (unlinkErr) {
-          console.error(
-            "Erreur lors de la suppression du fichier temporaire:",
-            unlinkErr
-          );
-        }
-      });
-
-      // Mettre à jour le chemin du fichier dans req.files
-      avatarFile.filepath = newPath;
-
-      const avatarUrl = `/uploads/avatars/${newFileName}`;
-      console.log("Mise à jour de l'avatar avec l'URL:", avatarUrl);
-      console.log("ID de l'utilisateur à mettre à jour:", id);
-      
-      const result = await User.updateAvatar(avatarUrl, id);
-      console.log("Résultat de la mise à jour de l'avatar:", result);
-
-      // Vérification du résultat
-      if (result === null) {
-        return res
-          .status(500)
-          .json({
-            message:
-              "Erreur lors de la mise à jour de l'avatar dans la base de données.",
-          });
-      }
-
-      // Réponse avec l'URL du nouvel avatar
-      return res.json({
-        message: "Avatar mis à jour avec succès !",
-        avatarUrl,
-      });
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour de l'avatar:", error);
-
-      // Supprimer le fichier temporaire en cas d'erreur
-      fs.unlink(oldPath, (unlinkErr) => {
-        if (unlinkErr) {
-          console.error(
-            "Erreur lors de la suppression du fichier temporaire:",
-            unlinkErr
-          );
-        }
-      });
-
-      return res.status(500).json({ message: "Erreur de mise à jour en base" });
-    }
-  });
+    return res.json({
+      message: "Avatar mis à jour avec succès !",
+      avatarUrl: req.avatarUrl,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de l'avatar:", error);
+    return res.status(500).json({ message: "Erreur interne du serveur" });
+  }
 };
 
 const updateByAdmin = async (req, res, next) => {

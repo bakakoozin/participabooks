@@ -39,20 +39,14 @@ FROM users WHERE id = ?`;
     }
   }
 
-  static async updateAvatar(avatarUrl, id) {
-    console.log("Tentative de mise à jour de l'avatar pour l'ID:", id, "avec l'URL:", avatarUrl);
-  
+  static async updateAvatar(avatar, id) {
     const UPDATE_AVATAR = `UPDATE users SET avatar = ? WHERE id = ?`;
     try {
-      const [result] = await pool.execute(UPDATE_AVATAR, [avatarUrl, id]);
-      console.log("Résultat de la mise à jour de l'avatar:", result);
+      const [result] = await pool.execute(UPDATE_AVATAR, [avatar, id]);
   
       if (result.affectedRows === 0) {
-        console.log("Aucune ligne affectée. Vérifie l'ID utilisateur.");
         return null;
       }
-  
-      console.log(`Avatar mis à jour pour l'utilisateur avec l'ID: ${id}`);
       return result;
     } catch (error) {
       console.error("Erreur lors de la mise à jour de l'avatar:", error);

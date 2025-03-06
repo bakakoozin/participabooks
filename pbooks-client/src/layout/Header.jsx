@@ -5,7 +5,7 @@ import { faBars, faCircleUser } from "@fortawesome/free-solid-svg-icons";
 
 import { toggleMenu } from "../features/menuSlice";
 import { logout } from "../features/authSlice";
-import { API_URL } from "../utils/constants";
+import { API_URL, URL_MEDIAS } from "../utils/constants";
 
 function Header() {
   const dispatch = useDispatch();
@@ -58,7 +58,7 @@ function Header() {
         {!isLogged || (infos.avatar === null) ? (
           <FontAwesomeIcon icon={faCircleUser} />
         ) : (
-          <img src={infos.avatar} alt={pseudo} />
+          <img src={`${URL_MEDIAS}avatars/${infos.avatar}`} alt={pseudo} />
         )}
         <p>{isLogged ? infos.pseudo : "non connecté"}</p>
       </div>

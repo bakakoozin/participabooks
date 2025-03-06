@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import { API_URL } from "../utils/constants";
+import { API_URL, URL_MEDIAS } from "../utils/constants";
 import scrollSlider from "../utils/slider";
 import notFoundCover from "/not-found.png";
 
@@ -26,7 +26,9 @@ function Home() {
   }, []);
 
   function handleCover(work) {
-    return work.cover_url ? `/medias/${work.cover_url}` : notFoundCover;
+    return work.cover_url
+      ? `${URL_MEDIAS}medias/${work.cover_url}`
+      : notFoundCover;
   }
 
   return (

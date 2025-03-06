@@ -51,6 +51,12 @@
 	  cursor: pointer;
 	  display: block;
 	}
+
+	.user-infos img {
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+	}
   }
   
   @media (min-width: 768px) {

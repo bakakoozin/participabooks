@@ -26,11 +26,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
     "/medias",
-    express.static(path.join(process.cwd(), "public", "uploads", "/medias"))
+    express.static(path.join(process.cwd(), "public", "uploads", "medias"))
 );
 app.use(
     "/avatars",
-    express.static(path.join(process.cwd(), "public", "uploads", "/avatars"))
+    express.static(path.join(process.cwd(), "public", "uploads", "avatars"))
 );
 
 app.get("/", (req, res) => {

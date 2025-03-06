@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { API_URL } from "../utils/constants";
+import { API_URL, URL_MEDIAS } from "../utils/constants";
 import notFoundCover from "/not-found.png";
 
 function Work() {
@@ -29,7 +29,7 @@ function Work() {
 
   function handleCover(volume) {
     if (volume.url_media) {
-      return `/medias/${volume.url_media}`;
+      return `${URL_MEDIAS}medias/${volume.url_media}`;
     } else return notFoundCover;
   }
 
