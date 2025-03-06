@@ -1,7 +1,3 @@
-import { handleUpload } from "../config/formidable.js";
-import sharp from "sharp";
-import path from "path";
-import fs from "fs";
 import { hash, genSalt } from "bcrypt";
 import User from "../models/users.model.js";
 import sendResponse from "../helpers/sendResponse.js";
