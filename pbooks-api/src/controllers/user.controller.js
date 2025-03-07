@@ -1,6 +1,8 @@
 import { hash, genSalt } from "bcrypt";
 import User from "../models/users.model.js";
 import sendResponse from "../helpers/sendResponse.js";
+import fs from "fs";
+import path from "path";
 
 //============================== GET =======================================//
 
@@ -97,6 +99,26 @@ const uploadAvatar = async (req, res, next) => {
   }
 
   try {
+    // 1️⃣ Récupérer l'ancien avatar
+    const [user] = await User.findOne(userId);
+    const oldAvatar = user[0]?.avatar;
+
+    // 2️⃣ Supprimer l'ancien fichier s'il existe et n'est pas un avatar par défaut
+    if (oldAvatar && oldAvatar !== "default-avatar.png") {
+      const oldAvatarPath = path.join(process.cwd(), "public/uploads/avatars", oldAvatar);
+
+      fs.access(oldAvatarPath, fs.constants.F_OK, (err) => {
+        if (!err) {
+          fs.unlink(oldAvatarPath, (unlinkErr) => {
+            if (unlinkErr) {
+              console.error("Erreur lors de la suppression de l'ancien avatar :", unlinkErr);
+            } else {
+              console.log("Ancien avatar supprimé :", oldAvatar);
+            }
+          });
+        }
+      });
+    }
     const result = await User.updateAvatar(req.avatarUrl, userId);
     if (!result) {
       return res.status(500).json({ message: "Erreur lors de la mise à jour de l'avatar en base." });
