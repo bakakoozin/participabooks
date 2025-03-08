@@ -1,8 +1,7 @@
 import pool from "../config/db.js";
 
 class User {
-
-//============================== SELECT =======================================//
+  //============================== SELECT =======================================//
 
   static async findAll() {
     const SELECT_ALL = `SELECT id, email, pseudo, created_at, role, status, avatar
@@ -22,7 +21,7 @@ FROM users WHERE id = ?`;
     return await pool.query(SEARCH_USER, [search]);
   }
 
-//============================== UPDATE =======================================//
+  //============================== UPDATE =======================================//
 
   static async update(query, values) {
     const connection = await pool.getConnection();
@@ -39,11 +38,16 @@ FROM users WHERE id = ?`;
     }
   }
 
+  static async userTheme(theme, id) {
+    const UPDATE_THEME = `UPDATE users SET theme = ? WHERE id = ?`;
+    return await pool.execute(UPDATE_THEME, [theme, id]);
+  }
+
   static async updateAvatar(avatar, id) {
     const UPDATE_AVATAR = `UPDATE users SET avatar = ? WHERE id = ?`;
     try {
       const [result] = await pool.execute(UPDATE_AVATAR, [avatar, id]);
-  
+
       if (result.affectedRows === 0) {
         return null;
       }
@@ -54,7 +58,7 @@ FROM users WHERE id = ?`;
     }
   }
 
-//============================== DELETE =======================================//
+  //============================== DELETE =======================================//
 
   static async delete(id) {
     const DELETE_USER = `DELETE FROM users WHERE id =?`;
