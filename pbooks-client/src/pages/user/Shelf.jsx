@@ -64,7 +64,7 @@ function Shelf() {
               <h2>{work.works_name}</h2>
               <p>{work.works_type}</p>
               <p>{work.works_score}</p>
-              <Link to={`/ShelfWorks/${work.works_id}`}>
+              <Link to={`/shelf/work/${work.works_id}`}>
                 <img src={handleCover(work)} alt={work.works_name} />
               </Link>
               <p>{work.authors_name}</p>

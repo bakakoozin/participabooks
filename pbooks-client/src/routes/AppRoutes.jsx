@@ -7,6 +7,7 @@ import Dashboard from "../pages/user/Dashboard";
 import ProtectedRoute from "./ProtectedRoutes";
 import UpdateUserForm from "../pages/user/UpdateUserForm";
 import Shelf from "../pages/user/Shelf";
+import ShelfWorkDetails from "../pages/user/ShelfWorkDetails";
 
 function AppRoutes() {
   return (
@@ -29,6 +30,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route path="/shelf/work/:id" element={<ShelfWorkDetails />} />
       <Route path="/works/:id" element={<Work />} />
       <Route path="/auth/register" element={<Register />} />
       <Route path="/auth/login" element={<Login />} />

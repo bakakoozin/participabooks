@@ -7,10 +7,8 @@ import sendResponse from "../helpers/sendResponse.js";
 
 const getAllUserWorks = async (req, res, next) => {
   const users_id = req.user.id;
-  console.log("Requête reçue pour /user/shelf");
   try {
     const [response] = await Shelf.findAll(users_id);
-
     if (response.length) {
       sendResponse(
         res,
@@ -32,7 +30,7 @@ const getOneUserWork = async (req, res, next) => {
     const works_id = req.params.id;
     try {
       const [response] = await Shelf.findOne(users_id, works_id);
-  
+      console.log('Réponse de la base de données:', response);
       if (response.length) {
         sendResponse(res, "Ouvrage récupéré.", 200, response);
         return;
