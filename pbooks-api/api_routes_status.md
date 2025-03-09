@@ -14,7 +14,7 @@
   - /profile/avatar      -> *(PATCH)*               ✅
   - /profile/theme       -> *(PATCH)*               ✅
   SHELF
-  - /shelf               -> *(GET tous)*            **en cours** 🟠
+  - /shelf               -> *(GET tous)*            **en cours** 🔴
   - /shelf/search        -> *(GET recherche)*       **en cours** 🟠
   - /shelf/volume        -> *(POST ajouter)*        **en cours** 🟠
   - /shelf/volume/status -> *(PATCH)*               **en cours** 🟠

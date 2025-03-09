@@ -64,6 +64,8 @@ const getOneUserWork = async (req, res, next) => {
 
 const addVolumeToShelf = async (req, res, next) => {
   const { users_id, volumes_id } = req.body;
+  console.log("Body reçu :", req.body);
+  console.log("Utilisateur :", req.user);
   try {
     await Shelf.insertVolume({ users_id, volumes_id });
     sendResponse(res, "Volume ajouté à la bibliothèque personnelle.", 201);
