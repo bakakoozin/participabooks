@@ -6,7 +6,8 @@ import sendResponse from "../helpers/sendResponse.js";
 //============================== GET =======================================//
 
 const getAllUserWorks = async (req, res, next) => {
-  const users_id = req.user.userId;
+  const users_id = req.user.id;
+  console.log("Requête reçue pour /user/shelf");
   try {
     const [response] = await Shelf.findAll(users_id);
 
@@ -27,7 +28,7 @@ const getAllUserWorks = async (req, res, next) => {
 };
 
 const getOneUserWork = async (req, res, next) => {
-    const users_id = req.user.userId;
+    const users_id = req.user.id;
     const works_id = req.params.id;
     try {
       const [response] = await Shelf.findOne(users_id, works_id);
@@ -64,8 +65,6 @@ const getOneUserWork = async (req, res, next) => {
 
 const addVolumeToShelf = async (req, res, next) => {
   const { users_id, volumes_id } = req.body;
-  console.log("Body reçu :", req.body);
-  console.log("Utilisateur :", req.user);
   try {
     await Shelf.insertVolume({ users_id, volumes_id });
     sendResponse(res, "Volume ajouté à la bibliothèque personnelle.", 201);

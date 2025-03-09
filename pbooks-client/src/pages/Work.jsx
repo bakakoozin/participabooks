@@ -42,7 +42,7 @@ function Work() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ volumes_id: volume.volumes_id, users_id: user.id }),
+        body: JSON.stringify({ volumes_id: volume.vol_id, users_id: user.id }),
         credentials: "include",
       });
 

@@ -12,10 +12,24 @@ function Shelf() {
   useEffect(() => {
     async function fetchWorks() {
       try {
-        const res = await fetch(`${API_URL}/works`);
+        const res = await fetch(`${API_URL}/user/shelf`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+  
+        if (res.status === 401) {
+          console.error("Non autorisé. Vérifiez votre authentification !");
+          return;
+        }
+  
         if (res.ok) {
           const { datas } = await res.json();
           setWorks(datas);
+        } else {
+          console.error("Erreur serveur:", res.status);
         }
       } catch (error) {
         console.error("Erreur lors de la récupération des données:", error);
@@ -33,7 +47,7 @@ function Shelf() {
 
   return (
     <section>
-      <h1>Bibliothèque Publique</h1>
+      <h1>Ma bibliothèque</h1>
 
       {/* Boutons de navigation */}
       <div className="slider-container">
@@ -50,7 +64,7 @@ function Shelf() {
               <h2>{work.works_name}</h2>
               <p>{work.works_type}</p>
               <p>{work.works_score}</p>
-              <Link to={`/works/${work.works_id}`}>
+              <Link to={`/ShelfWorks/${work.works_id}`}>
                 <img src={handleCover(work)} alt={work.works_name} />
               </Link>
               <p>{work.authors_name}</p>

@@ -12,7 +12,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/user/shelf" element={<Shelf />} />
+      <Route path="shelf" element={<Shelf />} />
       <Route
         path="dashboard"
         element={

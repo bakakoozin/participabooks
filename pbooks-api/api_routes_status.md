@@ -14,12 +14,12 @@
   - /profile/avatar      -> *(PATCH)*               ✅
   - /profile/theme       -> *(PATCH)*               ✅
   SHELF
-  - /shelf               -> *(GET tous)*            **en cours** 🔴
+  - /shelf               -> *(GET tous)*            ✅
   - /shelf/search        -> *(GET recherche)*       **en cours** 🟠
-  - /shelf/volume        -> *(POST ajouter)*        **en cours** 🟠
+  - /shelf/volume        -> *(POST ajouter)*        ✅
   - /shelf/volume/status -> *(PATCH)*               **en cours** 🟠
-  - /shelf/volume/:id    -> *(DELETE)*              **en cours** 🟠
-  - /shelf/work          -> *(POST ajouter)*        **en cours** 🟠
+  - /shelf/volume/:id    -> *(DELETE)*              **en cours** 🔴
+  - /shelf/work          -> *(POST ajouter)*        ✅
   - /shelf/work/:id      -> *(GET une)*             **en cours** 🟠
   - /shelf/work/:id      -> *(DELETE)*              **en cours** 🟠
   REVIEWS
