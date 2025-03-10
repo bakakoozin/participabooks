@@ -7,21 +7,21 @@
   - /session -> *(GET)*          `token requis` ✅
 
 - /user -> **en cours** 🟠 `token requis`
-  - /                    -> *(GET)*                 ✅
+  - /                    -> *(GET)*           ✅
   PROFILE
-  - /profile             -> *(PATCH)*               ✅
-  - /profile             -> *(DELETE)*              ✅
-  - /profile/avatar      -> *(PATCH)*               ✅
-  - /profile/theme       -> *(PATCH)*               ✅
+  - /profile             -> *(PATCH)*         ✅
+  - /profile             -> *(DELETE)*        ✅
+  - /profile/avatar      -> *(PATCH)*         ✅
+  - /profile/theme       -> *(PATCH)*         ✅
   SHELF
-  - /shelf               -> *(GET tous)*            ✅
-  - /shelf/search        -> *(GET recherche)*       **en cours** 🟠
-  - /shelf/volume        -> *(POST ajouter)*        ✅
-  - /shelf/volume/status -> *(PATCH)*               **en cours** 🟠
-  - /shelf/volume/:id    -> *(DELETE)*              **en cours** 🔴
-  - /shelf/work          -> *(POST ajouter)*        ✅
-  - /shelf/work/:id      -> *(GET une)*             **en cours** 🟠
-  - /shelf/work/:id      -> *(DELETE)*              **en cours** 🟠
+  - /shelf               -> *(GET tous)*      ✅
+  - /shelf/search        -> *(GET recherche)* **en cours** 🔴
+  - /shelf/volume        -> *(POST ajouter)*  ✅
+  - /shelf/volume/status -> *(PATCH)*         **en cours** 🔴
+  - /shelf/volume/:id    -> *(DELETE)*        ✅
+  - /shelf/work          -> *(POST ajouter)*  ✅
+  - /shelf/work/:id      -> *(GET une)*       ✅
+  - /shelf/work/:id      -> *(DELETE)*        ✅
   REVIEWS
   - /shelf/volumes/:id/reviews -> *(POST)*          **en cours** 🟠
   - /shelf/volumes/:id/reviews/comment -> *(PATCH)* **en cours** 🟠
@@ -31,7 +31,7 @@
 - /library -> **en cours** 🟠
   PUBLIC
   - /works        -> *(GET tous)*                               ✅
-  - /works/search -> *(GET recherche)*                          **en cours** 🟠
+  - /works/search -> *(GET recherche)*                          **en cours** 🔴
   - /works/:id    -> *(GET une)*                                ✅
   - /volumes/:id/reviews -> *(GET)*                             **en cours** 🟠
   USERS

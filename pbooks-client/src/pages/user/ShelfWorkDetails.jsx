@@ -13,11 +13,11 @@ function ShelfWorkDetails() {
     async function fetchUserWork() {
       try {
         const res = await fetch(`${API_URL}/user/shelf/work/${id}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
         });
         if (res.ok) {
           const { datas } = await res.json();
@@ -33,6 +33,23 @@ function ShelfWorkDetails() {
     fetchUserWork();
   }, []);
 
+  async function handleRemoveVolumeFromShelf(volume) {
+    try {
+      const response = await fetch(`${API_URL}/user/shelf/volume/${volume.vol_id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json", },
+        credentials: "include",
+      });
+      if (response.ok) {
+        console.log("Supprimé de la bibliothèque personnelle");
+      } else {
+        console.error("Erreur lors de la suppression de la bibliothèque personnelle");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la bibliothèque personnelle:", error);
+    }
+  }
+
   function handleCover(volume) {
     if (volume.url_media) {
       return `${URL_MEDIAS}medias/${volume.url_media}`;
@@ -47,35 +64,35 @@ function ShelfWorkDetails() {
   const workInfo = volumes.length > 0 ? volumes[0] : {};
 
   return (
-      <section>
-        <h1>Ma bibliothèque</h1>
+    <section>
+      <h1>Ma bibliothèque</h1>
 
-        {/* Afficher les informations de l'ouvrage une seule fois */}
-        {workInfo && (
-          <article className="work-card">
-            <h2>{workInfo.works_name}</h2>
-            <p>Type d&apos;ouvrage : {workInfo.works_type}</p>
-            <p>Édition : {workInfo.works_edition}</p>
-            <p>Format de l&apos;ouvrage : {workInfo.works_format}</p>
-          </article>
-        )}
+      {/* Afficher les informations de l'ouvrage une seule fois */}
+      {workInfo && (
+        <article className="work-card">
+          <h2>{workInfo.works_name}</h2>
+          <p>Type d&apos;ouvrage : {workInfo.works_type}</p>
+          <p>Édition : {workInfo.works_edition}</p>
+          <p>Format de l&apos;ouvrage : {workInfo.works_format}</p>
+        </article>
+      )}
 
-        {/* Afficher les volumes associés */}
-        {volumes.map((volume) => (
-          <aside key={volume.vol_id} className="volume-card">
-            <h3>
-              {volume.vol_num}. {volume.vol_title}
-            </h3>
-            <p>{volume.vol_score}</p>
-            <p>{volume.authors_name}</p>
-            <img src={handleCover(volume)} alt={volume.vol_title} />
-            <p>ISBN : {volume.vol_isbn}</p>
-            <h3>Résumé</h3>
-            <p>{volume.vol_summary}</p>
-                {/* <button onClick={() => handleDeleteVolumeFromShelf(volume)}>Supprimer de ma bibliothèque</button> */}
-          </aside>
-        ))}
-      </section>
+      {/* Afficher les volumes associés */}
+      {volumes.map((volume) => (
+        <aside key={volume.vol_id} className="volume-card">
+          <h3>
+            {volume.vol_num}. {volume.vol_title}
+          </h3>
+          <p>{volume.vol_score}</p>
+          <p>{volume.authors_name}</p>
+          <img src={handleCover(volume)} alt={volume.vol_title} />
+          <p>ISBN : {volume.vol_isbn}</p>
+          <h3>Résumé</h3>
+          <p>{volume.vol_summary}</p>
+          <button onClick={() => handleRemoveVolumeFromShelf(volume)}>Supprimer de ma bibliothèque</button>
+        </aside>
+      ))}
+    </section>
   );
 }
 

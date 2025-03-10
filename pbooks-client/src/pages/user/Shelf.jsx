@@ -39,6 +39,26 @@ function Shelf() {
     fetchWorks();
   }, []);
 
+async function handleRemoveFromShelf(work) {
+    try {
+      const response = await fetch (`${API_URL}/user/shelf/work/${work.works_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        console.log("Supprimé de la bibliothèque personnelle");
+      } else {
+        console.error("Erreur lors de la suppression de la bibliothèque personnelle");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la bibliothèque personnelle:", error);
+    }
+  }
+
   function handleCover(work) {
     return work.cover_url
       ? `${URL_MEDIAS}medias/${work.cover_url}`
@@ -70,6 +90,7 @@ function Shelf() {
               <p>{work.authors_name}</p>
               <p>{work.works_edition}</p>
               <p>{work.works_format}</p>
+              <button onClick={() => handleRemoveFromShelf(work)}>Supprimer</button>
             </article>
           ))}
         </div>
