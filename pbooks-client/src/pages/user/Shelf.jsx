@@ -7,6 +7,7 @@ import notFoundCover from "/not-found.png";
 
 function Shelf() {
   const [works, setWorks] = useState([]);
+  const [search, setSearch] = useState("");
   const sliderRef = useRef(null);
 
   useEffect(() => {
@@ -19,12 +20,12 @@ function Shelf() {
           },
           credentials: "include",
         });
-  
+
         if (res.status === 401) {
           console.error("Non autorisé. Vérifiez votre authentification !");
           return;
         }
-  
+
         if (res.ok) {
           const { datas } = await res.json();
           setWorks(datas);
@@ -39,23 +40,56 @@ function Shelf() {
     fetchWorks();
   }, []);
 
-async function handleRemoveFromShelf(work) {
+  async function handleSearch(value) {
+    setSearch(value);
     try {
-      const response = await fetch (`${API_URL}/user/shelf/work/${work.works_id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${API_URL}/user/shelf/search?q=${encodeURIComponent(value)}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (res.ok) {
+        const { datas } = await res.json();
+        setWorks(datas);
+      } else {
+        console.error("Erreur serveur:", res.status);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la recherche:", error);
+    }
+  }
+
+  async function handleRemoveFromShelf(work) {
+    try {
+      const response = await fetch(
+        `${API_URL}/user/shelf/work/${work.works_id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         console.log("Supprimé de la bibliothèque personnelle");
       } else {
-        console.error("Erreur lors de la suppression de la bibliothèque personnelle");
+        console.error(
+          "Erreur lors de la suppression de la bibliothèque personnelle"
+        );
       }
     } catch (error) {
-      console.error("Erreur lors de la suppression de la bibliothèque personnelle:", error);
+      console.error(
+        "Erreur lors de la suppression de la bibliothèque personnelle:",
+        error
+      );
     }
   }
 
@@ -68,6 +102,14 @@ async function handleRemoveFromShelf(work) {
   return (
     <section>
       <h1>Ma bibliothèque</h1>
+
+      <input
+        className="search-bar"
+        type="text"
+        placeholder="Rechercher..."
+        value={search}
+        onChange={(e) => handleSearch(e.target.value)}
+      />
 
       {/* Boutons de navigation */}
       <div className="slider-container">
@@ -90,7 +132,9 @@ async function handleRemoveFromShelf(work) {
               <p>{work.authors_name}</p>
               <p>{work.works_edition}</p>
               <p>{work.works_format}</p>
-              <button onClick={() => handleRemoveFromShelf(work)}>Supprimer</button>
+              <button onClick={() => handleRemoveFromShelf(work)}>
+                Supprimer
+              </button>
             </article>
           ))}
         </div>

@@ -26,37 +26,38 @@ const getAllUserWorks = async (req, res, next) => {
 };
 
 const getOneUserWork = async (req, res, next) => {
-  const users_id = req.user.id;
-  const works_id = req.params.id;
-  try {
-    const [response] = await Shelf.findOne({ users_id, works_id });
-    if (response.length) {
-      sendResponse(res, "Ouvrage récupéré.", 200, response);
+    const users_id = req.user.id;
+    const works_id = req.params.id;
+    try {
+      const [response] = await Shelf.findOne(users_id, works_id);
+      console.log('Réponse de la base de données:', response);
+      if (response.length) {
+        sendResponse(res, "Ouvrage récupéré.", 200, response);
+        return;
+      }
+      sendResponse(res, "Aucun ouvrage récupéré.", 400);
       return;
+    } catch (error) {
+      next(error);
     }
-    sendResponse(res, "Aucun ouvrage récupéré.", 400);
-    return;
-  } catch (error) {
-    next(error);
-  }
-};
+  };
 
-const getBySearchOnShelf = async (req, res, next) => {
-  const users_id = req.user.userId;
-  const formattedSearch = req.query.q ? req.query.q.trim() : null;
-  try {
-    const [response] = await Shelf.findBySearch(users_id, formattedSearch);
-
-    if (response.length) {
-      sendResponse(res, "Ouvrage trouvé.", 200, response);
+  const getBySearchOnShelf = async (req, res, next) => {
+    const users_id = req.user.userId;
+    const formattedSearch = req.query.q ? req.query.q.trim() : null;
+    try {
+      const [response] = await Shelf.findBySearch(users_id, formattedSearch);
+  
+      if (response.length) {
+        sendResponse(res, "Ouvrage trouvé.", 200, response);
+        return;
+      }
+      sendResponse(res, "Aucun ouvrage trouvé.", 400);
       return;
+    } catch (error) {
+      next(error);
     }
-    sendResponse(res, "Aucun ouvrage trouvé.", 400);
-    return;
-  } catch (error) {
-    next(error);
-  }
-};
+  };
 
 //============================== POST =======================================//
 
@@ -138,9 +139,9 @@ const updateStatusOnShelf = async (req, res, next) => {
 
 const updateScore = async (req, res, next) => {
   try {
-    const [response] = await Review.updateScore(req.body.score, req.params.id);
+    const [response] = await Review.updateScore( req.body.score, req.params.id );
     if (response.affectedRows) {
-      res.json({ message: "Note mise à jour." });
+      res.json({ message: "Note mise à jour."});
     }
     res.status(400).json({ message: "Erreur lors de la mise à jour de la note." });
   } catch (error) {
@@ -150,9 +151,9 @@ const updateScore = async (req, res, next) => {
 
 const updateComment = async (req, res, next) => {
   try {
-    const [response] = await Review.updateComment(req.body.comment, req.params.id);
+    const [response] = await Review.updateComment( req.body.comment, req.params.id );
     if (response.affectedRows) {
-      res.json({ message: "Commentaire mis à jour." });
+      res.json({ message: "Commentaire mis à jour."});
     }
     res.status(400).json({ message: "Erreur lors de la mise à jour du commentaire." });
   } catch (error) {
@@ -164,7 +165,7 @@ const updateComment = async (req, res, next) => {
 
 const removeVolumeFromShelf = async (req, res, next) => {
   try {
-    const [response] = await Shelf.deleteVolume({ volumes_id: req.params.id });
+    const [response] = await Shelf.deleteVolume(req.params.id);
     if (response.affectedRows) {
       sendResponse(res, "Volume retiré de la bibliothèque personnelle.", 200);
       return;
@@ -178,7 +179,7 @@ const removeVolumeFromShelf = async (req, res, next) => {
 
 const removeWorkFromShelf = async (req, res, next) => {
   try {
-    const [response] = await Shelf.deleteAllVolumes({ works_id: req.params.id });
+    const [response] = await Shelf.deleteAllVolumes(req.params.id);
     if (response.affectedRows) {
       sendResponse(res, "Ouvrage retiré de la bibliothèque personnelle.", 200);
       return;
