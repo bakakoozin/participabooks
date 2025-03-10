@@ -43,10 +43,13 @@ const getOneUserWork = async (req, res, next) => {
   };
 
   const getBySearchOnShelf = async (req, res, next) => {
-    const users_id = req.user.userId;
+    const users_id = req.user.id;
+    console.log('users_id:', users_id);
     const formattedSearch = req.query.q ? req.query.q.trim() : null;
+    console.log('formattedSearch:', formattedSearch);
     try {
       const [response] = await Shelf.findBySearch(users_id, formattedSearch);
+      console.log('Réponse de la base de données:', response);
   
       if (response.length) {
         sendResponse(res, "Ouvrage trouvé.", 200, response);

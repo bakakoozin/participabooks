@@ -7,7 +7,8 @@ import notFoundCover from "/not-found.png";
 
 function Shelf() {
   const [works, setWorks] = useState([]);
-  const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   const sliderRef = useRef(null);
 
   useEffect(() => {
@@ -20,12 +21,10 @@ function Shelf() {
           },
           credentials: "include",
         });
-
         if (res.status === 401) {
           console.error("Non autorisé. Vérifiez votre authentification !");
           return;
         }
-
         if (res.ok) {
           const { datas } = await res.json();
           setWorks(datas);
@@ -36,12 +35,17 @@ function Shelf() {
         console.error("Erreur lors de la récupération des données:", error);
       }
     }
-
     fetchWorks();
   }, []);
 
   async function handleSearch(value) {
-    setSearch(value);
+    setSearchQuery(value); // Met à jour la valeur de recherche
+    if (value === "") {
+      // Réinitialiser les résultats de la recherche si la barre est vide
+      setSearchResults(works);
+      return;
+    }
+
     try {
       const res = await fetch(
         `${API_URL}/user/shelf/search?q=${encodeURIComponent(value)}`,
@@ -53,10 +57,9 @@ function Shelf() {
           credentials: "include",
         }
       );
-
       if (res.ok) {
         const { datas } = await res.json();
-        setWorks(datas);
+        setSearchResults(datas); // Met à jour les résultats de la recherche
       } else {
         console.error("Erreur serveur:", res.status);
       }
@@ -99,6 +102,8 @@ function Shelf() {
       : notFoundCover;
   }
 
+  const displayWorks = searchQuery ? searchResults : works;
+
   return (
     <section>
       <h1>Ma bibliothèque</h1>
@@ -107,8 +112,8 @@ function Shelf() {
         className="search-bar"
         type="text"
         placeholder="Rechercher..."
-        value={search}
-        onChange={(e) => handleSearch(e.target.value)}
+        value={searchQuery}
+        onChange={(e) => handleSearch(e.target.value)} // Déclenche la recherche au changement
       />
 
       {/* Boutons de navigation */}
@@ -121,7 +126,8 @@ function Shelf() {
         </button>
 
         <div className="slider" ref={sliderRef}>
-          {works.map((work) => (
+        {displayWorks.length > 0 ? (
+            displayWorks.map((work) => (
             <article key={work.works_id} className="work-card">
               <h2>{work.works_name}</h2>
               <p>{work.works_type}</p>
@@ -136,7 +142,9 @@ function Shelf() {
                 Supprimer
               </button>
             </article>
-          ))}
+          ))) : (
+            <p>Aucun résultat trouvé pour {searchQuery}</p>
+          )}
         </div>
 
         <button
