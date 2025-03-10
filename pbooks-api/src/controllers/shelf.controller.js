@@ -29,8 +29,7 @@ const getOneUserWork = async (req, res, next) => {
     const users_id = req.user.id;
     const works_id = req.params.id;
     try {
-      const [response] = await Shelf.findOne(users_id, works_id);
-      console.log('Réponse de la base de données:', response);
+      const [response] = await Shelf.findOne({ users_id, works_id });
       if (response.length) {
         sendResponse(res, "Ouvrage récupéré.", 200, response);
         return;

@@ -12,7 +12,6 @@ function ShelfWorkDetails() {
   useEffect(() => {
     async function fetchUserWork() {
       try {
-        console.log(`Appel à l'API: ${API_URL}/user/shelf/work/${id}`);
         const res = await fetch(`${API_URL}/user/shelf/work/${id}`, {
             method: "GET",
             headers: {
