@@ -47,6 +47,9 @@ function Header() {
             <NavLink to="shelf" end onClick={handleClick}>
               Ma bibliothèque
             </NavLink>
+            <NavLink to="creator" end onClick={handleClick}>
+              Créer
+            </NavLink>
             <NavLink to="dashboard" end onClick={handleClick}>
               Profil
             </NavLink>

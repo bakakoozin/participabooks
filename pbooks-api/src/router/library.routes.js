@@ -1,4 +1,5 @@
 import { Router } from "express";
+import verifyToken from "../middlewares/verifyToken.js";
 
 import {
   getAll,
@@ -22,7 +23,7 @@ router.get("/:id", getOne);
 router.get("/volumes/:id/reviews", getReviews);
 
 //USERS
-router.post("/create", create);
+router.post("/create", verifyToken, create);
 router.delete("/:id", removeWork);
 router.patch("/:id", update);
 router.delete("/volumes/:id", removeVolume);

@@ -90,14 +90,16 @@ function Home() {
   return (
     <section>
       <h1>Bibliothèque Publique</h1>
+
       <input
+    
         className="search-bar"
         type="text"
         placeholder="Rechercher..."
         value={searchQuery}
         onChange={(e) => handleSearch(e.target.value)} // Déclenche la recherche au changement
       />
-      {/* Boutons de navigation */}
+
       <div className="slider-container">
         <button
           className="nav-button left"

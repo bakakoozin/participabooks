@@ -29,7 +29,7 @@ const getOneUserWork = async (req, res, next) => {
     const users_id = req.user.id;
     const works_id = req.params.id;
     try {
-      const [response] = await Shelf.findOne(users_id, works_id);
+      const [response] = await Shelf.findOne({users_id, works_id});
       console.log('Réponse de la base de données:', response);
       if (response.length) {
         sendResponse(res, "Ouvrage récupéré.", 200, response);
@@ -48,7 +48,7 @@ const getOneUserWork = async (req, res, next) => {
     const formattedSearch = req.query.q ? req.query.q.trim() : null;
     console.log('formattedSearch:', formattedSearch);
     try {
-      const [response] = await Shelf.findBySearch(users_id, formattedSearch);
+      const [response] = await Shelf.findBySearch({users_id, formattedSearch});
       console.log('Réponse de la base de données:', response);
   
       if (response.length) {

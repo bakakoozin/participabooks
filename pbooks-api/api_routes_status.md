@@ -15,7 +15,7 @@
   - /profile/theme       -> *(PATCH)*         ✅
   SHELF
   - /shelf               -> *(GET tous)*      ✅
-  - /shelf/search        -> *(GET recherche)* **en cours** 🔴
+  - /shelf/search        -> *(GET recherche)* **en cours** ❗ Problème à résoudre
   - /shelf/volume        -> *(POST ajouter)*  ✅
   - /shelf/volume/status -> *(PATCH)*         **en cours** 🔴
   - /shelf/volume/:id    -> *(DELETE)*        ✅
@@ -31,11 +31,11 @@
 - /library -> **en cours** 🟠
   PUBLIC
   - /works        -> *(GET tous)*                               ✅
-  - /works/search -> *(GET recherche)*                          **en cours** 🔴
+  - /works/search -> *(GET recherche)*                          **en cours** ❗ Problème à résoudre
   - /works/:id    -> *(GET une)*                                ✅
   - /volumes/:id/reviews -> *(GET)*                             **en cours** 🟠
   USERS
-  - /works/create -> *(POST créer)*              `token requis` **en cours** 🟠
+  - /works/create -> *(POST créer)*              `token requis` **en cours** 🔴
   - /works/:id -> *(PATCH)*                      `token requis` **en cours** 🟠
   - /works/:id -> *(DELETE)*                     `token requis` **en cours** 🟠
   - /volumes/:id -> *(DELETE)*                   `token requis` **en cours** 🟠
