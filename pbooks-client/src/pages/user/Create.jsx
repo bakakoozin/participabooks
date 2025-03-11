@@ -237,7 +237,7 @@ function Creator() {
           />
           <label htmlFor="creator_visibility">
             Je souhaite rendre mon pseudo visible en tant que créateur de ce
-            volume
+            volume supprimer ce mot
           </label>
         </div>
         <button type="submit">Valider</button>
