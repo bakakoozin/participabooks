@@ -8,6 +8,8 @@ import notFoundCover from "/not-found.png";
 
 function Home() {
   const [works, setWorks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   const sliderRef = useRef(null);
   const { isLogged, infos: user } = useSelector((state) => state.auth);
 
@@ -26,6 +28,35 @@ function Home() {
 
     fetchWorks();
   }, []);
+
+  async function handleSearch(value) {
+    setSearchQuery(value);
+    if (value === "") {
+      setSearchResults(works);
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `${API_URL}/user/shelf/search?q=${encodeURIComponent(value)}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      if (res.ok) {
+        const { datas } = await res.json();
+        setSearchResults(datas);
+      } else {
+        console.error("Erreur serveur:", res.status);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la recherche:", error);
+    }
+  }
 
   function handleCover(work) {
     return work.cover_url
@@ -54,10 +85,18 @@ function Home() {
     }
   }
 
+  const displayWorks = searchQuery ? searchResults : works;
+
   return (
     <section>
       <h1>Bibliothèque Publique</h1>
-
+      <input
+        className="search-bar"
+        type="text"
+        placeholder="Rechercher..."
+        value={searchQuery}
+        onChange={(e) => handleSearch(e.target.value)} // Déclenche la recherche au changement
+      />
       {/* Boutons de navigation */}
       <div className="slider-container">
         <button
@@ -68,7 +107,8 @@ function Home() {
         </button>
 
         <div className="slider" ref={sliderRef}>
-          {works.map((work) => (
+        {displayWorks.length > 0 ? (
+            displayWorks.map((work) => (
             <article key={work.works_id} className="work-card">
               <h2>{work.works_name}</h2>
               <p>{work.works_type}</p>
@@ -83,7 +123,9 @@ function Home() {
                 <button onClick={() => handleAddWorkToShelf(work)}>Ajouter à ma bibliothèque</button>
               )}
             </article>
-          ))}
+          ))) : (
+            <p>Aucun résultat trouvé pour {searchQuery}</p>
+          )}
         </div>
 
         <button

@@ -26,16 +26,19 @@ const getAll = async (req, res, next) => {
 };
 
 const getBySearch = async (req, res, next) => {
-  const formattedSearch = req.query.q ? req.query.q.trim() : null;
   try {
+    const formattedSearch = req.query.q?.trim() || "";
+    if (!formattedSearch) {
+      return sendResponse(res, "Paramètre de recherche requis.", 400);
+    }
+
     const [response] = await Work.findBySearch(formattedSearch);
 
-    if (response.length) {
-      sendResponse(res, "Ouvrage trouvé.", 200, response);
-      return;
+    if (response.length > 0) {
+      return sendResponse(res, "Ouvrage trouvé.", 200, response);
     }
-    sendResponse(res, "Aucun ouvrage trouvé.", 400);
-    return;
+    
+    return sendResponse(res, "Aucun ouvrage trouvé.", 404);
   } catch (error) {
     next(error);
   }

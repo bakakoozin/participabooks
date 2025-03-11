@@ -39,9 +39,8 @@ function Shelf() {
   }, []);
 
   async function handleSearch(value) {
-    setSearchQuery(value); // Met à jour la valeur de recherche
+    setSearchQuery(value);
     if (value === "") {
-      // Réinitialiser les résultats de la recherche si la barre est vide
       setSearchResults(works);
       return;
     }
@@ -59,7 +58,7 @@ function Shelf() {
       );
       if (res.ok) {
         const { datas } = await res.json();
-        setSearchResults(datas); // Met à jour les résultats de la recherche
+        setSearchResults(datas);
       } else {
         console.error("Erreur serveur:", res.status);
       }
