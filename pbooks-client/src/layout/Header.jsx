@@ -61,12 +61,12 @@ function Header() {
         <FontAwesomeIcon icon={faBars} />
       </div>
       <div className="user-infos">
+      <p>{isLogged ? infos.pseudo : "non connecté"}</p>
         {!isLogged || (infos.avatar === null) ? (
           <FontAwesomeIcon icon={faCircleUser} />
         ) : (
           <img src={`${URL_MEDIAS}avatars/${infos.avatar}`} alt={pseudo} />
         )}
-        <p>{isLogged ? infos.pseudo : "non connecté"}</p>
       </div>
     </header>
   );
