@@ -37,7 +37,7 @@ const getBySearch = async (req, res, next) => {
     if (response.length > 0) {
       return sendResponse(res, "Ouvrage trouvé.", 200, response);
     }
-    
+
     return sendResponse(res, "Aucun ouvrage trouvé.", 404);
   } catch (error) {
     next(error);
@@ -92,9 +92,11 @@ const getReviews = async (req, res, next) => {
 //============================== POST =======================================//
 
 const create = async (req, res, next) => {
-  const form = new formidable.IncomingForm();
+  const form = formidable();
 
   form.parse(req, async (err, fields, files) => {
+    console.log(fields); // Vérifie le contenu des champs envoyés
+console.log(files);
     if (err) {
       return res
         .status(400)
@@ -119,8 +121,6 @@ const create = async (req, res, next) => {
     try {
       await connection.beginTransaction();
 
-      // const authorId = await Author.findOrCreateAuthor(author);
-
       const worksId = await Work.findOrCreateWork({
         name,
         edition,
@@ -138,8 +138,7 @@ const create = async (req, res, next) => {
         users_id,
       });
 
-      const parseAuthors =
-        typeof authors === "string" ? JSON.parse(authors) : authors;
+      const parseAuthors = authors ? JSON.parse(authors) : [];
 
       if (Array.isArray(parseAuthors) && parseAuthors.length > 0) {
         await Promise.all(
@@ -163,6 +162,7 @@ const create = async (req, res, next) => {
         volumesId,
       });
     } catch (error) {
+      console.error("Erreur interne du serveur : ", error);
       await connection.rollback();
       res
         .status(500)

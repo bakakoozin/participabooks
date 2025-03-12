@@ -59,6 +59,7 @@
 	.user-infos {
 		display: flex;
 		align-items: center;
+		font-size: 3rem;
 
 		img {
 			width: 30px;
@@ -66,6 +67,7 @@
 			border-radius: 50%;
 		}
 		p {
+			font-size: $font-size;
 			margin-right: 1rem;
 		}
 	}

@@ -17,8 +17,8 @@ function Creator() {
     number: "",
     title: "",
     isbn: "",
-    description: "",
-    creator_visibility: "1",
+    summary: "",
+    creator_visibility: false, // Mettre à jour l'état pour la case à cocher
     media: null,
     authors: [""],
   });
@@ -26,7 +26,7 @@ function Creator() {
   const [message, setMessage] = useState("");
 
   function handleChange(e) {
-    const { name, value, files } = e.target;
+    const { name, value, checked, files } = e.target;
     if (name === "media") {
       setFormData((prevData) => ({
         ...prevData,
@@ -40,10 +40,15 @@ function Creator() {
         ...prevData,
         authors: newAuthors,
       }));
+    } else if (name === "creator_visibility") {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: checked,
+      }));
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value,
+        [name]: value || "",  // Ajout de cette ligne pour s'assurer que les valeurs vides ne sont pas undefined
       }));
     }
   }
@@ -58,30 +63,28 @@ function Creator() {
   async function handleSubmit(e) {
     e.preventDefault();
     const newFormData = new FormData();
-    newFormData.append("name", formData.name);
-    newFormData.append("edition", formData.edition);
-    newFormData.append("type", formData.type);
-    newFormData.append("format", formData.format);
-    newFormData.append("number", formData.number);
-    newFormData.append("title", formData.title);
-    newFormData.append("isbn", formData.isbn);
-    newFormData.append("description", formData.description);
-    newFormData.append("creator_visibility", formData.creator_visibility);
-    if (formData.image) {
-      newFormData.append("image", formData.image);
+    newFormData.append("name", formData.name || "");  // Remplacer undefined par une chaîne vide
+    newFormData.append("edition", formData.edition || "");
+    newFormData.append("type", formData.type || "");
+    newFormData.append("format", formData.format || "");
+    newFormData.append("number", formData.number || null);  // Remplacer "" par null si non renseigné
+    newFormData.append("title", formData.title || "");
+    newFormData.append("isbn", formData.isbn || "");
+    newFormData.append("summary", formData.summary || "");  // Assurez-vous que summary n'est pas undefined
+    newFormData.append("creator_visibility", formData.creator_visibility ? "1" : "0");
+    
+    if (formData.media) {
+      newFormData.append("media", formData.media);
     }
+    
     formData.authors.forEach((author, index) => {
-      newFormData.append(`author-${index}`, author);
+      newFormData.append(`author-${index}`, author || ""); // Remplacer undefined pour les auteurs
     });
     try {
-      const response = await fetch(`${API_URL}/create`, {
-        // à modifier
+      const response = await fetch(`${API_URL}/works/create`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         credentials: "include",
-        body: JSON.stringify(newFormData),
+        body: newFormData,
       });
 
       if (response.ok) {
@@ -91,9 +94,9 @@ function Creator() {
         });
         if (checkSession.ok) {
           const resJSON = await checkSession.json();
-          dispatch(login(resJSON.user)); // à modifier
+          dispatch(login(resJSON.user));
           toast.success("Ouvrage créé!");
-          navigate("/"); // à modifier
+          navigate("/");
         } else {
           toast.error(
             "Échec de la vérification de la session. Veuillez réessayer."
@@ -149,7 +152,7 @@ function Creator() {
               checked={formData.type === "BD"}
               onChange={handleChange}
             />
-            <label htmlFor="choice">BD</label>
+            <label htmlFor="BD">BD</label>
             <input
               type="radio"
               id="Livre"
@@ -158,7 +161,7 @@ function Creator() {
               checked={formData.type === "Livre"}
               onChange={handleChange}
             />
-            <label htmlFor="choice">Livre</label>
+            <label htmlFor="Livre">Livre</label>
             <input
               type="radio"
               id="Manga"
@@ -167,7 +170,7 @@ function Creator() {
               checked={formData.type === "Manga"}
               onChange={handleChange}
             />
-            <label htmlFor="choice">Manga</label>
+            <label htmlFor="Manga">Manga</label>
           </div>
         </div>
         <div>
@@ -181,7 +184,7 @@ function Creator() {
               checked={formData.format === "livre"}
               onChange={handleChange}
             />
-            <label htmlFor="choice">livre</label>
+            <label htmlFor="livre">livre</label>
             <input
               type="radio"
               id="poche"
@@ -190,7 +193,7 @@ function Creator() {
               checked={formData.format === "poche"}
               onChange={handleChange}
             />
-            <label htmlFor="choice">poche</label>
+            <label htmlFor="poche">poche</label>
             <input
               type="radio"
               id="ebook"
@@ -199,7 +202,7 @@ function Creator() {
               checked={formData.format === "ebook"}
               onChange={handleChange}
             />
-            <label htmlFor="choice">ebook</label>
+            <label htmlFor="ebook">ebook</label>
             <input
               type="radio"
               id="comics"
@@ -208,7 +211,7 @@ function Creator() {
               checked={formData.format === "comics"}
               onChange={handleChange}
             />
-            <label htmlFor="choice">comics</label>
+            <label htmlFor="comics">comics</label>
             <input
               type="radio"
               id="manga"
@@ -217,7 +220,7 @@ function Creator() {
               checked={formData.format === "manga"}
               onChange={handleChange}
             />
-            <label htmlFor="choice">manga</label>
+            <label htmlFor="manga">manga</label>
           </div>
         </div>
         <div>
@@ -255,23 +258,9 @@ function Creator() {
           <textarea
             id="summary"
             name="summary"
-            value={formData.description}
+            value={formData.summary}
             onChange={handleChange}
           />
-        </div>
-        <div>
-          <input
-            type="radio"
-            id="creator-visibility"
-            name="creator_visibility"
-            value="1"
-            checked={formData.format === "1"}
-            onChange={handleChange}
-          />
-          <label htmlFor="creator_visibility">
-            Je souhaite rendre mon pseudo visible en tant que créateur de ce
-            volume
-          </label>
         </div>
         {formData.authors.map((author, index) => (
           <div key={index}>
@@ -289,7 +278,7 @@ function Creator() {
           Ajouter un auteur
         </button>
         <div>
-        <label htmlFor="media">Image de couverture</label>
+          <label htmlFor="media">Image de couverture</label>
           <input
             type="file"
             id="media"
@@ -297,6 +286,19 @@ function Creator() {
             accept="image/*"
             onChange={handleChange}
           />
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            id="creator_visibility"
+            name="creator_visibility"
+            checked={formData.creator_visibility}
+            onChange={handleChange}
+          />
+          <label htmlFor="creator_visibility">
+            Je souhaite rendre mon pseudo visible en tant que créateur de ce
+            volume
+          </label>
         </div>
         <button type="submit">Valider</button>
       </form>
