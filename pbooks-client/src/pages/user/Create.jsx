@@ -1,47 +1,80 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { login } from "../../features/authSlice";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 
 function Creator() {
-  const { infos } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    pseudo: infos.pseudo || "",
-    email: infos.email || "",
-    password: "",
-    passwordCheck: "",
+    name: "",
+    edition: "",
+    type: "",
+    format: "",
+    number: "",
+    title: "",
+    isbn: "",
+    description: "",
+    creator_visibility: "1",
+    media: null,
+    authors: [""],
   });
 
   const [message, setMessage] = useState("");
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
+    if (name === "media") {
+      setFormData((prevData) => ({
+        ...prevData,
+        media: files[0],
+      }));
+    } else if (name.startsWith("author")) {
+      const index = parseInt(name.split("-")[1], 10);
+      const newAuthors = [...formData.authors];
+      newAuthors[index] = value;
+      setFormData((prevData) => ({
+        ...prevData,
+        authors: newAuthors,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  }
+
+  function addAuthor() {
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      authors: [...prevData.authors, ""],
     }));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const newFormData = {
-      name: formData.name,
-      edition: formData.edition,
-      type: formData.type,
-      format: formData.format,
-      number: formData.number,
-      title: formData.title,
-      isbn: formData.isbn,
-      description: formData.description,
-      creator_visibility: formData.creator_visibility,
-    };
+    const newFormData = new FormData();
+    newFormData.append("name", formData.name);
+    newFormData.append("edition", formData.edition);
+    newFormData.append("type", formData.type);
+    newFormData.append("format", formData.format);
+    newFormData.append("number", formData.number);
+    newFormData.append("title", formData.title);
+    newFormData.append("isbn", formData.isbn);
+    newFormData.append("description", formData.description);
+    newFormData.append("creator_visibility", formData.creator_visibility);
+    if (formData.image) {
+      newFormData.append("image", formData.image);
+    }
+    formData.authors.forEach((author, index) => {
+      newFormData.append(`author-${index}`, author);
+    });
     try {
-      const response = await fetch(`${API_URL}/user/profile`, {
+      const response = await fetch(`${API_URL}/create`, {
         // à modifier
         method: "POST",
         headers: {
@@ -59,8 +92,8 @@ function Creator() {
         if (checkSession.ok) {
           const resJSON = await checkSession.json();
           dispatch(login(resJSON.user)); // à modifier
-          toast.success("Mise à jour réussie.");
-          navigate("/dashboard"); // à modifier
+          toast.success("Ouvrage créé!");
+          navigate("/"); // à modifier
         } else {
           toast.error(
             "Échec de la vérification de la session. Veuillez réessayer."
@@ -69,11 +102,11 @@ function Creator() {
       } else {
         const resJSON = await response.json();
         toast.error(
-          resJSON.message || "Échec de la mise à jour. Veuillez réessayer."
+          resJSON.message || "Échec de la création. Veuillez réessayer."
         );
       }
     } catch (error) {
-      console.error("Erreur lors de la mise à jour.", error);
+      console.error("Erreur lors de la création.", error);
       setMessage("Erreur s'est produite. Veuillez réessayer.");
     }
   }
@@ -237,8 +270,33 @@ function Creator() {
           />
           <label htmlFor="creator_visibility">
             Je souhaite rendre mon pseudo visible en tant que créateur de ce
-            volume supprimer ce mot
+            volume
           </label>
+        </div>
+        {formData.authors.map((author, index) => (
+          <div key={index}>
+            <label htmlFor={`author-${index}`}>Auteur {index + 1}</label>
+            <input
+              type="text"
+              id={`author-${index}`}
+              name={`author-${index}`}
+              value={author}
+              onChange={handleChange}
+            />
+          </div>
+        ))}
+        <button type="button" onClick={addAuthor}>
+          Ajouter un auteur
+        </button>
+        <div>
+        <label htmlFor="media">Image de couverture</label>
+          <input
+            type="file"
+            id="media"
+            name="media"
+            accept="image/*"
+            onChange={handleChange}
+          />
         </div>
         <button type="submit">Valider</button>
       </form>
