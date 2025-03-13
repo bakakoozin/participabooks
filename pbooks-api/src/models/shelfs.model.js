@@ -3,7 +3,7 @@ import pool from "../config/db.js";
 class Shelf {
   //============================== SELECT =======================================//
 
-  static async findAll(users_id) {
+  static async findAll(users_id, search = "") {
     const FIND_ALL_WORKS = `
       SELECT 
         works.id AS works_id, 
@@ -26,8 +26,9 @@ class Shelf {
       LEFT JOIN reviews ON reviews.volumes_id = volumes.id AND reviews.users_id = ?
       LEFT JOIN shelfs ON shelfs.volumes_id = volumes.id
       WHERE shelfs.users_id = ?
+      AND (works.name LIKE CONCAT(?) OR volumes.title LIKE CONCAT(?))
       GROUP BY works.id, works.name`;
-    return await pool.query(FIND_ALL_WORKS, [users_id, users_id]);
+    return await pool.query(FIND_ALL_WORKS, [users_id, users_id, `%${search}%`, `%${search}%`]);
   }
 
   static async findOne({ users_id, works_id }) {
@@ -62,44 +63,6 @@ class Shelf {
       GROUP BY volumes.id, works.id, users.id, medias.url
       ORDER BY vol_num`;
     return await pool.query(FIND_ONE_WORK, [users_id, users_id, works_id]);
-  }
-
-  static async findBySearch(users_id, search = "") {
-    const SEARCH_ONE = `SELECT 
-          works.id AS works_id, 
-          works.name AS works_name,
-          works.edition AS works_edition,
-          works.type AS works_type,
-          works.format AS works_format,
-          COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ', '), 'Inconnu') AS authors_name,
-          COALESCE(AVG(reviews.score), 0) AS works_score,
-          (SELECT medias.url 
-           FROM volumes 
-           LEFT JOIN medias ON medias.volumes_id = volumes.id
-           WHERE volumes.works_id = works.id
-           ORDER BY volumes.number ASC
-           LIMIT 1) AS cover_url
-      FROM works
-      LEFT JOIN volumes ON volumes.works_id = works.id
-      LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
-      LEFT JOIN authors ON authors.id = volumes_authors.authors_id
-      LEFT JOIN reviews ON reviews.volumes_id = volumes.id AND reviews.users_id = ?
-      LEFT JOIN shelfs ON shelfs.volumes_id = volumes.id
-      WHERE shelfs.users_id = ? 
-      AND 
-          (? IS NULL OR works.name LIKE CONCAT(?) OR volumes.title LIKE CONCAT(?))
-      GROUP BY works.id, works.name
-      HAVING 
-          (? IS NULL OR authors_name LIKE CONCAT(?))`;
-    return await pool.query(SEARCH_ONE, [
-      users_id,
-      users_id,
-      search || null,
-      `%${search}%`,
-      `%${search}%`,
-      search || null,
-      `%${search}%`,
-    ]);
   }
 
   //============================== INSERT =======================================//

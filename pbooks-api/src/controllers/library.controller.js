@@ -11,6 +11,8 @@ import sendResponse from "../helpers/sendResponse.js";
 //============================== GET =======================================//
 
 const getAll = async (req, res, next) => {
+  const formattedSearch = req.query.q?.trim() || "";
+  console.log("formattedSearch", formattedSearch);
   try {
     const [response] = await Work.findAll();
 
@@ -91,28 +93,7 @@ const getReviews = async (req, res, next) => {
 
 //============================== POST =======================================//
 
-// const cleanFields = (fields) => {
-//   const cleanedData = {};
-//   for (const key in fields) {
-//     cleanedData[key] = Array.isArray(fields[key]) ? fields[key][0] : fields[key]; // Convertir les tableaux en valeurs simples
-//   }
-//   return cleanedData;
-// };
-
 const create = async (req, res, next) => {
-  // const form = formidable({multiples: false});
-
-  // form.parse(req, async (err, fields, files) => {
-  //     console.log(fields); // Vérifie le contenu des champs envoyés
-  // console.log(files);
-  // if (err) {
-  //   return res
-  //     .status(400)
-  //     .json({ error: "Erreur lors du téléchargement du fichier." });
-
-
-  // console.log("Champs avant nettoyage :", fields);
-  // const cleanedFields = cleanFields(fields);
   try {
     console.log("Données reçues :", req.body);
 
@@ -164,20 +145,8 @@ const create = async (req, res, next) => {
         })
       );
     }
-
-    // form.parse(req, async (err, fields, files) => {
-    // if (err) {
-    //   console.error("Erreur lors du téléchargement du fichier :", err);
-    //   return res.status(400).json({ error: "Erreur lors du téléchargement du fichier." });
-    // }
-    // const file = files.media;
-    // if (file) {
-    //   const url = `/uploads/medias/${file.newFilename}`;
-    //   await Media.insertMedia({ volumes_id: volumesId, url });
-    // }
     await connection.commit();
     connection.release();
-
     res.status(201).json({
       message: "Ouvrage et volume ajoutés avec succès.",
       worksId,
@@ -197,12 +166,16 @@ const uploadMedia = async (req, res, next) => {
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
-      return res.status(400).json({ error: "Erreur lors du téléchargement du fichier." });
+      return res
+        .status(400)
+        .json({ error: "Erreur lors du téléchargement du fichier." });
     }
 
     const { volumesId } = fields;
     if (!volumesId) {
-      return res.status(400).json({ error: "ID du volume obligatoire pour l'ajout de média." });
+      return res
+        .status(400)
+        .json({ error: "ID du volume obligatoire pour l'ajout de média." });
     }
 
     const file = files.media;
@@ -213,14 +186,20 @@ const uploadMedia = async (req, res, next) => {
     try {
       const url = `/uploads/medias/${file.newFilename}`;
       await Media.insertMedia({ volumes_id: volumesId, url });
-      res.status(201).json({ message: "Média ajouté avec succès.", volumesId, url });
+      res
+        .status(201)
+        .json({ message: "Média ajouté avec succès.", volumesId, url });
     } catch (error) {
       console.error("Erreur lors de l'ajout du média :", error);
-      res.status(500).json({ error: "Erreur lors de l'ajout du média.", details: error.message });
+      res
+        .status(500)
+        .json({
+          error: "Erreur lors de l'ajout du média.",
+          details: error.message,
+        });
     }
   });
 };
-
 
 //============================== PATCH =======================================//
 

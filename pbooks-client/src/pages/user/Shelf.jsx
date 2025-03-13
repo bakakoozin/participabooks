@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useDebounce } from "../../hooks/useDebounce";
 import { Link } from "react-router-dom";
 
 import { API_URL, URL_MEDIAS } from "../../utils/constants";
@@ -8,62 +9,35 @@ import notFoundCover from "/not-found.png";
 function Shelf() {
   const [works, setWorks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const searchDebounced = useDebounce(searchQuery, 500);
+  const [isFetching, setIsFetching] = useState(false);
   const sliderRef = useRef(null);
 
-  useEffect(() => {
-    async function fetchWorks() {
-      try {
-        const res = await fetch(`${API_URL}/user/shelf`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-        if (res.status === 401) {
-          console.error("Non autorisé. Vérifiez votre authentification !");
-          return;
-        }
-        if (res.ok) {
-          const { datas } = await res.json();
-          setWorks(datas);
-        } else {
-          console.error("Erreur serveur:", res.status);
-        }
-      } catch (error) {
-        console.error("Erreur lors de la récupération des données:", error);
-      }
-    }
-    fetchWorks();
-  }, []);
-
-  async function handleSearch(value) {
-    setSearchQuery(value);
-    if (value === "") {
-      setSearchResults(works);
-      return;
-    }
-
+  async function fetchWorks() {
+    if (isFetching) return;
+    setIsFetching(true);
     try {
-      const res = await fetch(
-        `${API_URL}/user/shelf/search?q=${encodeURIComponent(value)}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const res = await fetch(`${API_URL}/user/shelf?q=${searchQuery}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      if (res.status === 401) {
+        console.error("Non autorisé. Vérifiez votre authentification !");
+        return;
+      }
       if (res.ok) {
         const { datas } = await res.json();
-        setSearchResults(datas);
+        setWorks(datas);
       } else {
         console.error("Erreur serveur:", res.status);
       }
     } catch (error) {
-      console.error("Erreur lors de la recherche:", error);
+      console.error("Erreur lors de la récupération des données:", error);
+    } finally {
+      setIsFetching(false);
     }
   }
 
@@ -101,7 +75,9 @@ function Shelf() {
       : notFoundCover;
   }
 
-  const displayWorks = searchQuery ? searchResults : works;
+  useEffect(() => {
+    fetchWorks();
+  }, [searchDebounced]);
 
   return (
     <section>
@@ -112,7 +88,7 @@ function Shelf() {
         type="text"
         placeholder="Rechercher..."
         value={searchQuery}
-        onChange={(e) => handleSearch(e.target.value)} // Déclenche la recherche au changement
+        onChange={(e) => setSearchQuery(e.target.value)} // Déclenche la recherche au changement
       />
 
       {/* Boutons de navigation */}
@@ -125,8 +101,7 @@ function Shelf() {
         </button>
 
         <div className="slider" ref={sliderRef}>
-        {displayWorks.length > 0 ? (
-            displayWorks.map((work) => (
+          {works.map((work) => (
             <article key={work.works_id} className="work-card">
               <h2>{work.works_name}</h2>
               <p>{work.works_type}</p>
@@ -141,11 +116,12 @@ function Shelf() {
                 Supprimer
               </button>
             </article>
-          ))) : (
-            <p>Aucun résultat trouvé pour {searchQuery}</p>
-          )}
+          ))}
         </div>
-
+        <div>
+          {isFetching && <p>Chargement...</p>}
+          {works.length === 0 && !isFetching && <p>Aucun ouvrage trouvé.</p>}
+        </div>
         <button
           className="nav-button right"
           onClick={() => scrollSlider(sliderRef, "right")}

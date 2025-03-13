@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
-// import { useDispatch } from "react-redux";
-import { useState } from "react";
-// import { login } from "../../features/authSlice";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 
 function Creator() {
-  // const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isLogged = useSelector((state) => state.auth.isLogged);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -18,12 +17,17 @@ function Creator() {
     title: "",
     isbn: "",
     summary: "",
-    creator_visibility: false, // Mettre à jour l'état pour la case à cocher
+    creator_visibility: false,
     media: null,
     authors: [""],
   });
 
-  const [message, setMessage] = useState("");
+  useEffect(() => {
+    if (!isLogged) {
+      toast.error("Vous devez être connecté pour accéder à cette page !");
+      navigate("/");
+    }
+  }, [isLogged, navigate]);
 
   function handleChange(e) {
     const { name, value, checked, files } = e.target;
@@ -62,19 +66,20 @@ function Creator() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
     const jsonData = {
-    name: formData.name || "",
-    edition: formData.edition || null,
-    type: formData.type,
-    format: formData.format || "",
-    number: formData.number || null,
-    title: formData.title || null,
-    isbn: formData.isbn,
-    summary: formData.summary || null,
-    creator_visibility: formData.creator_visibility ? "1" : "0",
-    authors: JSON.stringify(formData.authors || []),
+      name: formData.name || "",
+      edition: formData.edition || null,
+      type: formData.type,
+      format: formData.format || "",
+      number: formData.number || null,
+      title: formData.title || null,
+      isbn: formData.isbn,
+      summary: formData.summary || null,
+      creator_visibility: formData.creator_visibility ? "1" : "0",
+      authors: JSON.stringify(formData.authors || []),
     };
-   
+
     try {
       const response = await fetch(`${API_URL}/works/create`, {
         method: "POST",
@@ -85,7 +90,7 @@ function Creator() {
         body: JSON.stringify(jsonData),
       });
 
-const resJSON = await response.json();
+      const resJSON = await response.json();
 
       if (response.ok) {
         toast.success("Ouvrage créé!");
@@ -93,30 +98,29 @@ const resJSON = await response.json();
           const fileData = new FormData();
           fileData.append("media", formData.media);
           fileData.append("volulmesId", resJSON.volumesId);
-      
+
           await fetch(`${API_URL}/works/create`, {
-      method: "POST",
-      credentials: "include",
-      body: fileData,
-    });
-  }
+            method: "POST",
+            credentials: "include",
+            body: fileData,
+          });
+        }
         navigate("/");
-        } else {
+      } else {
         toast.error(
           resJSON.message || "Échec de la création. Veuillez réessayer."
         );
       }
     } catch (error) {
       console.error("Erreur lors de la création.", error);
-      setMessage("Erreur s'est produite. Veuillez réessayer.");
     }
   }
+
+  if (!isLogged) return null;
 
   return (
     <>
       <h2>Créer ou mettre à jour un ouvrage</h2>
-
-      {message && <p>{message}</p>}
 
       <form onSubmit={handleSubmit}>
         <div>

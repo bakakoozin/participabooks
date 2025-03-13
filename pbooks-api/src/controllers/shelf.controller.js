@@ -7,8 +7,10 @@ import sendResponse from "../helpers/sendResponse.js";
 
 const getAllUserWorks = async (req, res, next) => {
   const users_id = req.user.id;
+  const formattedSearch = req.query.q?.trim() || "";
+  console.log("formattedSearch", formattedSearch);
   try {
-    const [response] = await Shelf.findAll(users_id);
+    const [response] = await Shelf.findAll(users_id, formattedSearch);
     if (response.length) {
       sendResponse(
         res,
@@ -21,6 +23,7 @@ const getAllUserWorks = async (req, res, next) => {
     sendResponse(res, "Aucun ouvrage récupéré pour l'utilisateur.", 400);
     return;
   } catch (error) {
+    console.log("Erreur lors de la récupération des ouvrages:", error);
     next(error);
   }
 };
