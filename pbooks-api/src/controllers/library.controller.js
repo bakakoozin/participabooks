@@ -107,7 +107,6 @@ const create = async (req, res, next) => {
       isbn,
       summary,
       creator_visibility,
-      users_id,
       authors,
     } = req.body;
 
@@ -117,7 +116,7 @@ const create = async (req, res, next) => {
 
     const connection = await pool.getConnection();
     await connection.beginTransaction();
-
+    const users_id = req.user.id;
     const worksId = await Work.findOrCreateWork({
       name,
       edition,
@@ -191,12 +190,10 @@ const uploadMedia = async (req, res, next) => {
         .json({ message: "Média ajouté avec succès.", volumesId, url });
     } catch (error) {
       console.error("Erreur lors de l'ajout du média :", error);
-      res
-        .status(500)
-        .json({
-          error: "Erreur lors de l'ajout du média.",
-          details: error.message,
-        });
+      res.status(500).json({
+        error: "Erreur lors de l'ajout du média.",
+        details: error.message,
+      });
     }
   });
 };

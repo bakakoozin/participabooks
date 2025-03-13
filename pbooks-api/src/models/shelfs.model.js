@@ -81,17 +81,18 @@ class Shelf {
 
   //============================== DELETE =======================================//
 
-  static async deleteVolume({ volumes_id }) {
-    const DELETE_VOLUME = `DELETE FROM shelfs WHERE volumes_id = ?`;
-    return await pool.execute(DELETE_VOLUME, [volumes_id]);
+  static async deleteVolume(volumes_id, users_id) {
+    const DELETE_VOLUME = `DELETE FROM shelfs WHERE volumes_id = ?
+    AND users_id = ?`;
+    return await pool.execute(DELETE_VOLUME, [volumes_id, users_id]);
   }
 
-  static async deleteAllVolumes({ works_id }) {
+  static async deleteAllVolumes( works_id, users_id ) {
     const DELETE_ALL_VOLUMES = `DELETE FROM shelfs
     WHERE volumes_id IN (
         SELECT id FROM volumes WHERE works_id = ?
-      )`;
-    return await pool.execute(DELETE_ALL_VOLUMES, [works_id]);
+      ) AND users_id = ?`;
+    return await pool.execute(DELETE_ALL_VOLUMES, [works_id, users_id]);
   }
 }
 

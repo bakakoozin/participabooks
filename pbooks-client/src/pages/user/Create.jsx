@@ -1,12 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 
 function Creator() {
   const navigate = useNavigate();
-  const isLogged = useSelector((state) => state.auth.isLogged);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,15 +20,13 @@ function Creator() {
     authors: [""],
   });
 
-  useEffect(() => {
-    if (!isLogged) {
-      toast.error("Vous devez être connecté pour accéder à cette page !");
-      navigate("/");
-    }
-  }, [isLogged, navigate]);
-
   function handleChange(e) {
     const { name, value, checked, files } = e.target;
+
+    // if (name === "test") {
+    //   //TODO: gérer
+    // }
+
     if (name === "media") {
       setFormData((prevData) => ({
         ...prevData,
@@ -115,8 +111,6 @@ function Creator() {
       console.error("Erreur lors de la création.", error);
     }
   }
-
-  if (!isLogged) return null;
 
   return (
     <>

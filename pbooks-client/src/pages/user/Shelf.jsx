@@ -1,45 +1,16 @@
-import { useEffect, useState, useRef } from "react";
-import { useDebounce } from "../../hooks/useDebounce";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 
 import { API_URL, URL_MEDIAS } from "../../utils/constants";
 import scrollSlider from "../../utils/slider";
 import notFoundCover from "/not-found.png";
+import { useFetch } from "../../hooks/useFetch";
+
+
 
 function Shelf() {
-  const [works, setWorks] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const searchDebounced = useDebounce(searchQuery, 500);
-  const [isFetching, setIsFetching] = useState(false);
+  const {data, isFetching, search, setSearch} = useFetch("/user/shelf", { initData: [] });
   const sliderRef = useRef(null);
-
-  async function fetchWorks() {
-    if (isFetching) return;
-    setIsFetching(true);
-    try {
-      const res = await fetch(`${API_URL}/user/shelf?q=${searchQuery}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      if (res.status === 401) {
-        console.error("Non autorisé. Vérifiez votre authentification !");
-        return;
-      }
-      if (res.ok) {
-        const { datas } = await res.json();
-        setWorks(datas);
-      } else {
-        console.error("Erreur serveur:", res.status);
-      }
-    } catch (error) {
-      console.error("Erreur lors de la récupération des données:", error);
-    } finally {
-      setIsFetching(false);
-    }
-  }
 
   async function handleRemoveFromShelf(work) {
     try {
@@ -75,10 +46,6 @@ function Shelf() {
       : notFoundCover;
   }
 
-  useEffect(() => {
-    fetchWorks();
-  }, [searchDebounced]);
-
   return (
     <section>
       <h1>Ma bibliothèque</h1>
@@ -87,8 +54,8 @@ function Shelf() {
         className="search-bar"
         type="text"
         placeholder="Rechercher..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)} // Déclenche la recherche au changement
+        value={search}
+        onChange={(e) => setSearch(e.target.value)} // Déclenche la recherche au changement
       />
 
       {/* Boutons de navigation */}
@@ -101,7 +68,7 @@ function Shelf() {
         </button>
 
         <div className="slider" ref={sliderRef}>
-          {works.map((work) => (
+          {data?.datas?.map((work) => (
             <article key={work.works_id} className="work-card">
               <h2>{work.works_name}</h2>
               <p>{work.works_type}</p>
@@ -120,7 +87,7 @@ function Shelf() {
         </div>
         <div>
           {isFetching && <p>Chargement...</p>}
-          {works.length === 0 && !isFetching && <p>Aucun ouvrage trouvé.</p>}
+          {data?.datas?.length === 0 && !isFetching && <p>Aucun ouvrage trouvé.</p>}
         </div>
         <button
           className="nav-button right"

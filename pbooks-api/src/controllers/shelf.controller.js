@@ -171,7 +171,7 @@ const updateComment = async (req, res, next) => {
 
 const removeVolumeFromShelf = async (req, res, next) => {
   try {
-    const [response] = await Shelf.deleteVolume(req.params.id);
+    const [response] = await Shelf.deleteVolume(req.params.id, req.user.id);
     if (response.affectedRows) {
       sendResponse(res, "Volume retiré de la bibliothèque personnelle.", 200);
       return;
@@ -185,7 +185,7 @@ const removeVolumeFromShelf = async (req, res, next) => {
 
 const removeWorkFromShelf = async (req, res, next) => {
   try {
-    const [response] = await Shelf.deleteAllVolumes(req.params.id);
+    const [response] = await Shelf.deleteAllVolumes(req.params.id, req.user.id);
     if (response.affectedRows) {
       sendResponse(res, "Ouvrage retiré de la bibliothèque personnelle.", 200);
       return;
