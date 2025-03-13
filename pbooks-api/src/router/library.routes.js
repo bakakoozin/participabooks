@@ -12,6 +12,7 @@ import {
   updateStatus,
   removeWork,
   removeVolume,
+  uploadMedia,
 } from "../controllers/library.controller.js";
 
 const router = Router();
@@ -24,6 +25,7 @@ router.get("/volumes/:id/reviews", getReviews);
 
 //USERS
 router.post("/create", verifyToken, create);
+router.post("/uploads/medias", verifyToken, uploadMedia);
 router.delete("/:id", removeWork);
 router.patch("/:id", update);
 router.delete("/volumes/:id", removeVolume);

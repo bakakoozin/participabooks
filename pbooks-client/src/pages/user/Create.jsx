@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { login } from "../../features/authSlice";
+// import { login } from "../../features/authSlice";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 
 function Creator() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -48,7 +48,7 @@ function Creator() {
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value || "",  // Ajout de cette ligne pour s'assurer que les valeurs vides ne sont pas undefined
+        [name]: value || "",
       }));
     }
   }
@@ -62,48 +62,46 @@ function Creator() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const newFormData = new FormData();
-    newFormData.append("name", formData.name || "");  // Remplacer undefined par une chaîne vide
-    newFormData.append("edition", formData.edition || "");
-    newFormData.append("type", formData.type || "");
-    newFormData.append("format", formData.format || "");
-    newFormData.append("number", formData.number || null);  // Remplacer "" par null si non renseigné
-    newFormData.append("title", formData.title || "");
-    newFormData.append("isbn", formData.isbn || "");
-    newFormData.append("summary", formData.summary || "");  // Assurez-vous que summary n'est pas undefined
-    newFormData.append("creator_visibility", formData.creator_visibility ? "1" : "0");
-    
-    if (formData.media) {
-      newFormData.append("media", formData.media);
-    }
-    
-    formData.authors.forEach((author, index) => {
-      newFormData.append(`author-${index}`, author || ""); // Remplacer undefined pour les auteurs
-    });
+    const jsonData = {
+    name: formData.name || "",
+    edition: formData.edition || null,
+    type: formData.type,
+    format: formData.format || "",
+    number: formData.number || null,
+    title: formData.title || null,
+    isbn: formData.isbn,
+    summary: formData.summary || null,
+    creator_visibility: formData.creator_visibility ? "1" : "0",
+    authors: JSON.stringify(formData.authors || []),
+    };
+   
     try {
       const response = await fetch(`${API_URL}/works/create`, {
         method: "POST",
         credentials: "include",
-        body: newFormData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jsonData),
       });
 
+const resJSON = await response.json();
+
       if (response.ok) {
-        const checkSession = await fetch(`${API_URL}/auth/session`, {
-          method: "GET",
-          credentials: "include",
-        });
-        if (checkSession.ok) {
-          const resJSON = await checkSession.json();
-          dispatch(login(resJSON.user));
-          toast.success("Ouvrage créé!");
-          navigate("/");
+        toast.success("Ouvrage créé!");
+        if (formData.media) {
+          const fileData = new FormData();
+          fileData.append("media", formData.media);
+          fileData.append("volulmesId", resJSON.volumesId);
+      
+          await fetch(`${API_URL}/works/create`, {
+      method: "POST",
+      credentials: "include",
+      body: fileData,
+    });
+  }
+        navigate("/");
         } else {
-          toast.error(
-            "Échec de la vérification de la session. Veuillez réessayer."
-          );
-        }
-      } else {
-        const resJSON = await response.json();
         toast.error(
           resJSON.message || "Échec de la création. Veuillez réessayer."
         );

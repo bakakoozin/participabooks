@@ -23,9 +23,18 @@ static async findAllByWorkId(works_id) {
     creator_visibility,
     users_id,
   }) {
+    console.log("Données insérées :", { worksId, number, title, isbn, summary, creator_visibility, users_id });
     const INSERT_VOLUME = 
       `INSERT INTO volumes (works_id, number, title, isbn, summary, creator_visibility, users_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-      const [result] = await pool.execute(INSERT_VOLUME, [worksId, number, title, isbn, summary, creator_visibility, users_id]);
+      const [result] = await pool.execute(INSERT_VOLUME, [
+        worksId ?? null,
+        number ?? null,
+        title ?? null,
+        isbn ?? null,
+        summary ?? null,
+        creator_visibility ?? null,
+        users_id ?? null
+      ]);
     return result.insertId; // Récupére l'ID du volume inséré
   }
 

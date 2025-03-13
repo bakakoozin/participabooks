@@ -91,17 +91,30 @@ const getReviews = async (req, res, next) => {
 
 //============================== POST =======================================//
 
-const create = async (req, res, next) => {
-  const form = formidable();
+// const cleanFields = (fields) => {
+//   const cleanedData = {};
+//   for (const key in fields) {
+//     cleanedData[key] = Array.isArray(fields[key]) ? fields[key][0] : fields[key]; // Convertir les tableaux en valeurs simples
+//   }
+//   return cleanedData;
+// };
 
-  form.parse(req, async (err, fields, files) => {
-    console.log(fields); // Vérifie le contenu des champs envoyés
-console.log(files);
-    if (err) {
-      return res
-        .status(400)
-        .json({ error: "Erreur lors du téléchargement du fichier." });
-    }
+const create = async (req, res, next) => {
+  // const form = formidable({multiples: false});
+
+  // form.parse(req, async (err, fields, files) => {
+  //     console.log(fields); // Vérifie le contenu des champs envoyés
+  // console.log(files);
+  // if (err) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: "Erreur lors du téléchargement du fichier." });
+
+
+  // console.log("Champs avant nettoyage :", fields);
+  // const cleanedFields = cleanFields(fields);
+  try {
+    console.log("Données reçues :", req.body);
 
     const {
       name,
@@ -115,63 +128,99 @@ console.log(files);
       creator_visibility,
       users_id,
       authors,
-    } = fields;
+    } = req.body;
+
+    if (!name || !type || !format) {
+      return res.status(400).json({ error: "Champs obligatoires manquants" });
+    }
 
     const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    const worksId = await Work.findOrCreateWork({
+      name,
+      edition,
+      type,
+      format,
+    });
+
+    const volumesId = await Volume.insertVolume({
+      worksId,
+      number: number !== "" ? number : null,
+      title: title !== "" ? title : null,
+      isbn,
+      summary: summary !== "" ? summary : null,
+      creator_visibility,
+      users_id,
+    });
+
+    const parseAuthors = authors ? JSON.parse(authors) : [];
+
+    if (Array.isArray(parseAuthors) && parseAuthors.length > 0) {
+      await Promise.all(
+        parseAuthors.map(async (authorName) => {
+          const authorId = await Author.findOrCreateAuthor(authorName);
+          await Author.linkAuthorToVolume(volumesId, authorId);
+        })
+      );
+    }
+
+    // form.parse(req, async (err, fields, files) => {
+    // if (err) {
+    //   console.error("Erreur lors du téléchargement du fichier :", err);
+    //   return res.status(400).json({ error: "Erreur lors du téléchargement du fichier." });
+    // }
+    // const file = files.media;
+    // if (file) {
+    //   const url = `/uploads/medias/${file.newFilename}`;
+    //   await Media.insertMedia({ volumes_id: volumesId, url });
+    // }
+    await connection.commit();
+    connection.release();
+
+    res.status(201).json({
+      message: "Ouvrage et volume ajoutés avec succès.",
+      worksId,
+      volumesId,
+    });
+  } catch (error) {
+    console.error("Erreur interne du serveur : ", error);
+    await connection.rollback();
+    res
+      .status(500)
+      .json({ error: "Erreur lors de l'ajout.", details: error.message });
+  }
+};
+
+const uploadMedia = async (req, res, next) => {
+  const form = new formidable({ multiples: false });
+
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      return res.status(400).json({ error: "Erreur lors du téléchargement du fichier." });
+    }
+
+    const { volumesId } = fields;
+    if (!volumesId) {
+      return res.status(400).json({ error: "ID du volume obligatoire pour l'ajout de média." });
+    }
+
+    const file = files.media;
+    if (!file) {
+      return res.status(400).json({ error: "Fichier média manquant." });
+    }
+
     try {
-      await connection.beginTransaction();
-
-      const worksId = await Work.findOrCreateWork({
-        name,
-        edition,
-        type,
-        format,
-      });
-
-      const volumesId = await Volume.insertVolume({
-        worksId,
-        number,
-        title,
-        isbn,
-        summary,
-        creator_visibility,
-        users_id,
-      });
-
-      const parseAuthors = authors ? JSON.parse(authors) : [];
-
-      if (Array.isArray(parseAuthors) && parseAuthors.length > 0) {
-        await Promise.all(
-          parseAuthors.map(async (authorName) => {
-            const authorId = await Author.findOrCreateAuthor(authorName);
-            await Author.linkAuthorToVolume(volumesId, authorId);
-          })
-        );
-      }
-
-      const file = files.media;
-      if (file) {
-        const url = `/uploads/medias/${file.newFilename}`;
-
-        await Media.insertMedia({ volumes_id: volumesId, url });
-      }
-      await connection.commit();
-      res.status(201).json({
-        message: "Ouvrage et volume ajoutés avec succès.",
-        worksId,
-        volumesId,
-      });
+      const url = `/uploads/medias/${file.newFilename}`;
+      await Media.insertMedia({ volumes_id: volumesId, url });
+      res.status(201).json({ message: "Média ajouté avec succès.", volumesId, url });
     } catch (error) {
-      console.error("Erreur interne du serveur : ", error);
-      await connection.rollback();
-      res
-        .status(500)
-        .json({ error: "Erreur lors de l'ajout.", details: error.message });
-    } finally {
-      connection.release();
+      console.error("Erreur lors de l'ajout du média :", error);
+      res.status(500).json({ error: "Erreur lors de l'ajout du média.", details: error.message });
     }
   });
 };
+
 
 //============================== PATCH =======================================//
 
@@ -354,4 +403,5 @@ export {
   updateStatus,
   removeWork,
   removeVolume,
+  uploadMedia,
 };
