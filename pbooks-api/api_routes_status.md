@@ -15,7 +15,6 @@
   - /profile/theme       -> *(PATCH)*         ✅
   SHELF
   - /shelf               -> *(GET tous)*      ✅
-  - /shelf/search        -> *(GET recherche)* **en cours** ❗ Problème à résoudre
   - /shelf/volume        -> *(POST ajouter)*  ✅
   - /shelf/volume/status -> *(PATCH)*         **en cours** 🔴
   - /shelf/volume/:id    -> *(DELETE)*        ✅
@@ -30,12 +29,12 @@
 
 - /library -> **en cours** 🟠
   PUBLIC
-  - /works        -> *(GET tous)*                               ✅
-  - /works/search -> *(GET recherche)*                          **en cours** ❗ Problème à résoudre
-  - /works/:id    -> *(GET une)*                                ✅
+  - /:id    -> *(GET une)*                                      ✅
+  - /        -> *(GET tous)*                                    ✅
   - /volumes/:id/reviews -> *(GET)*                             **en cours** 🟠
   USERS
   - /works/create -> *(POST créer)*              `token requis` **en cours** 🔴
+  - /uploads/medias -> *(POST créer)*            `token requis` **en cours** 🔴
   - /works/:id -> *(PATCH)*                      `token requis` **en cours** 🟠
   - /works/:id -> *(DELETE)*                     `token requis` **en cours** 🟠
   - /volumes/:id -> *(DELETE)*                   `token requis` **en cours** 🟠
@@ -80,7 +79,6 @@
 - shelfs.model -> **terminé** ✔️
   - findAll -> *(SELECT tous)*            ✔️
   - findOne -> *(SELECT un)*              ✔️
-  - findBySearch -> *(SELECT rechercher)* ✔️
   - insertVolume -> *(INSERT)*            ✔️
   - updateStatus -> *(UPDATE)*            ✔️
   - deleteVolume -> *(DELETE)* ->         ✔️
@@ -104,7 +102,6 @@
 
 - works.model -> **terminé** ✔️
   - findAll -> *(SELECT tous)*              ✔️
-  - findBySearch -> *(SELECT rechercher)*   ✔️
   - findOne -> *(SELECT un)*                ✔️
   - findWork -> *(SELECT un)*               ✔️
   - insertWork -> *(INSERT)*                ✔️

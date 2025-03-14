@@ -1,51 +1,23 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { API_URL } from "../../utils/constants";
 import { ButtonRemoveFromShelf } from "../../components/ButtonRemoveFromShelf";
 import { Img } from "../../components/Img";
+import { useFetch } from "../../hooks/useFetch";
 
 function ShelfWorkDetails() {
   const { id } = useParams();
-  const [volumes, setVolumes] = useState([]);
-  const [error, setError] = useState(null);
+  const { data, isFetching } = useFetch(`/user/shelf/work/${id}`, {
+      initData: { datas: [] },
+    });
 
-  useEffect(() => {
-    async function fetchUserWork() {
-      try {
-        const res = await fetch(`${API_URL}/user/shelf/work/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-        if (res.ok) {
-          const { datas } = await res.json();
-          setVolumes(datas);
-        } else {
-          throw new Error("La réponse n'est pas au format JSON attendu.");
-        }
-      } catch (error) {
-        setError(error.message);
-        console.error("Erreur lors de la récupération des données:", error);
-      }
-    }
-    fetchUserWork();
-  }, []);
+    if (isFetching) return <p>Chargement...</p>;
 
-  if (error) {
-    return <p>Erreur: {error}</p>;
-  }
-
-  // Extraire les informations de l'ouvrage
-  const workInfo = volumes.length > 0 ? volumes[0] : {};
+    const workInfo = data.datas.length > 0 ? data.datas[0] : {};
 
   return (
     <section>
       <h1>Ma bibliothèque</h1>
 
-      {/* Afficher les informations de l'ouvrage une seule fois */}
       {workInfo && (
         <article className="work-card">
           <h2>{workInfo.works_name}</h2>
@@ -55,8 +27,7 @@ function ShelfWorkDetails() {
         </article>
       )}
 
-      {/* Afficher les volumes associés */}
-      {volumes.map((volume) => (
+      {data.datas.map((volume) => (
         <aside key={volume.vol_id} className="volume-card">
           <h3>
             {volume.vol_num}. {volume.vol_title}
