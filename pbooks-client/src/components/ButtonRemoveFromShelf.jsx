@@ -2,19 +2,19 @@ import { useSelector } from "react-redux";
 import { API_URL } from "../utils/constants";
 import PropTypes from "prop-types";
 
-const ButtonAddToShelf = ({ item, type }) => {
+const ButtonRemoveFromShelf = ({ item, type }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
 
-  async function handleAddToShelf() {
+  async function handleRemoveFromShelf() {
     const isWork = type === "work";
-    const url = `${API_URL}/user/shelf/${isWork ? "work" : "volume"}`;
+    const url = `${API_URL}/user/shelf/${isWork ? "work" : "volume"}/${isWork ? item.works_id : item.vol_id}`;
     const bodyData = isWork
       ? { works_id: item.works_id, users_id: infos.id }
       : { volumes_id: item.vol_id, users_id: infos.id };
 
     try {
       const response = await fetch(url, {
-        method: "POST",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
@@ -23,24 +23,28 @@ const ButtonAddToShelf = ({ item, type }) => {
       });
 
       if (response.ok) {
-        console.log("Ajouté à la bibliothèque personnelle");
+        console.log("Supprimé de la bibliothèque personnelle");
       } else {
-        console.error("Erreur lors de l'ajout à la bibliothèque personnelle");
+        console.error(
+          "Erreur lors de la suppression de la bibliothèque personnelle"
+        );
       }
     } catch (error) {
       console.error(
-        "Erreur lors de l'ajout à la bibliothèque personnelle:",
+        "Erreur lors de la suppression de la bibliothèque personnelle:",
         error
       );
     }
   }
   if (!isLogged) return null;
-  return <button onClick={handleAddToShelf}>Ajouter à ma bibliothèque</button>;
+  return (
+    <button onClick={handleRemoveFromShelf}>
+      Supprimer de ma bibliothèque
+    </button>
+  );
 };
-
-ButtonAddToShelf.propTypes = {
+ButtonRemoveFromShelf.propTypes = {
   item: PropTypes.object.isRequired,
   type: PropTypes.oneOf(["work", "volume"]).isRequired,
 };
-
-export { ButtonAddToShelf };
+export { ButtonRemoveFromShelf };

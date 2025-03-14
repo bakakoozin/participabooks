@@ -4,7 +4,7 @@ class Work {
 
     //============================== SELECT =======================================//
     
-      static async findAll() {
+      static async findAll(search = "") {
         const SELECT_ALL = `SELECT 
           works.id AS works_id, 
           works.name AS works_name,
@@ -24,8 +24,10 @@ class Work {
         LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
         LEFT JOIN authors ON authors.id = volumes_authors.authors_id
         LEFT JOIN reviews ON reviews.volumes_id = volumes.id
+        WHERE works.name LIKE CONCAT('%', ?, '%') 
+        OR volumes.title LIKE CONCAT('%', ?, '%')
         GROUP BY works.id, works.name`;
-        return await pool.query(SELECT_ALL);
+        return await pool.query(SELECT_ALL, [`%${search}%`, `%${search}%`]);
       }
     
       static async findOne(id) {
@@ -58,40 +60,6 @@ class Work {
         GROUP BY volumes.id, works.id, users.id, medias.url
         ORDER BY vol_num`;
         return await pool.query(SELECT_WORK, [id]);
-      }
-    
-      static async findBySearch(search = "") {
-        const SEARCH_ONE = `SELECT 
-              works.id AS works_id, 
-              works.name AS works_name,
-              works.edition AS works_edition,
-              works.type AS works_type,
-              works.format AS works_format,
-              COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ', '), 'Inconnu') AS authors_name,
-              COALESCE(AVG(reviews.score), 0) AS works_score,
-              (SELECT medias.url 
-               FROM volumes 
-               LEFT JOIN medias ON medias.volumes_id = volumes.id
-               WHERE volumes.works_id = works.id
-               ORDER BY volumes.number ASC
-               LIMIT 1) AS cover_url
-          FROM works
-          LEFT JOIN volumes ON volumes.works_id = works.id
-          LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
-          LEFT JOIN authors ON authors.id = volumes_authors.authors_id
-          LEFT JOIN reviews ON reviews.volumes_id = volumes.id
-          WHERE 
-              (? IS NULL OR works.name LIKE CONCAT(?) OR volumes.title LIKE CONCAT(?))
-          GROUP BY works.id, works.name
-          HAVING 
-              (? IS NULL OR authors_name LIKE CONCAT(?))`;
-        return await pool.query(SEARCH_ONE, [
-          search || null,
-          `%${search}%`,
-          `%${search}%`,
-          search || null,
-          `%${search}%`,
-        ]);
       }
 
       static async findWork({ name, edition, type, format }) {

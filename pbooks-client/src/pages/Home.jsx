@@ -7,21 +7,21 @@ import { ButtonAddToShelf } from "../components/ButtonAddToShelf";
 import { Img } from "../components/Img";
 
 function Home() {
-  const {data, search, setSearch} = useFetch("/works", { initData: [] });
+  const { data, isFetching, search, setSearch } = useFetch("/works/", {
+    initData: [],
+  });
   const sliderRef = useRef(null);
-  const displayWorks = data?.datas || [];
 
   return (
     <section>
       <h1>Bibliothèque Publique</h1>
 
       <input
-    
         className="search-bar"
         type="text"
         placeholder="Rechercher..."
         value={search}
-        onChange={(e) => setSearch(e.target.value)} // Déclenche la recherche au changement
+        onChange={(e) => setSearch(e.target.value)}
       />
 
       <div className="slider-container">
@@ -33,25 +33,25 @@ function Home() {
         </button>
 
         <div className="slider" ref={sliderRef}>
-        {displayWorks.length > 0 ? (
-            displayWorks.map((work) => (
+          {data?.datas?.map((work) => (
             <article key={work.works_id} className="work-card">
               <h2>{work.works_name}</h2>
               <p>{work.works_type}</p>
               <p>{work.works_score}</p>
               <Link to={`/works/${work.works_id}`}>
-              <Img src={work.cover_url} alt={work.works_name} />  
+                <Img src={work.cover_url} alt={work.works_name} />
               </Link>
               <p>{work.authors_name}</p>
               <p>{work.works_edition}</p>
               <p>{work.works_format}</p>
-              <ButtonAddToShelf work={work} />
+              <ButtonAddToShelf item={work} type="work" />
             </article>
-          ))) : (
-            <p>Aucun résultat trouvé pour {search}</p>
-          )}
+          ))}
         </div>
-
+        <div>
+        {isFetching && <p>Chargement...</p>}
+        {data?.datas?.length === 0 && !isFetching && <p>Aucun ouvrage trouvé.</p>}
+        </div>
         <button
           className="nav-button right"
           onClick={() => scrollSlider(sliderRef, "right")}

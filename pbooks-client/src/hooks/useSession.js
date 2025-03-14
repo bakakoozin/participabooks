@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { API_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
-import { login } from "../features/authSlice";
+import { login, setSessionChecked } from "../features/authSlice";
 
 export function useSession() {
   const dispatch = useDispatch();
@@ -15,14 +15,14 @@ export function useSession() {
         },
         credentials: "include",
       });
-      const resJSON = await response.json();
       if (response.ok) {
+        const resJSON = await response.json();
         dispatch(login(resJSON.user));
-      } else {
-        throw new Error(resJSON.message);
       }
     } catch (error) {
       console.error("Error fetching session", error);
+    } finally {
+      dispatch(setSessionChecked(true));
     }
   };
 

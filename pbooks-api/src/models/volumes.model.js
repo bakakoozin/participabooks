@@ -9,7 +9,8 @@ static async findAllByWorkId(works_id) {
     SELECT id FROM volumes WHERE works_id = ?
   `;
   const [rows] = await pool.query(FIND_ALL_VOLUMES, [works_id]);
-  return rows;
+  console.log("Volumes SQL trouvés:", rows);
+  return rows.map((row) => row.id);
 }
 
 //============================== INSERT =======================================//

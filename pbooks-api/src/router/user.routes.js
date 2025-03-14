@@ -11,7 +11,6 @@ import {
 import {
   getAllUserWorks,
   getOneUserWork,
-  getBySearchOnShelf,
   addVolumeToShelf,
   addAllVolumesToShelf,
   addReview,
@@ -35,7 +34,6 @@ router.patch("/profile/theme", updateTheme);
 
 //SHELF
 router.get("/shelf", getAllUserWorks);
-router.get("/shelf/search", getBySearchOnShelf);
 router.post("/shelf/volume", addVolumeToShelf);
 router.patch("/shelf/volume/status", updateStatusOnShelf);
 router.delete("/shelf/volume/:id", removeVolumeFromShelf);

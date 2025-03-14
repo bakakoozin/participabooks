@@ -14,7 +14,9 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="shelf" element={<Shelf />} />
+      <Route path="/works/:id" element={<Work />} />
+      <Route path="/auth/register" element={<Register />} />
+      <Route path="/auth/login" element={<Login />} />
       <Route
         path="dashboard"
         element={
@@ -31,11 +33,30 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="creator" element={<Creator />} />
-      <Route path="/shelf/work/:id" element={<ShelfWorkDetails />} />
-      <Route path="/works/:id" element={<Work />} />
-      <Route path="/auth/register" element={<Register />} />
-      <Route path="/auth/login" element={<Login />} />
+      <Route
+        path="shelf"
+        element={
+          <ProtectedRoute>
+            <Shelf />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/shelf/work/:id"
+        element={
+          <ProtectedRoute>
+            <ShelfWorkDetails />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="creator"
+        element={
+          <ProtectedRoute>
+            <Creator />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

@@ -4,7 +4,6 @@ import verifyToken from "../middlewares/verifyToken.js";
 import {
   getAll,
   getOne,
-  getBySearch,
   getAuthorsBySearch,
   getReviews,
   create,
@@ -19,7 +18,6 @@ const router = Router();
 
 //PUBLIC
 router.get("/", getAll);
-router.get("/search", getBySearch);
 router.get("/:id", getOne);
 router.get("/volumes/:id/reviews", getReviews);
 

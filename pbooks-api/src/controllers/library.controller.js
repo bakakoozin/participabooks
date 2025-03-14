@@ -12,35 +12,14 @@ import sendResponse from "../helpers/sendResponse.js";
 
 const getAll = async (req, res, next) => {
   const formattedSearch = req.query.q?.trim() || "";
-  console.log("formattedSearch", formattedSearch);
   try {
-    const [response] = await Work.findAll();
-
+    const [response] = await Work.findAll(formattedSearch);
     if (response.length) {
       sendResponse(res, "Ouvrages récupérés.", 200, response);
       return;
     }
     sendResponse(res, "Aucun ouvrage récupéré.", 400);
     return;
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getBySearch = async (req, res, next) => {
-  try {
-    const formattedSearch = req.query.q?.trim() || "";
-    if (!formattedSearch) {
-      return sendResponse(res, "Paramètre de recherche requis.", 400);
-    }
-
-    const [response] = await Work.findBySearch(formattedSearch);
-
-    if (response.length > 0) {
-      return sendResponse(res, "Ouvrage trouvé.", 200, response);
-    }
-
-    return sendResponse(res, "Aucun ouvrage trouvé.", 404);
   } catch (error) {
     next(error);
   }
@@ -370,7 +349,6 @@ const removeVolume = async (req, res, next) => {
 
 export {
   getAll,
-  getBySearch,
   getOne,
   getAuthorsBySearch,
   getReviews,
