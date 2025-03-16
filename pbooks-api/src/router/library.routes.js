@@ -6,7 +6,8 @@ import {
   getOne,
   getAuthorsBySearch,
   getReviews,
-  create,
+  createWork,
+  editWork,
   update,
   updateStatus,
   removeWork,
@@ -22,7 +23,8 @@ router.get("/:id", getOne);
 router.get("/volumes/:id/reviews", getReviews);
 
 //USERS
-router.post("/create", verifyToken, create);
+router.post("/create", verifyToken, createWork);
+router.post("/edit", verifyToken, editWork);
 router.post("/uploads/medias", verifyToken, uploadMedia);
 router.delete("/:id", removeWork);
 router.patch("/:id", update);

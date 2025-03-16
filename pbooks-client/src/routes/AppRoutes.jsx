@@ -8,7 +8,8 @@ import ProtectedRoute from "./ProtectedRoutes";
 import UpdateUserForm from "../pages/user/UpdateUserForm";
 import Shelf from "../pages/user/Shelf";
 import ShelfWorkDetails from "../pages/user/ShelfWorkDetails";
-import Creator from "../pages/user/Create";
+import CreateWork from "../pages/user/Create";
+import EditWork from "../pages/user/Edit";
 
 function AppRoutes() {
   return (
@@ -53,7 +54,15 @@ function AppRoutes() {
         path="creator"
         element={
           <ProtectedRoute>
-            <Creator />
+            <CreateWork />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="editor/:id"
+        element={
+          <ProtectedRoute>
+            <EditWork />
           </ProtectedRoute>
         }
       />

@@ -72,7 +72,31 @@ const getReviews = async (req, res, next) => {
 
 //============================== POST =======================================//
 
-const create = async (req, res, next) => {
+const createWork = async (req, res, next) => {
+  try {
+    const { name, edition, type, format } = req.body;
+    if (!name || !type || !format) {
+      return res
+        .status(400)
+        .json({ error: "Les champs obligatoires sont manquants." });
+    }
+
+    const worksId = await Work.findOrCreateWork({
+      name,
+      edition,
+      type,
+      format,
+    });
+
+    res.status(201).json({ worksId:worksId, message: "Ouvrage ajouté."});
+    console.log("Ouvrage ajouté :", worksId);
+  } catch (error) {
+    console.error("Erreur lors de l'ajout de l'ouvrage :", error);
+    res.status(500).json({ error: "Erreur lors de l'ajout de l'ouvrage." });
+  }
+};
+
+const editWork = async (req, res, next) => {
   try {
     console.log("Données reçues :", req.body);
 
@@ -352,7 +376,8 @@ export {
   getOne,
   getAuthorsBySearch,
   getReviews,
-  create,
+  createWork,
+  editWork,
   update,
   updateStatus,
   removeWork,
