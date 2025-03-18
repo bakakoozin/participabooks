@@ -97,71 +97,89 @@ const createWork = async (req, res, next) => {
 };
 
 const editWork = async (req, res, next) => {
+  let connection;
+
   try {
     console.log("Données reçues :", req.body);
 
-    const {
-      name,
-      edition,
-      type,
-      format,
-      number,
-      title,
-      isbn,
-      summary,
-      creator_visibility,
-      authors,
-    } = req.body;
+    const { works_id, number, title, isbn, summary, creator_visibility, authors } = req.body;
 
-    if (!name || !type || !format) {
-      return res.status(400).json({ error: "Champs obligatoires manquants" });
+    if (!works_id) {
+      return res.status(400).json({ error: "ID de l'ouvrage manquant." });
     }
 
-    const connection = await pool.getConnection();
-    await connection.beginTransaction();
+    const worksId = works_id;
     const users_id = req.user.id;
-    const worksId = await Work.findOrCreateWork({
-      name,
-      edition,
-      type,
-      format,
-    });
 
-    const volumesId = await Volume.insertVolume({
+    const volumeData = {
       worksId,
-      number: number !== "" ? number : null,
-      title: title !== "" ? title : null,
+      number: number || null,
+      title: title || null,
       isbn,
-      summary: summary !== "" ? summary : null,
+      summary: summary || null,
       creator_visibility,
       users_id,
-    });
+    };
 
-    const parseAuthors = authors ? JSON.parse(authors) : [];
+    console.log("VolumeData préparé :", volumeData);
 
-    if (Array.isArray(parseAuthors) && parseAuthors.length > 0) {
+    // Connexion à la base de données
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    // Insertion du volume
+    console.log("Insertion du volume en cours...");
+    const volumesId = await Volume.insertVolume(volumeData);
+
+    console.log("Volume ajouté avec succès, ID :", volumesId);
+
+    // Gestion des auteurs
+    const parsedAuthors = authors ? JSON.parse(authors) : [];
+    
+    if (Array.isArray(parsedAuthors) && parsedAuthors.length > 0) {
+      console.log("Ajout des auteurs :", parsedAuthors);
       await Promise.all(
-        parseAuthors.map(async (authorName) => {
+        parsedAuthors.map(async (authorName) => {
           const authorId = await Author.findOrCreateAuthor(authorName);
           await Author.linkAuthorToVolume(volumesId, authorId);
+          console.log(`Auteur "${authorName}" lié au volume ${volumesId}`);
         })
       );
+    } else {
+      console.log("Aucun auteur à ajouter.");
     }
+
+    // Validation de la transaction
     await connection.commit();
-    connection.release();
+    console.log("Transaction commitée avec succès.");
+
     res.status(201).json({
       message: "Ouvrage et volume ajoutés avec succès.",
       worksId,
       volumesId,
     });
+
   } catch (error) {
-    console.error("Erreur interne du serveur : ", error);
-    await connection.rollback();
-    res
-      .status(500)
-      .json({ error: "Erreur lors de l'ajout.", details: error.message });
+    console.error("Erreur interne du serveur :", error);
+
+    if (connection) {
+      await connection.rollback();
+      console.log("Transaction annulée.");
+    }
+
+    res.status(500).json({
+      error: "Erreur lors de l'ajout du volume.",
+      details: error.message,
+    });
+
+  } finally {
+    if (connection) {
+      connection.release();
+      console.log("Connexion à la base de données libérée.");
+    }
   }
 };
+
 
 const uploadMedia = async (req, res, next) => {
   const form = new formidable({ multiples: false });

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { API_URL } from "../../utils/constants";
@@ -6,7 +6,6 @@ import { useFetch } from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 
 function EditWork() {
-  const navigate = useNavigate();
   const { id } = useParams();
 
   const [formData, setFormData] = useState({
@@ -68,6 +67,11 @@ function EditWork() {
         ...prevData,
         [name]: checked,
       }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
   }
 
@@ -82,6 +86,7 @@ function EditWork() {
     e.preventDefault();
 
     const jsonData = {
+      works_id: formData.works_id,
       number: formData.number || null,
       title: formData.title || null,
       isbn: formData.isbn,
@@ -109,22 +114,29 @@ function EditWork() {
           fileData.append("media", formData.media);
           fileData.append("volumesId", resJSON.volumesId);
 
-          await fetch(`${API_URL}/works/create`, {
+          const mediaResponse = await fetch(`${API_URL}/works/uploads`, {
             method: "POST",
             credentials: "include",
             body: fileData,
           });
+
+           if (mediaResponse.ok) {
+            toast.success("Image de couverture mise à jour!");
+          } else {
+            toast.error("Échec de la mise à jour de l'image de couverture.");
+          }
         }
-        navigate("/");
       } else {
         toast.error(
-          resJSON.message || "Échec de la création. Veuillez réessayer."
+          resJSON.message || "Échec de la mise à jour. Veuillez réessayer."
         );
       }
     } catch (error) {
-      console.error("Erreur lors de la création.", error);
+      console.error("Erreur lors de la mise à jour.", error);
+      toast.error("Erreur lors de la mise à jour. Veuillez réessayer.");
     }
   }
+
 
   const workInfo = data.datas.length > 0 ? data.datas[0] : {};
 
