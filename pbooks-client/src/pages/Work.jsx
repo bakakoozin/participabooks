@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { ButtonAddToShelf } from "../components/ButtonAddToShelf";
 import { Img } from "../components/Img";
 import { useFetch } from "../hooks/useFetch";
+import { ButtonEditWork } from "../components/ButtonEditWork";
 
 function Work() {
   const { id } = useParams();
@@ -28,6 +29,7 @@ function Work() {
       )}
 
       {data.datas.map((volume) => (
+        console.log("🔍 Contenu de volume :", volume),
         <aside key={volume.vol_id} className="volume-card">
           <h3>
             {volume.vol_num}. {volume.vol_title}
@@ -39,6 +41,7 @@ function Work() {
           <h3>Résumé</h3>
           <p>{volume.vol_summary}</p>
           <ButtonAddToShelf item={volume} type="volume" />
+          <ButtonEditWork item={volume} type="volume" />
         </aside>
       ))}
     </section>
