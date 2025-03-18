@@ -12,42 +12,18 @@ import sendResponse from "../helpers/sendResponse.js";
 
 const getAll = async (req, res, next) => {
   const formattedSearch = req.query.q?.trim() || "";
-  const userId = req.user?.id || null;
-  const userRole = req.user?.role || "guest"; // "guest" si pas connecté
-
   try {
     const [response] = await Work.findAll(formattedSearch);
-
-    if (!response.length) {
-      sendResponse(res, "Aucun ouvrage récupéré.", 400);
+    if (response.length) {
+      sendResponse(res, "Ouvrages récupérés.", 200, response);
       return;
     }
-
-    // Filtrer les ouvrages
-    const filteredWorks = response.filter((work) => {
-      const volumes = work.volumes || [];
-
-      // Vérifier si au moins un volume est "validé"
-      const hasValidatedVolume = volumes.some((v) => v.vol_status === "validé");
-
-      // Vérifier si l'utilisateur possède un volume "en attente"
-      const ownsPendingVolume = volumes.some(
-        (v) => v.vol_status === "en attente" && v.user_id === userId
-      );
-
-      // L'admin/modérateur voit tout
-      if (userRole === "admin" || userRole === "moderator") return true;
-      console.log("Utilisateur admin ou modérateur, ouvrage visible");
-      // Afficher si au moins un volume validé ou si l'utilisateur possède un volume
-      return hasValidatedVolume || ownsPendingVolume;
-    });
-    console.log(filteredWorks); // Log des ouvrages après filtrage
-    sendResponse(res, "Ouvrages filtrés récupérés.", 200, filteredWorks);
+    sendResponse(res, "Aucun ouvrage récupéré.", 400);
+    return;
   } catch (error) {
     next(error);
   }
 };
-
 
 const getOne = async (req, res, next) => {
   try {
@@ -112,7 +88,7 @@ const createWork = async (req, res, next) => {
       format,
     });
 
-    res.status(201).json({ worksId:worksId, message: "Ouvrage ajouté."});
+    res.status(201).json({ worksId: worksId, message: "Ouvrage ajouté." });
     console.log("Ouvrage ajouté :", worksId);
   } catch (error) {
     console.error("Erreur lors de l'ajout de l'ouvrage :", error);
@@ -121,12 +97,16 @@ const createWork = async (req, res, next) => {
 };
 
 const editWork = async (req, res, next) => {
-  let connection;
-
   try {
-    console.log("Données reçues :", req.body);
-
-    const { works_id, number, title, isbn, summary, creator_visibility, authors } = req.body;
+    const {
+      works_id,
+      number,
+      title,
+      isbn,
+      summary,
+      creator_visibility,
+      authors,
+    } = req.body;
 
     if (!works_id) {
       return res.status(400).json({ error: "ID de l'ouvrage manquant." });
@@ -134,7 +114,6 @@ const editWork = async (req, res, next) => {
 
     const worksId = works_id;
     const users_id = req.user.id;
-
     const volumeData = {
       worksId,
       number: number || null,
@@ -145,65 +124,63 @@ const editWork = async (req, res, next) => {
       users_id,
     };
 
-    console.log("VolumeData préparé :", volumeData);
-
     // Connexion à la base de données
-    connection = await pool.getConnection();
-    await connection.beginTransaction();
+    const connection = await pool.getConnection();
+    try {
+      await connection.beginTransaction();
 
-    // Insertion du volume
-    console.log("Insertion du volume en cours...");
-    const volumesId = await Volume.insertVolume(volumeData);
-
-    console.log("Volume ajouté avec succès, ID :", volumesId);
-
-    // Gestion des auteurs
-    const parsedAuthors = authors ? JSON.parse(authors) : [];
-    
-    if (Array.isArray(parsedAuthors) && parsedAuthors.length > 0) {
-      console.log("Ajout des auteurs :", parsedAuthors);
-      await Promise.all(
-        parsedAuthors.map(async (authorName) => {
-          const authorId = await Author.findOrCreateAuthor(authorName);
-          await Author.linkAuthorToVolume(volumesId, authorId);
-          console.log(`Auteur "${authorName}" lié au volume ${volumesId}`);
-        })
+      const [existingVolume] = await connection.query(
+        "SELECT * FROM volumes WHERE isbn = ?",
+        [isbn]
       );
-    } else {
-      console.log("Aucun auteur à ajouter.");
-    }
 
-    // Validation de la transaction
-    await connection.commit();
-    console.log("Transaction commitée avec succès.");
+      if (existingVolume.length > 0) {
+        return res
+          .status(400)
+          .json({ error: `Le volume avec l'ISBN ${isbn} existe déjà.` });
+      }
+      const volumesId = await Volume.insertVolume(volumeData);
+      const parsedAuthors = authors ? JSON.parse(authors) : [];
 
-    res.status(201).json({
-      message: "Ouvrage et volume ajoutés avec succès.",
-      worksId,
-      volumesId,
-    });
+      if (Array.isArray(parsedAuthors) && parsedAuthors.length > 0) {
+        console.log("Ajout des auteurs :", parsedAuthors);
+        await Promise.all(
+          parsedAuthors.map(async (authorName) => {
+            const authorId = await Author.findOrCreateAuthor(authorName);
+            await Author.linkAuthorToVolume(volumesId, authorId);
+            console.log(`Auteur "${authorName}" lié au volume ${volumesId}`);
+          })
+        );
+      } else {
+        console.log("Aucun auteur à ajouter.");
+      }
 
-  } catch (error) {
-    console.error("Erreur interne du serveur :", error);
+      // Validation de la transaction
+      await connection.commit();
+      res.status(201).json({
+        message: "Volume ajoutés avec succès.",
+        worksId,
+        volumesId,
+      });
+    } catch (error) {
+      console.error("Erreur interne du serveur :", error);
 
-    if (connection) {
       await connection.rollback();
-      console.log("Transaction annulée.");
+      res.status(500).json({
+        error: "Erreur lors de l'ajout du volume.",
+        details: error.message,
+      });
+    } finally {
+      connection.release();
     }
-
+  } catch (error) {
+    console.error("Erreur lors de la connexion à la base de données :", error);
     res.status(500).json({
-      error: "Erreur lors de l'ajout du volume.",
+      error: "Erreur lors de la connexion à la base de données.",
       details: error.message,
     });
-
-  } finally {
-    if (connection) {
-      connection.release();
-      console.log("Connexion à la base de données libérée.");
-    }
   }
 };
-
 
 const uploadMedia = async (req, res, next) => {
   const form = new formidable({ multiples: false });

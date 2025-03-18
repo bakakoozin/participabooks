@@ -14,11 +14,11 @@ function EditWork() {
     title: "",
     isbn: "",
     summary: "",
-    creator_visibility: false,
+    creator_visibility: 0,
     media: null,
     authors: [""],
   });
-
+  console.log(formData);
   const { data, isFetching } = useFetch(`/works/${id}`, {
     initData: { datas: [] },
   });
@@ -42,10 +42,6 @@ function EditWork() {
 
   function handleChange(e) {
     const { name, value, checked, files } = e.target;
-
-    // if (name === "test") {
-    //   //TODO: gérer
-    // }
 
     if (name === "media") {
       setFormData((prevData) => ({

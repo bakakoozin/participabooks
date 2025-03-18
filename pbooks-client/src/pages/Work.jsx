@@ -29,7 +29,6 @@ function Work() {
       )}
 
       {data.datas.map((volume) => (
-        console.log("🔍 Contenu de volume :", volume),
         <aside key={volume.vol_id} className="volume-card">
           <h3>
             {volume.vol_num}. {volume.vol_title}

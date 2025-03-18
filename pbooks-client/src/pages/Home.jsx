@@ -49,8 +49,10 @@ function Home() {
           ))}
         </div>
         <div>
-        {isFetching && <p>Chargement...</p>}
-        {data?.datas?.length === 0 && !isFetching && <p>Aucun ouvrage trouvé.</p>}
+          {isFetching && <p>Chargement...</p>}
+          {data?.datas?.length === 0 && !isFetching && (
+            <p>Aucun ouvrage trouvé.</p>
+          )}
         </div>
         <button
           className="nav-button right"

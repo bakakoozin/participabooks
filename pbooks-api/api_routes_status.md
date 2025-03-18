@@ -33,7 +33,8 @@
   - /        -> *(GET tous)*                                    ✅
   - /volumes/:id/reviews -> *(GET)*                             **en cours** 🟠
   USERS
-  - /works/create -> *(POST créer)*              `token requis` **en cours** 🔴
+  - /works/create -> *(POST créer)*              `token requis` ✅
+  - /works/edit -> *(POST créer)*                `token requis` ✅
   - /uploads/medias -> *(POST créer)*            `token requis` **en cours** 🔴
   - /works/:id -> *(PATCH)*                      `token requis` **en cours** 🟠
   - /works/:id -> *(DELETE)*                     `token requis` **en cours** 🟠

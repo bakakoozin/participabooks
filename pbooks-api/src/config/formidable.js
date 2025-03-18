@@ -1,6 +1,5 @@
 import formidable from "formidable";
 import path from "path";
-import sharp from "sharp";
 import fs from "fs";
 
 export const handleUpload = (req, res, next) => {
@@ -43,21 +42,11 @@ export const handleUpload = (req, res, next) => {
     const outputFilePath = path.join(process.cwd(), "public/uploads/avatars", newFileName);
 
     try {
-      // Redimensionner et enregistrer l'image
-      await sharp(avatarFile.filepath)
-        .resize(200, 200)
-        .toFile(outputFilePath);
-
-      // Supprimer l'ancien fichier temporaire
-      fs.unlink(avatarFile.filepath, () => {});
-
-      // Ajouter le chemin final à la requête pour utilisation dans `uploadAvatar`
+      fs.renameSync(avatarFile.filepath, outputFilePath);
       req.avatarUrl = newFileName;
-
-      // Passer au middleware suivant (uploadAvatar)
       next();
     } catch (error) {
-      console.error("Erreur lors du redimensionnement:", error);
+      console.error("Erreur lors du déplacement du fichier:", error);
       return res.status(500).json({ message: "Erreur lors du traitement de l'image", error: error.message });
     }
   });
