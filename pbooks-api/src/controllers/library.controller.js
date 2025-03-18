@@ -12,18 +12,42 @@ import sendResponse from "../helpers/sendResponse.js";
 
 const getAll = async (req, res, next) => {
   const formattedSearch = req.query.q?.trim() || "";
+  const userId = req.user?.id || null;
+  const userRole = req.user?.role || "guest"; // "guest" si pas connecté
+
   try {
     const [response] = await Work.findAll(formattedSearch);
-    if (response.length) {
-      sendResponse(res, "Ouvrages récupérés.", 200, response);
+
+    if (!response.length) {
+      sendResponse(res, "Aucun ouvrage récupéré.", 400);
       return;
     }
-    sendResponse(res, "Aucun ouvrage récupéré.", 400);
-    return;
+
+    // Filtrer les ouvrages
+    const filteredWorks = response.filter((work) => {
+      const volumes = work.volumes || [];
+
+      // Vérifier si au moins un volume est "validé"
+      const hasValidatedVolume = volumes.some((v) => v.vol_status === "validé");
+
+      // Vérifier si l'utilisateur possède un volume "en attente"
+      const ownsPendingVolume = volumes.some(
+        (v) => v.vol_status === "en attente" && v.user_id === userId
+      );
+
+      // L'admin/modérateur voit tout
+      if (userRole === "admin" || userRole === "moderator") return true;
+      console.log("Utilisateur admin ou modérateur, ouvrage visible");
+      // Afficher si au moins un volume validé ou si l'utilisateur possède un volume
+      return hasValidatedVolume || ownsPendingVolume;
+    });
+    console.log(filteredWorks); // Log des ouvrages après filtrage
+    sendResponse(res, "Ouvrages filtrés récupérés.", 200, filteredWorks);
   } catch (error) {
     next(error);
   }
 };
+
 
 const getOne = async (req, res, next) => {
   try {

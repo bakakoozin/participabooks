@@ -36,7 +36,6 @@ function Login() {
 
         const resJson = await response.json();
         dispatch(login(resJson.user));
-        toast.success("Connexion réussie.");
         navigate("/");
       } catch (error){
         console.error("Erreur lors de la connexion:", error);
