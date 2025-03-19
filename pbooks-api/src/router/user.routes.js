@@ -1,6 +1,5 @@
 import { Router } from "express";
 
-import { handleUpload } from "../config/formidable.js";
 import {
   getInfos,
   update,
@@ -29,7 +28,7 @@ router.get("/", getInfos);
 //PROFILE
 router.patch("/profile", update);
 router.delete("/profile", remove);
-router.patch("/profile/avatar", handleUpload, uploadAvatar);
+router.patch("/profile/avatar", uploadAvatar);
 router.patch("/profile/theme", updateTheme);
 
 //SHELF

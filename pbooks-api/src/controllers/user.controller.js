@@ -1,8 +1,11 @@
 import { hash, genSalt } from "bcrypt";
+import path from "path";
+import fs from "fs";
+
 import User from "../models/users.model.js";
 import sendResponse from "../helpers/sendResponse.js";
-import fs from "fs";
-import path from "path";
+import handleUpload from "../config/formidable.js";
+
 
 //============================== GET =======================================//
 
@@ -89,50 +92,120 @@ const update = async (req, res, next) => {
 const uploadAvatar = async (req, res, next) => {
   console.log("Début de l'upload d'avatar");
 
-  const userId = req.user.id;
+  const userId = req.user?.id;
   if (!userId) {
     return res.status(400).json({ message: "ID utilisateur manquant." });
   }
 
-  if (!req.avatarUrl) {
-    return res.status(400).json({ message: "Aucune image traitée." });
-  }
+  const formOptions = {
+    multiples: false,
+    uploadDir: path.join(process.cwd(), "public/uploads/temp"),
+    maxFileSize: 5 * 1024 * 1024, // 5 Mo max
+  };
 
-  try {
-    // 1️⃣ Récupérer l'ancien avatar
-    const [user] = await User.findOne(userId);
-    const oldAvatar = user[0]?.avatar;
+  handleUpload(req, res, async () => {
+    console.log("Fichiers reçus:", req.files);
+    console.log("Body reçu:", req.body);
 
-    // 2️⃣ Supprimer l'ancien fichier s'il existe et n'est pas un avatar par défaut
-    if (oldAvatar && oldAvatar !== "default-avatar.png") {
-      const oldAvatarPath = path.join(process.cwd(), "public/uploads/avatars", oldAvatar);
+    if (!req.files || !req.files.avatar) {
+      return res.status(400).json({ message: "Fichier avatar manquant." });
+    }
 
-      fs.access(oldAvatarPath, fs.constants.F_OK, (err) => {
-        if (!err) {
-          fs.unlink(oldAvatarPath, (unlinkErr) => {
-            if (unlinkErr) {
-              console.error("Erreur lors de la suppression de l'ancien avatar :", unlinkErr);
-            } else {
-              console.log("Ancien avatar supprimé :", oldAvatar);
-            }
-          });
-        }
+    const avatarFile = req.files.avatar[0];
+    const fileExt = path.extname(avatarFile.originalFilename || "").toLowerCase();
+    const validExtensions = [".jpg", ".jpeg", ".png"];
+
+    if (!validExtensions.includes(fileExt)) {
+      fs.unlink(avatarFile.path, () => { });
+      return res.status(400).json({ message: "Format de fichier non autorisé." });
+    }
+
+    const newFilename = `avatar_${Date.now()}${fileExt}`;
+    const outputFilePath = path.join(process.cwd(), "public/uploads/avatars", newFilename);
+    
+    try {
+      fs.renameSync(avatarFile.filepath, outputFilePath);
+
+      const [user] = await User.findOne(userId);
+      const oldAvatar = user[0]?.avatar;
+
+      if (oldAvatar && oldAvatar !== "default-avatar.png") {
+        const oldAvatarPath = path.join(process.cwd(), "public/uploads/avatars", oldAvatar);
+        fs.access(oldAvatarPath, fs.constants.F_OK, (err) => {
+          if (!err) {
+            fs.unlink(oldAvatarPath, (unlinkErr) => {
+              if (unlinkErr) {
+                console.error("Erreur lors de la suppression de l'ancien avatar :", unlinkErr);
+              } else {
+                console.log("Ancien avatar supprimé :", oldAvatar);
+              }
+            });
+          }
+        });
+      }
+      const result = await User.updateAvatar(newFilename, userId);
+      if (!result) {
+        return res.status(500).json({ message: "Erreur lors de la mise à jour de l'avatar en base." });
+      }
+
+      return res.json({
+        message: "Avatar mis à jour avec succès !",
+        avatarUrl: newFilename,
       });
+    } catch (error) {
+      console.error("Erreur lors du déplacement du fichier avatar :", error);
+      return res.status(500).json({ message: "Erreur lors du traitement de l'image.", error: error.message });
     }
-    const result = await User.updateAvatar(req.avatarUrl, userId);
-    if (!result) {
-      return res.status(500).json({ message: "Erreur lors de la mise à jour de l'avatar en base." });
-    }
-
-    return res.json({
-      message: "Avatar mis à jour avec succès !",
-      avatarUrl: req.avatarUrl,
-    });
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour de l'avatar:", error);
-    return res.status(500).json({ message: "Erreur interne du serveur" });
-  }
+  }, formOptions);
 };
+
+// const uploadAvatar = async (req, res, next) => {
+//   console.log("Début de l'upload d'avatar");
+
+//   const userId = req.user.id;
+//   if (!userId) {
+//     return res.status(400).json({ message: "ID utilisateur manquant." });
+//   }
+
+//   if (!req.avatarUrl) {
+//     return res.status(400).json({ message: "Aucune image traitée." });
+//   }
+
+//   try {
+//     // 1 Récupérer l'ancien avatar
+//     const [user] = await User.findOne(userId);
+//     const oldAvatar = user[0]?.avatar;
+
+//     // 2 Supprimer l'ancien fichier s'il existe et n'est pas un avatar par défaut
+//     if (oldAvatar && oldAvatar !== "default-avatar.png") {
+//       const oldAvatarPath = path.join(process.cwd(), "public/uploads/avatars", oldAvatar);
+
+//       fs.access(oldAvatarPath, fs.constants.F_OK, (err) => {
+//         if (!err) {
+//           fs.unlink(oldAvatarPath, (unlinkErr) => {
+//             if (unlinkErr) {
+//               console.error("Erreur lors de la suppression de l'ancien avatar :", unlinkErr);
+//             } else {
+//               console.log("Ancien avatar supprimé :", oldAvatar);
+//             }
+//           });
+//         }
+//       });
+//     }
+//     const result = await User.updateAvatar(req.avatarUrl, userId);
+//     if (!result) {
+//       return res.status(500).json({ message: "Erreur lors de la mise à jour de l'avatar en base." });
+//     }
+
+//     return res.json({
+//       message: "Avatar mis à jour avec succès !",
+//       avatarUrl: req.avatarUrl,
+//     });
+//   } catch (error) {
+//     console.error("Erreur lors de la mise à jour de l'avatar:", error);
+//     return res.status(500).json({ message: "Erreur interne du serveur" });
+//   }
+// };
 
 const updateByAdmin = async (req, res, next) => {
   const { id, status, role } = req.body;
