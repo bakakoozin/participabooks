@@ -18,7 +18,7 @@ function EditWork() {
     media: null,
     authors: [""],
   });
-  console.log(formData);
+
   const { data, isFetching } = useFetch(`/works/${id}`, {
     initData: { datas: [] },
   });
@@ -104,23 +104,10 @@ function EditWork() {
       const resJSON = await response.json();
 
       if (response.ok) {
-        toast.success("Ouvrage créé!");
+        toast.success("Ouvrage mis à jour !");
         if (formData.media) {
-          const fileData = new FormData();
-          fileData.append("media", formData.media);
-          fileData.append("volumesId", resJSON.volumesId);
-
-          const mediaResponse = await fetch(`${API_URL}/works/uploads`, {
-            method: "POST",
-            credentials: "include",
-            body: fileData,
-          });
-
-           if (mediaResponse.ok) {
-            toast.success("Image de couverture mise à jour!");
-          } else {
-            toast.error("Échec de la mise à jour de l'image de couverture.");
-          }
+          const volumeId = resJSON.volumesId;
+          await updateMedia(volumeId);
         }
       } else {
         toast.error(
@@ -133,6 +120,30 @@ function EditWork() {
     }
   }
 
+  async function updateMedia(volumeId) {
+    const fileData = new FormData();
+    fileData.append("media", formData.media);
+    fileData.append("volumes_id", volumeId);
+
+    try {
+      const mediaResponse = await fetch(`${API_URL}/works/uploads`, {
+        method: "PATCH",
+        credentials: "include",
+        body: fileData,
+      });
+
+      if (mediaResponse.ok) {
+        toast.success("Image de couverture mise à jour !");
+      } else {
+        toast.error(
+          "Échec de la mise à jour de l'image de couverture. Veuillez réessayer."
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'upload du média.", error);
+      toast.error("Erreur lors de l'upload du média. Veuillez réessayer.");
+    }
+  }
 
   const workInfo = data.datas.length > 0 ? data.datas[0] : {};
 
@@ -140,7 +151,7 @@ function EditWork() {
     <>
       {workInfo && <h2>Editer l&apos;ouvrage {workInfo.works_name}</h2>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div>
           <label htmlFor="number">Numéro du volume</label>
           <input
@@ -196,16 +207,6 @@ function EditWork() {
           Ajouter un auteur
         </button>
         <div>
-          <label htmlFor="media">Image de couverture</label>
-          <input
-            type="file"
-            id="media"
-            name="media"
-            accept="image/*"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
           <input
             type="checkbox"
             id="creator_visibility"
@@ -220,6 +221,24 @@ function EditWork() {
         </div>
         <button type="submit">Valider</button>
       </form>
+
+      {formData.works_id && (
+        <div>
+          <h3>Ajouter une image de couverture</h3>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <div>
+              <label htmlFor="media">Image de couverture</label>
+              <input
+                type="file"
+                id="media"
+                name="media"
+                accept="image/*"
+                onChange={handleChange}
+              />
+            </div>
+          </form>
+        </div>
+      )}
     </>
   );
 }

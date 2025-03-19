@@ -1,5 +1,6 @@
 import pool from "../config/db.js";
-import formidable from "formidable";
+import path from "path";
+import fs from "fs";
 
 import Volume from "../models/volumes.model.js";
 import Work from "../models/works.model.js";
@@ -7,6 +8,7 @@ import Media from "../models/medias.model.js";
 import Author from "../models/authors.model.js";
 import Review from "../models/reviews.model.js";
 import sendResponse from "../helpers/sendResponse.js";
+import handleUpload from "../config/formidable.js";
 
 //============================== GET =======================================//
 
@@ -183,41 +185,89 @@ const editWork = async (req, res, next) => {
 };
 
 const uploadMedia = async (req, res, next) => {
-  const form = new formidable({ multiples: false });
+  console.log("Début de l'upload du média...");
 
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      return res
-        .status(400)
-        .json({ error: "Erreur lors du téléchargement du fichier." });
-    }
+  const formOptions = {
+    multiples: false,
+    uploadDir: path.join(process.cwd(), "public/uploads/medias"),
+    maxFileSize: 5 * 1024 * 1024,
+  };
+  console.log(req.body);  // Affichez ce qui est reçu
+  console.log(req.file);
+  handleUpload(
+    req,
+    formOptions,
+    async () => {
+      console.log("Fichier téléchargé :", req.files);
+      console.log("Body reçu :", req.body);
 
-    const { volumesId } = fields;
-    if (!volumesId) {
-      return res
-        .status(400)
-        .json({ error: "ID du volume obligatoire pour l'ajout de média." });
-    }
+      const volumesId = req.body?.volumesId;
+      if (!volumesId) {
+        return res.status(400).json({ message: "ID du volume obligatoire." });
+      }
 
-    const file = files.media;
-    if (!file) {
-      return res.status(400).json({ error: "Fichier média manquant." });
-    }
+      if (!req.files || !req.files.media) {
+        return res.status(400).json({ message: "Fichier média manquant." });
+      }
 
-    try {
-      const url = `/uploads/medias/${file.newFilename}`;
-      await Media.insertMedia({ volumes_id: volumesId, url });
-      res
-        .status(201)
-        .json({ message: "Média ajouté avec succès.", volumesId, url });
-    } catch (error) {
-      console.error("Erreur lors de l'ajout du média :", error);
-      res.status(500).json({
-        error: "Erreur lors de l'ajout du média.",
-        details: error.message,
-      });
-    }
-  });
+      const mediaFile = req.files.media[0];
+      const originalFilename = mediaFile.originalFilename || "inconnu";
+      const fileExt = path.extname(originalFilename).toLowerCase();
+      const validExtensions = ["jpg", "jpeg", "png", "webp"];
+
+      if (!validExtensions.includes(fileExt)) {
+        fs.unlink(mediaFile.path, () => {});
+        return res
+          .status(400)
+          .json({ message: `Format non autorisé: ${fileExt}` });
+      }
+
+      const newFilename = `media_${Date.now()}${fileExt}`;
+      const outputFilePath = path.join(
+        process.cwd(),
+        "public/uploads/medias",
+        newFilename
+      );
+
+      try {
+        fs.renameSync(mediaFile.filepath, outputFilePath);
+
+        const [existingMedia] = await Media.findByVolumeId(volumesId);
+
+        if (existingMedia.length > 0) {
+          // Si un média existe déjà, on le remplace et on supprime l'ancien fichier
+          const oldFilePath = path.join(process.cwd(), "public", existingMedia[0].url);
+          fs.unlinkSync(oldFilePath); // Supprimer l'ancien fichier
+
+          // Mise à jour de l'URL du média en base de données
+          await Media.updateMedia(newFilename, volumesId);
+        } else {
+          // Sinon, ajouter un nouveau média
+          await Media.insertMedia(newFilename, volumesId);
+        }
+
+        return res.json({
+          message: "Média ajouté avec succès.",
+          file: {
+            volumesId,
+            originalFilename,
+            newFilename,
+            fileExt,
+            filePath: `/uploads/medias/${newFilename}`,
+          },
+        });
+      } catch (error) {
+        console.error("Erreur lors de l'ajout du média :", error);
+        return res
+          .status(500)
+          .json({
+            message: "Erreur lors ddu traitement du fichier.",
+            error: error.message,
+          });
+      }
+    },
+    formOptions
+  );
 };
 
 //============================== PATCH =======================================//

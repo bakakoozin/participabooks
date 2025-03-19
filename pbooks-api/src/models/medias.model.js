@@ -10,8 +10,8 @@ class Media {
 
   //============================== UPDATE =======================================//
   static async updateMedia({ volumes_id, url }) {
-    const INSERT_MEDIA = `UPDATE medias SET url WHERE volumes_id = ?`;
-    return await pool.execute(INSERT_MEDIA, [volumes_id, url]);
+    const UPDATE_MEDIA = `UPDATE medias SET url = ? WHERE volumes_id = ?`;
+    return await pool.execute(UPDATE_MEDIA, [url, volumes_id]);
   }
 }
 

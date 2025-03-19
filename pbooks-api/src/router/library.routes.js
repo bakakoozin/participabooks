@@ -25,7 +25,7 @@ router.get("/volumes/:id/reviews", getReviews);
 //USERS
 router.post("/create", verifyToken, createWork);
 router.post("/edit", verifyToken, editWork);
-router.post("/uploads", verifyToken, uploadMedia);
+router.patch("/uploads", verifyToken, uploadMedia);
 router.delete("/:id", removeWork);
 router.patch("/:id", update);
 router.delete("/volumes/:id", removeVolume);
