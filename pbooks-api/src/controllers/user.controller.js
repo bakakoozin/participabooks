@@ -113,7 +113,7 @@ const uploadAvatar = async (req, res, next) => {
 
     const avatarFile = req.files.avatar[0];
     const fileExt = path.extname(avatarFile.originalFilename || "").toLowerCase();
-    const validExtensions = [".jpg", ".jpeg", ".png"];
+    const validExtensions = [".jpg", ".jpeg", ".png", "webp"];
 
     if (!validExtensions.includes(fileExt)) {
       fs.unlink(avatarFile.path, () => { });

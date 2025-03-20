@@ -187,6 +187,11 @@ const editWork = async (req, res, next) => {
 const uploadMedia = async (req, res, next) => {
   console.log("Début de l'upload du média...");
 
+  const volumesId = req.body?.volumesId;
+  if (!volumesId) {
+    return res.status(400).json({ message: "ID du volume obligatoire." });
+  }
+
   const formOptions = {
     multiples: false,
     uploadDir: path.join(process.cwd(), "public/uploads/medias"),
@@ -194,80 +199,73 @@ const uploadMedia = async (req, res, next) => {
   };
   console.log(req.body);  // Affichez ce qui est reçu
   console.log(req.file);
-  handleUpload(
-    req,
-    formOptions,
-    async () => {
-      console.log("Fichier téléchargé :", req.files);
-      console.log("Body reçu :", req.body);
 
-      const volumesId = req.body?.volumesId;
-      if (!volumesId) {
-        return res.status(400).json({ message: "ID du volume obligatoire." });
-      }
+  handleUpload(req, res, async () => {
+    console.log("Fichier téléchargé :", req.files);
+    console.log("Body reçu :", req.body);
 
-      if (!req.files || !req.files.media) {
-        return res.status(400).json({ message: "Fichier média manquant." });
-      }
+    if (!req.files || !req.files.media) {
+      return res.status(400).json({ message: "Fichier média manquant." });
+    }
 
-      const mediaFile = req.files.media[0];
-      const originalFilename = mediaFile.originalFilename || "inconnu";
-      const fileExt = path.extname(originalFilename).toLowerCase();
-      const validExtensions = ["jpg", "jpeg", "png", "webp"];
+    const mediaFile = req.files.media[0];
+    const fileExt = path.extname(originalFilename).toLowerCase();
+    const validExtensions = ["jpg", "jpeg", "png", "webp"];
 
-      if (!validExtensions.includes(fileExt)) {
-        fs.unlink(mediaFile.path, () => {});
-        return res
-          .status(400)
-          .json({ message: `Format non autorisé: ${fileExt}` });
-      }
+    if (!validExtensions.includes(fileExt)) {
+      fs.unlink(mediaFile.path, () => { });
+      return res
+        .status(400)
+        .json({ message: `Format non autorisé: ${fileExt}` });
+    }
 
-      const newFilename = `media_${Date.now()}${fileExt}`;
-      const outputFilePath = path.join(
-        process.cwd(),
-        "public/uploads/medias",
-        newFilename
-      );
+    const newFilename = `media_${Date.now()}${fileExt}`;
+    const outputFilePath = path.join(
+      process.cwd(),
+      "public/uploads/medias",
+      newFilename
+    );
 
-      try {
-        fs.renameSync(mediaFile.filepath, outputFilePath);
+    try {
+      fs.renameSync(mediaFile.filepath, outputFilePath);
 
-        const [existingMedia] = await Media.findByVolumeId(volumesId);
+      const [existingMedia] = await Media.findByVolumeId(volumesId);
+      const oldMedia = existingMedia[0]?.url;
 
-        if (existingMedia.length > 0) {
-          // Si un média existe déjà, on le remplace et on supprime l'ancien fichier
-          const oldFilePath = path.join(process.cwd(), "public", existingMedia[0].url);
-          fs.unlinkSync(oldFilePath); // Supprimer l'ancien fichier
-
-          // Mise à jour de l'URL du média en base de données
-          await Media.updateMedia(newFilename, volumesId);
-        } else {
-          // Sinon, ajouter un nouveau média
-          await Media.insertMedia(newFilename, volumesId);
-        }
-
-        return res.json({
-          message: "Média ajouté avec succès.",
-          file: {
-            volumesId,
-            originalFilename,
-            newFilename,
-            fileExt,
-            filePath: `/uploads/medias/${newFilename}`,
-          },
+      if (oldMedia) {
+        // Si un média existe déjà, on le remplace et on supprime l'ancien fichier
+        const oldMediaPath = path.join(process.cwd(), "public/uploads/medias", oldMedia);
+        fs.access(oldMediaPath, fs.constants.F_OK, (err) => {
+          if (!err) {
+            fs.unlink(oldMediaPath, (unlinkErr) => {
+              if (unlinkErr) {
+                console.error("Erreur lors de la suppression de l'ancien media :", unlinkErr);
+              } else {
+                console.log("Ancien media supprimé :", oldMedia);
+              }
+            });
+          }
         });
-      } catch (error) {
-        console.error("Erreur lors de l'ajout du média :", error);
-        return res
-          .status(500)
-          .json({
-            message: "Erreur lors ddu traitement du fichier.",
-            error: error.message,
-          });
       }
-    },
-    formOptions
-  );
+      const result = await Media.updateMedia(newFilename, volumesId);
+      if (!result) {
+        return res.status(500).json({ message: "Erreur lors de l'ajout du média." });
+      }
+
+      return res.json({
+        message: "Média ajouté avec succès.",
+        mediaUrl: newFilename,
+      });
+    } catch (error) {
+      console.error("Erreur lors du déplacement du fichier média :", error);
+      return res
+        .status(500)
+        .json({
+          message: "Erreur lors du traitement du fichier.",
+          error: error.message,
+        });
+    }
+  }, formOptions);
 };
 
 //============================== PATCH =======================================//
