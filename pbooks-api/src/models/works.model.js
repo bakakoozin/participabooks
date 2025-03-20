@@ -4,7 +4,7 @@ class Work {
 
     //============================== SELECT =======================================//
     
-    static async findAll(search = "") {
+    static async findAll(search = "", user_id) {
       const SELECT_ALL = `SELECT 
         works.id AS works_id, 
         works.name AS works_name,
@@ -22,18 +22,29 @@ class Work {
         JSON_ARRAYAGG(JSON_OBJECT(
           'vol_id', volumes.id,
           'vol_status', volumes.status,
-          'user_id', volumes.users_id
+          'user_id', volumes.users_id,
+          'role', users.role
         )) AS volumes
       FROM works
+      LEFT JOIN users ON users.id = ?
       LEFT JOIN volumes ON volumes.works_id = works.id
       LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
       LEFT JOIN authors ON authors.id = volumes_authors.authors_id
       LEFT JOIN reviews ON reviews.volumes_id = volumes.id
-      WHERE works.name LIKE CONCAT('%', ?, '%') 
-        OR volumes.title LIKE CONCAT('%', ?, '%')
+      WHERE 
+          (
+    volumes.status = 'validé'
+    OR users.role = 'moderator'
+    OR users.id = volumes.users_id
+  )
+  AND
+  (
+    works.name LIKE CONCAT('%', ?, '%')
+    OR volumes.title LIKE CONCAT('%', ?, '%')
+  )
       GROUP BY works.id, works.name`;
       
-      return await pool.query(SELECT_ALL, [`%${search}%`, `%${search}%`]);
+      return await pool.query(SELECT_ALL, [user_id, `%${search}%`, `%${search}%`]);
     }
     
       static async findOne(id) {

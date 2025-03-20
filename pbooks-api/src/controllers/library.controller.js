@@ -15,7 +15,7 @@ import handleUpload from "../config/formidable.js";
 const getAll = async (req, res, next) => {
   const formattedSearch = req.query.q?.trim() || "";
   try {
-    const [response] = await Work.findAll(formattedSearch);
+    const [response] = await Work.findAll(formattedSearch, req?.user?.id || "");
     if (response.length) {
       sendResponse(res, "Ouvrages récupérés.", 200, response);
       return;
@@ -23,6 +23,7 @@ const getAll = async (req, res, next) => {
     sendResponse(res, "Aucun ouvrage récupéré.", 400);
     return;
   } catch (error) {
+    console.log("Erreur lors de la récupération des ouvrages :", error);
     next(error);
   }
 };

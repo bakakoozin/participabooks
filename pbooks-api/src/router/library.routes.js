@@ -1,5 +1,6 @@
 import { Router } from "express";
 import verifyToken from "../middlewares/verifyToken.js";
+import verifyTokenNoBlock from "../middlewares/verifyTokenNoBlock.js";
 
 import {
   getAll,
@@ -18,7 +19,7 @@ import {
 const router = Router();
 
 //PUBLIC
-router.get("/", getAll);
+router.get("/", verifyTokenNoBlock, getAll);
 router.get("/:id", getOne);
 router.get("/volumes/:id/reviews", getReviews);
 
