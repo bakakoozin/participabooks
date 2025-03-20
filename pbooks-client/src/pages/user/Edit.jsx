@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { API_URL } from "../../utils/constants";
 import { useFetch } from "../../hooks/useFetch";
@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 function EditWork() {
   const { id } = useParams();
-
+const refMedia = useRef(null);
   const [formData, setFormData] = useState({
     works_id: id,
     number: "",
@@ -106,8 +106,9 @@ function EditWork() {
       if (response.ok) {
         toast.success("Ouvrage mis à jour !");
         if (formData.media) {
-          const volumeId = resJSON.volumesId;
-          await updateMedia(volumeId);
+          const volumesId = resJSON.volumesId;
+          console.log(volumesId);
+          await updateMedia(volumesId);
         }
       } else {
         toast.error(
@@ -120,11 +121,11 @@ function EditWork() {
     }
   }
 
-  async function updateMedia(volumeId) {
+  async function updateMedia(volumesId) {
     const fileData = new FormData();
-    fileData.append("media", formData.media);
-    fileData.append("volumes_id", volumeId);
-
+    fileData.append("media", refMedia.current.files[0]);
+    fileData.append("volumesId", volumesId);
+console.log(fileData);
     try {
       const mediaResponse = await fetch(`${API_URL}/works/uploads`, {
         method: "PATCH",
@@ -229,6 +230,7 @@ function EditWork() {
             <div>
               <label htmlFor="media">Image de couverture</label>
               <input
+              ref={refMedia}
                 type="file"
                 id="media"
                 name="media"
