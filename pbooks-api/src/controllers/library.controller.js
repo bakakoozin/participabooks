@@ -188,19 +188,11 @@ const editWork = async (req, res, next) => {
 const uploadMedia = async (req, res, next) => {
   console.log("Début de l'upload du média...");
 
-  
-  // console.log(req.body);
-  // if (!volumesId) {
-  //   return res.status(400).json({ message: "ID du volume obligatoire." });
-  // }
-
   const formOptions = {
     multiples: false,
     uploadDir: path.join(process.cwd(), "public/uploads/medias"),
     maxFileSize: 5 * 1024 * 1024,
   };
-  // console.log(req.body);  // Affichez ce qui est reçu
-  // console.log(req.file);
 
   handleUpload(req, res, async () => {
     const volumesId = req.body?.volumesId?.[0];
@@ -211,9 +203,19 @@ const uploadMedia = async (req, res, next) => {
       return res.status(400).json({ message: "Fichier média manquant." });
     }
 
-    const mediaFile = req.files.media[0];
+    const mediaFile = Array.isArray(req.files.media) ? req.files.media[0] : req.files.media;
+
+    if (!mediaFile) {
+      return res.status(400).json({ message: "Fichier média introuvable." });
+    }
+
     const fileExt = path.extname(mediaFile.originalFilename || "").toLowerCase();
     const validExtensions = ["jpg", "jpeg", "png", "webp"];
+
+    if (!validExtensions.includes(fileExt.replace(".", ""))) {
+      return res.status(400).json({ message: "Extension de fichier invalide." });
+    }
+
     const newFilename = `media_${Date.now()}${fileExt}`;
     const outputFilePath = path.join(
       process.cwd(),
@@ -224,7 +226,21 @@ const uploadMedia = async (req, res, next) => {
     try {
       fs.renameSync(mediaFile.filepath, outputFilePath);
 
-      // const [existingMedia] = await Media.findByVolumeId(volumesId);
+      const existingMedia = await Media.findByVolumeId(volumesId);
+      const queryResult = existingMedia
+        ? await Media.updateMedia({ url: newFilename, volumes_id: volumesId })
+        : await Media.insertMedia({ url: newFilename, volumes_id: volumesId });
+
+      const [result] = queryResult;
+
+      if (!result || result.affectedRows === 0) {
+        return res.status(500).json({ message: "Erreur lors de l'ajout / mise à jour du média." });
+      }
+
+      return res.json({
+        message: "Média enregistré avec succès.",
+        mediaUrl: newFilename,
+      });
       // const oldMedia = existingMedia[0]?.url;
       // console.log("Ancien média :", oldMedia);
 
@@ -235,27 +251,27 @@ const uploadMedia = async (req, res, next) => {
 
       //   if (isExistingMedia) {
       //     fs.unlink(oldMediaPath)
-        // fs.access(oldMediaPath, fs.constants.F_OK, (err) => {
-        //   if (!err) {
-        //     fs.unlink(oldMediaPath, (unlinkErr) => {
-        //       if (unlinkErr) {
-        //         console.error("Erreur lors de la suppression de l'ancien media :", unlinkErr);
-        //       } else {
-        //         console.log("Ancien media supprimé :", oldMedia);
-        //       }
-        //     });
-          // }
-        // });
+      // fs.access(oldMediaPath, fs.constants.F_OK, (err) => {
+      //   if (!err) {
+      //     fs.unlink(oldMediaPath, (unlinkErr) => {
+      //       if (unlinkErr) {
+      //         console.error("Erreur lors de la suppression de l'ancien media :", unlinkErr);
+      //       } else {
+      //         console.log("Ancien media supprimé :", oldMedia);
+      //       }
+      //     });
       // }
-      const result = await Media.updateMedia({url: newFilename, volumes_id: volumesId});
-      if (!result) {
-        return res.status(500).json({ message: "Erreur lors de l'ajout du média." });
-      }
+      // });
+      // }
+      // const result = await Media.updateMedia({ url: newFilename, volumes_id: volumesId });
+      // if (!result) {
+      //   return res.status(500).json({ message: "Erreur lors de l'ajout du média." });
+      // }
 
-      return res.json({
-        message: "Média ajouté avec succès.",
-        mediaUrl: newFilename,
-      });
+      // return res.json({
+      //   message: "Média ajouté avec succès.",
+      //   mediaUrl: newFilename,
+      // });
     } catch (error) {
       console.error("Erreur lors du déplacement du fichier média :", error);
       return res

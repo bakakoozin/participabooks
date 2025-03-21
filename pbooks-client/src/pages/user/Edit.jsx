@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 function EditWork() {
   const { id } = useParams();
-const refMedia = useRef(null);
+  const refMedia = useRef(null);
   const [formData, setFormData] = useState({
     works_id: id,
     number: "",
@@ -125,7 +125,7 @@ const refMedia = useRef(null);
     const fileData = new FormData();
     fileData.append("media", refMedia.current.files[0]);
     fileData.append("volumesId", volumesId);
-console.log(fileData);
+    console.log(fileData);
     try {
       const mediaResponse = await fetch(`${API_URL}/works/uploads`, {
         method: "PATCH",
@@ -230,7 +230,7 @@ console.log(fileData);
             <div>
               <label htmlFor="media">Image de couverture</label>
               <input
-              ref={refMedia}
+                ref={refMedia}
                 type="file"
                 id="media"
                 name="media"
