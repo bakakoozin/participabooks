@@ -227,10 +227,32 @@ const uploadMedia = async (req, res, next) => {
       fs.renameSync(mediaFile.filepath, outputFilePath);
 
       const existingMedia = await Media.findByVolumeId(volumesId);
-      const queryResult = existingMedia
-        ? await Media.updateMedia({ url: newFilename, volumes_id: volumesId })
-        : await Media.insertMedia({ url: newFilename, volumes_id: volumesId });
 
+      if (existingMedia) {
+        const oldMediaPath = path.join(process.cwd(), "public/uploads/medias", existingMedia.url);
+
+        try {
+          if (fs.unlink(oldMediaPath)) {
+            fs.unlinkSync(oldMediaPath);
+            console.log(`Ancien fichier supprimé : ${existingMedia.url}`);
+          }
+        } catch (unlinkError) {
+          console.error("Erreur lors de la suppression de l'ancien média :", unlinkError);
+        }
+        const queryResult = await Media.updateMedia({ url: newFilename, volumes_id: volumesId })
+        const [result] = queryResult;
+
+        if (!result || result.affectedRows === 0) {
+          return res.status(500).json({ message: "Erreur lors de l'ajout / mise à jour du média." });
+        }
+
+        return res.json({
+          message: "Média mis à jour avec succès.",
+          mediaUrl: newFilename,
+        });
+      }
+
+      const queryResult = await Media.insertMedia({ url: newFilename, volumes_id: volumesId });
       const [result] = queryResult;
 
       if (!result || result.affectedRows === 0) {
@@ -238,40 +260,9 @@ const uploadMedia = async (req, res, next) => {
       }
 
       return res.json({
-        message: "Média enregistré avec succès.",
+        message: "Média ajouté avec succès.",
         mediaUrl: newFilename,
       });
-      // const oldMedia = existingMedia[0]?.url;
-      // console.log("Ancien média :", oldMedia);
-
-      // if (oldMedia) {
-      //   // Si un média existe déjà, on le remplace et on supprime l'ancien fichier
-      //   const oldMediaPath = path.join(process.cwd(), "public/uploads/medias", oldMedia);
-      //   const isExistingMedia = fs.existsSync(oldMediaPath);
-
-      //   if (isExistingMedia) {
-      //     fs.unlink(oldMediaPath)
-      // fs.access(oldMediaPath, fs.constants.F_OK, (err) => {
-      //   if (!err) {
-      //     fs.unlink(oldMediaPath, (unlinkErr) => {
-      //       if (unlinkErr) {
-      //         console.error("Erreur lors de la suppression de l'ancien media :", unlinkErr);
-      //       } else {
-      //         console.log("Ancien media supprimé :", oldMedia);
-      //       }
-      //     });
-      // }
-      // });
-      // }
-      // const result = await Media.updateMedia({ url: newFilename, volumes_id: volumesId });
-      // if (!result) {
-      //   return res.status(500).json({ message: "Erreur lors de l'ajout du média." });
-      // }
-
-      // return res.json({
-      //   message: "Média ajouté avec succès.",
-      //   mediaUrl: newFilename,
-      // });
     } catch (error) {
       console.error("Erreur lors du déplacement du fichier média :", error);
       return res
