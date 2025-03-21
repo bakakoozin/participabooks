@@ -2,23 +2,23 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const ButtonEditWork = ({ item }) => {
+const ButtonEditVolume = ({ item }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  
+  console.log(item);
   if (!isLogged || item.vol_status !== "en attente" || item.user_id !== infos.id) {
     return null;
   }
 
   const handleEditWork = () => {
-    navigate(`/editor/${item.works_id}`);
+    navigate(`/editVol/${item.vol_id}`);
   };
 
   return <button onClick={handleEditWork}>Éditer</button>;
 };
 
-ButtonEditWork.propTypes = {
+ButtonEditVolume.propTypes = {
   item: PropTypes.object.isRequired,
 };
 
-export { ButtonEditWork };
+export { ButtonEditVolume };

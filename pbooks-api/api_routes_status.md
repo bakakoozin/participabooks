@@ -35,7 +35,7 @@
   USERS
   - /works/create -> *(POST créer)*              `token requis` ✅
   - /works/edit -> *(POST créer)*                `token requis` ✅
-  - /uploads/medias -> *(POST créer)*            `token requis` **en cours** 🔴
+  - /uploads/medias -> *(PATCH)*                 `token requis` ✅
   - /works/:id -> *(PATCH)*                      `token requis` **en cours** 🟠
   - /works/:id -> *(DELETE)*                     `token requis` **en cours** 🟠
   - /volumes/:id -> *(DELETE)*                   `token requis` **en cours** 🟠

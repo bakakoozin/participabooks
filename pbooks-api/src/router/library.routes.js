@@ -5,11 +5,12 @@ import verifyTokenNoBlock from "../middlewares/verifyTokenNoBlock.js";
 import {
   getAll,
   getOne,
+  getVolumeDetails,
   getAuthorsBySearch,
   getReviews,
   createWork,
   editWork,
-  update,
+  updateVolume,
   updateStatus,
   removeWork,
   removeVolume,
@@ -28,7 +29,9 @@ router.post("/create", verifyToken, createWork);
 router.post("/edit", verifyToken, editWork);
 router.patch("/uploads", verifyToken, uploadMedia);
 router.delete("/:id", removeWork);
-router.patch("/:id", update);
+// router.patch("/:id", verifyToken, updateWork);
+router.get("/volumes/:id", verifyToken, getVolumeDetails);
+router.patch("/volumes/:id", verifyToken, updateVolume);
 router.delete("/volumes/:id", removeVolume);
 
 //MODERATOR

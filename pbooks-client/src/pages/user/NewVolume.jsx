@@ -1,14 +1,15 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+
 import { API_URL } from "../../utils/constants";
 import { useFetch } from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 
-function UpdateVolume() {
-  const { volumeId } = useParams();
+function NewVolume() {
+  const { id } = useParams();
   const refMedia = useRef(null);
   const [formData, setFormData] = useState({
-    volumes_id: volumeId,
+    works_id: id,
     number: "",
     title: "",
     isbn: "",
@@ -18,36 +19,27 @@ function UpdateVolume() {
     authors: [""],
   });
 
-  // Utilisation du hook personnalisé pour fetch les données
-  const { data, isFetching } = useFetch(`/works/volumes/${volumeId}`, {
-    initData: { datas: {} }, // Valeur par défaut (vide)
+  const { data, isFetching } = useFetch(`/works/${id}`, {
+    initData: { datas: [] },
   });
 
-  // Affichage des erreurs ou des données dans la console
   useEffect(() => {
-    console.log(data.datas);
-    if (data.datas) { // On vérifie si data.datas est défini
-      const volumeInfo = data.datas;
-  
-      // Traitement de l'auteur : on s'assure que c'est un tableau, même s'il n'y a qu'un auteur
-      const authors = volumeInfo.author_name ? [volumeInfo.author_name] : [""]; // Si author_name existe, on le met dans un tableau
-  
+    if (data.datas.length > 0) {
+      const workInfo = data.datas[0];
       setFormData((prevData) => ({
         ...prevData,
-        number: volumeInfo.number || "",
-        title: volumeInfo.title || "",
-        isbn: volumeInfo.isbn || "",
-        summary: volumeInfo.summary || "",
-        creator_visibility: volumeInfo.creator_visibility === "1",
-        authors: authors, // Mettre à jour la liste des auteurs dans le state
+        number: workInfo.number || "",
+        title: workInfo.title || "",
+        isbn: workInfo.isbn || "",
+        summary: workInfo.summary || "",
+        creator_visibility: workInfo.creator_visibility === "1",
+        authors: workInfo.authors || [""],
       }));
     }
-  }, [data]); // Se déclenche à chaque changement de `data` ou `volumeId`
+  }, [data]);
 
-  // Affichage si en cours de récupération des données
   if (isFetching) return <p>Chargement...</p>;
 
-  // Gestion des changements de valeur dans le formulaire
   function handleChange(e) {
     const { name, value, checked, files } = e.target;
 
@@ -79,7 +71,6 @@ function UpdateVolume() {
     }
   }
 
-  // Ajouter un auteur
   function addAuthor() {
     setFormData((prevData) => ({
       ...prevData,
@@ -87,23 +78,22 @@ function UpdateVolume() {
     }));
   }
 
-  // Soumission du formulaire
   async function handleSubmit(e) {
     e.preventDefault();
 
     const jsonData = {
-      volumes_id: formData.volumes_id,
+      works_id: formData.works_id,
       number: formData.number || null,
       title: formData.title || null,
       isbn: formData.isbn,
       summary: formData.summary || null,
       creator_visibility: formData.creator_visibility ? "1" : "0",
-      authors: formData.authors || [],
+      authors: JSON.stringify(formData.authors || []),
     };
 
     try {
-      const response = await fetch(`${API_URL}/works/volumes/${volumeId}`, {
-        method: "PATCH",
+      const response = await fetch(`${API_URL}/works/edit`, {
+        method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
@@ -114,13 +104,16 @@ function UpdateVolume() {
       const resJSON = await response.json();
 
       if (response.ok) {
-        toast.success("Volume mis à jour !");
+        toast.success("Ouvrage mis à jour !");
         if (formData.media) {
           const volumesId = resJSON.volumesId;
+          console.log(volumesId);
           await updateMedia(volumesId);
         }
       } else {
-        toast.error(resJSON.message || "Échec de la mise à jour. Veuillez réessayer.");
+        toast.error(
+          resJSON.message || "Échec de la mise à jour. Veuillez réessayer."
+        );
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour.", error);
@@ -128,11 +121,11 @@ function UpdateVolume() {
     }
   }
 
-  // Mise à jour du média
   async function updateMedia(volumesId) {
     const fileData = new FormData();
     fileData.append("media", refMedia.current.files[0]);
     fileData.append("volumesId", volumesId);
+    console.log(fileData);
     try {
       const mediaResponse = await fetch(`${API_URL}/works/uploads`, {
         method: "PATCH",
@@ -143,20 +136,21 @@ function UpdateVolume() {
       if (mediaResponse.ok) {
         toast.success("Image de couverture mise à jour !");
       } else {
-        toast.error("Échec de la mise à jour de l'image de couverture.");
+        toast.error(
+          "Échec de la mise à jour de l'image de couverture. Veuillez réessayer."
+        );
       }
     } catch (error) {
       console.error("Erreur lors de l'upload du média.", error);
-      toast.error("Erreur lors de l'upload du média.");
+      toast.error("Erreur lors de l'upload du média. Veuillez réessayer.");
     }
   }
 
-  // Rendu du formulaire avec les données récupérées
+  const workInfo = data.datas.length > 0 ? data.datas[0] : {};
+
   return (
     <>
-      {formData.number && formData.title && (
-        <h2>Editer le volume n°{formData.number} - {formData.title}</h2>
-      )}
+      {workInfo && <h2>Editer l&apos;ouvrage {workInfo.works_name}</h2>}
 
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div>
@@ -167,7 +161,6 @@ function UpdateVolume() {
             name="number"
             value={formData.number}
             onChange={handleChange}
-            placeholder={formData.number || "Numéro du volume"}
           />
         </div>
         <div>
@@ -178,7 +171,6 @@ function UpdateVolume() {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            placeholder={formData.title || "Titre du volume"}
           />
         </div>
         <div>
@@ -189,7 +181,6 @@ function UpdateVolume() {
             name="isbn"
             value={formData.isbn}
             onChange={handleChange}
-            placeholder={formData.isbn || "ISBN du volume"}
           />
         </div>
         <div>
@@ -199,7 +190,6 @@ function UpdateVolume() {
             name="summary"
             value={formData.summary}
             onChange={handleChange}
-            placeholder={formData.summary || "Résumé du volume"}
           />
         </div>
         {formData.authors.map((author, index) => (
@@ -211,7 +201,6 @@ function UpdateVolume() {
               name={`author-${index}`}
               value={author}
               onChange={handleChange}
-              placeholder={author || `Auteur ${index + 1}`}
             />
           </div>
         ))}
@@ -227,13 +216,14 @@ function UpdateVolume() {
             onChange={handleChange}
           />
           <label htmlFor="creator_visibility">
-            Je souhaite rendre mon pseudo visible en tant que créateur de ce volume
+            Je souhaite rendre mon pseudo visible en tant que créateur de ce
+            volume
           </label>
         </div>
         <button type="submit">Valider</button>
       </form>
 
-      {formData.volumes_id && (
+      {formData.works_id && (
         <div>
           <h3>Ajouter une image de couverture</h3>
           <form onSubmit={(e) => e.preventDefault()}>
@@ -255,4 +245,4 @@ function UpdateVolume() {
   );
 }
 
-export default UpdateVolume;
+export default NewVolume;

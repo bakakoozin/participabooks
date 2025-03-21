@@ -43,6 +43,20 @@ const getOne = async (req, res, next) => {
   }
 };
 
+const getVolumeDetails = async (req, res, next) => {
+  try {
+    const volumeId = req.params.id;
+    const volume = await Volume.findById(volumeId);
+    if (volume) {
+      sendResponse(res, "Volume récupéré.", 200, volume);
+    } else {
+      sendResponse(res, "Aucun volume trouvé.", 404);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getAuthorsBySearch = async (req, res, next) => {
   try {
     const searchTerm = req.query.q ? req.query.q.trim() : "";
@@ -187,7 +201,6 @@ const editWork = async (req, res, next) => {
 
 const uploadMedia = async (req, res, next) => {
   console.log("Début de l'upload du média...");
-
   const formOptions = {
     multiples: false,
     uploadDir: path.join(process.cwd(), "public/uploads/medias"),
@@ -198,20 +211,17 @@ const uploadMedia = async (req, res, next) => {
     const volumesId = req.body?.volumesId?.[0];
     console.log("Fichier téléchargé :", req.fields);
     console.log("Body reçu :", req.body);
-
     if (!req.files || !req.files.media) {
       return res.status(400).json({ message: "Fichier média manquant." });
     }
 
     const mediaFile = Array.isArray(req.files.media) ? req.files.media[0] : req.files.media;
-
     if (!mediaFile) {
       return res.status(400).json({ message: "Fichier média introuvable." });
     }
 
     const fileExt = path.extname(mediaFile.originalFilename || "").toLowerCase();
     const validExtensions = ["jpg", "jpeg", "png", "webp"];
-
     if (!validExtensions.includes(fileExt.replace(".", ""))) {
       return res.status(400).json({ message: "Extension de fichier invalide." });
     }
@@ -225,9 +235,7 @@ const uploadMedia = async (req, res, next) => {
 
     try {
       fs.renameSync(mediaFile.filepath, outputFilePath);
-
       const existingMedia = await Media.findByVolumeId(volumesId);
-
       if (existingMedia) {
         const oldMediaPath = path.join(process.cwd(), "public/uploads/medias", existingMedia.url);
 
@@ -239,13 +247,12 @@ const uploadMedia = async (req, res, next) => {
         } catch (unlinkError) {
           console.error("Erreur lors de la suppression de l'ancien média :", unlinkError);
         }
+
         const queryResult = await Media.updateMedia({ url: newFilename, volumes_id: volumesId })
         const [result] = queryResult;
-
         if (!result || result.affectedRows === 0) {
           return res.status(500).json({ message: "Erreur lors de l'ajout / mise à jour du média." });
         }
-
         return res.json({
           message: "Média mis à jour avec succès.",
           mediaUrl: newFilename,
@@ -254,11 +261,9 @@ const uploadMedia = async (req, res, next) => {
 
       const queryResult = await Media.insertMedia({ url: newFilename, volumes_id: volumesId });
       const [result] = queryResult;
-
       if (!result || result.affectedRows === 0) {
         return res.status(500).json({ message: "Erreur lors de l'ajout / mise à jour du média." });
       }
-
       return res.json({
         message: "Média ajouté avec succès.",
         mediaUrl: newFilename,
@@ -277,123 +282,34 @@ const uploadMedia = async (req, res, next) => {
 
 //============================== PATCH =======================================//
 
-const update = async (req, res, next) => {
-  const form = new formidable.IncomingForm();
+const updateVolume = async (req, res, next) => {
+  console.log(req.body);
+  const {
+    number,
+    title,
+    isbn,
+    summary,
+    creator_visibility } = req.body;
 
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      return res
-        .status(400)
-        .json({ error: "Erreur lors du téléchargement du fichier." });
+  try {
+    const volumeId = req.params.id;
+    const volumeData = {
+      number,
+      title,
+      isbn,
+      summary,
+      creator_visibility,
+    };
+
+    const [result] = await Volume.updateVolume({ volumesId: volumeId, ...volumeData });
+    if (result && result.affectedRows) {
+      res.json({ message: "Volume mis à jour avec succès." });
+    } else {
+      res.status(400).json({ message: "Erreur lors de la mise à jour du volume." });
     }
-
-    const { worksId, volumesId, authors } = fields;
-
-    if (!worksId) {
-      return res
-        .status(400)
-        .json({ error: "ID de l'ouvrage obligatoire pour la mise à jour." });
-    }
-
-    if (!volumesId) {
-      return res
-        .status(400)
-        .json({ error: "ID du volume obligatoire pour la mise à jour." });
-    }
-
-    const connection = await pool.getConnection();
-    try {
-      await connection.beginTransaction();
-
-      // construction de l'objet de mise à jour pour le work
-      const workFields = {};
-      ["name", "edition", "type", "format"].forEach((key) => {
-        if (fields[key] !== undefined && fields[key] !== "") {
-          workFields[key] = fields[key];
-        }
-      });
-
-      // mise à jour seulement s'il y a des champs à modifier
-      if (Object.keys(workFields).length > 0) {
-        await Work.updateWork({ worksId, ...workFields });
-      }
-
-      // construction de l'objet de mise à jour pour le volume
-      const volumeFields = {};
-      ["number", "title", "isbn", "summary", "creator_visibility"].forEach(
-        (key) => {
-          if (fields[key] !== undefined && fields[key] !== "") {
-            volumeFields[key] = fields[key];
-          }
-        }
-      );
-      // gestion du toggle creator_visibility (tinyint 0/1)
-      if (fields.creator_visibility !== undefined) {
-        volumeFields.creator_visibility = parseInt(
-          fields.creator_visibility,
-          10
-        );
-      }
-
-      // mise à jour seulement s'il y a des champs à modifier
-      if (Object.keys(volumeFields).length > 0) {
-        await Volume.updateVolume({ volumesId, ...volumeFields });
-      }
-
-      if (authors) {
-        const parseAuthors =
-          typeof authors === "string" ? JSON.parse(authors) : authors;
-
-        if (Array.isArray(parseAuthors) && parseAuthors.length > 0) {
-          const existingAuthors = await Author.getAuthorsByVolumeId(volumesId);
-
-          await Promise.all(
-            parseAuthors.map(async (authorName) => {
-              const authorId = await Author.findOrCreateAuthor(authorName);
-
-              if (!existingAuthors.some((author) => author.id === authorId)) {
-                await Author.linkAuthorToVolume(volumesId, authorId);
-              }
-            })
-          );
-
-          await Promise.all(
-            existingAuthors.map(async (existingAuthor) => {
-              if (!parseAuthors.includes(existingAuthor.name)) {
-                await Author.unlinkAuthorFromVolume(
-                  volumesId,
-                  existingAuthor.id
-                );
-              }
-            })
-          );
-        }
-      }
-
-      const file = files.media;
-      const url = file ? `/uploads/medias/${file.newFilename}` : null;
-
-      if (file) {
-        await Media.updateMedia({ volumesId, url });
-      }
-
-      await connection.commit();
-      res.json({
-        message: "Mise à jour effectuée avec succès.",
-        worksId,
-        volumesId,
-        mediaUrl: url,
-      });
-    } catch (error) {
-      await connection.rollback();
-      res.status(500).json({
-        error: "Erreur lors de la mise à jour.",
-        details: error.message,
-      });
-    } finally {
-      connection.release();
-    }
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const updateStatus = async (req, res, next) => {
@@ -448,11 +364,12 @@ const removeVolume = async (req, res, next) => {
 export {
   getAll,
   getOne,
+  getVolumeDetails,
   getAuthorsBySearch,
   getReviews,
   createWork,
   editWork,
-  update,
+  updateVolume,
   updateStatus,
   removeWork,
   removeVolume,

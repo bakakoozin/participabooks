@@ -58,14 +58,22 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="editor/:id"
+         <Route
+        path="editVol/:volumeId"
         element={
           <ProtectedRoute>
             <EditWork />
           </ProtectedRoute>
         }
       />
+      {/* <Route
+        path="editor/:id"
+        element={
+          <ProtectedRoute>
+            <EditWork />
+          </ProtectedRoute>
+        }
+      /> */}
     </Routes>
   );
 }
