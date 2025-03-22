@@ -22,10 +22,10 @@
   - /shelf/work/:id      -> *(GET une)*       ✅
   - /shelf/work/:id      -> *(DELETE)*        ✅
   REVIEWS
-  - /shelf/volumes/:id/reviews -> *(POST)*          **en cours** 🟠
-  - /shelf/volumes/:id/reviews/comment -> *(PATCH)* **en cours** 🟠
-  - /shelf/volumes/:id/reviews/score -> *(PATCH)*   **en cours** 🟠
-  - /shelf/volumes/:id/reviews/:id -> *(PDELETE)*   **en cours** 🟠
+  - /shelf/volumes/:id/reviews -> *(POST)*          **à faire** 🔴
+  - /shelf/volumes/:id/reviews/comment -> *(PATCH)* **à faire** 🔴
+  - /shelf/volumes/:id/reviews/score -> *(PATCH)*   **à faire** 🔴
+  - /shelf/volumes/:id/reviews/:id -> *(PDELETE)*   **à faire** 🔴
 
 - /library -> **en cours** 🟠
   PUBLIC
@@ -34,12 +34,11 @@
   - /volumes/:id/reviews -> *(GET)*                             **à faire** 🔴
   USERS
   - /works/create -> *(POST créer)*              `token requis` ✅
-  - /works/:id -> *(PATCH)*                      `token requis` **à faire** 🔴
-  - /works/:id -> *(DELETE)*                     `token requis` **à faire** 🔴
+  - /works/work/:id -> *(DELETE)*                `token requis` ✅
   - /works/volume/create -> *(POST créer)*       `token requis` ✅
   - /works/volumes/:id -> *(GET)*                `token requis` ✅
   - /works/volumes/:id -> *(PATCH)*              `token requis` ✅
-  - /works/volumes/:id -> *(DELETE)*             `token requis` **à faire** 🔴
+  - /works/volume/:id -> *(DELETE)*              `token requis` ✅
   - /works/uploads -> *(PATCH)*                  `token requis` ✅
   MODERATOR
   - /volumes/:id/status -> *(PATCH)* `token requis` `moderator` **à faire** 🔴

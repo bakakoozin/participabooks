@@ -5,6 +5,7 @@ import { ButtonAddToShelf } from "../components/ButtonAddToShelf";
 import { Img } from "../components/Img";
 import { useFetch } from "../hooks/useFetch";
 import { ButtonEditVolume } from "../components/ButtonEditVolume";
+import { ButtonRemove } from "../components/ButtonRemove";
 
 function Work() {
   const { id } = useParams();
@@ -44,6 +45,7 @@ function Work() {
           <p>{volume.vol_summary}</p>
           <ButtonAddToShelf item={volume} type="volume" />
           <ButtonEditVolume item={volume} type="volume" />
+          <ButtonRemove item={volume} type="volume" />
         </aside>
       ))}
     </section>

@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import scrollSlider from "../utils/slider";
 import { useFetch } from "../hooks/useFetch";
 import { ButtonAddToShelf } from "../components/ButtonAddToShelf";
+import { ButtonRemove } from "../components/ButtonRemove";
 import { Img } from "../components/Img";
 
 function Home() {
   const { data, isFetching, search, setSearch } = useFetch("/works/", {
-    initData: [],
+    initData: { datas: [] },
   });
+  console.log("Données reçues de l'API:", data);
   const sliderRef = useRef(null);
 
   return (
@@ -45,6 +47,7 @@ function Home() {
               <p>{work.works_edition}</p>
               <p>{work.works_format}</p>
               <ButtonAddToShelf item={work} type="work" />
+              <ButtonRemove item={work} type="work" />
             </article>
           ))}
         </div>
