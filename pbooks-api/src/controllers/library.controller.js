@@ -113,7 +113,7 @@ const createWork = async (req, res, next) => {
   }
 };
 
-const editWork = async (req, res, next) => {
+const createVolume = async (req, res, next) => {
   try {
     const {
       works_id,
@@ -368,7 +368,7 @@ export {
   getAuthorsBySearch,
   getReviews,
   createWork,
-  editWork,
+  createVolume,
   updateVolume,
   updateStatus,
   removeWork,

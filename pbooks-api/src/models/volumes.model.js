@@ -1,7 +1,6 @@
 import pool from "../config/db.js";
 
 class Volume {
-
   //============================== SELECT =======================================//
 
   static async findAllByWorkId(works_id) {
@@ -46,9 +45,16 @@ class Volume {
     creator_visibility,
     users_id,
   }) {
-    console.log("Données insérées :", { worksId, number, title, isbn, summary, creator_visibility, users_id });
-    const INSERT_VOLUME =
-      `INSERT INTO volumes (works_id, number, title, isbn, summary, creator_visibility, users_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    console.log("Données insérées :", {
+      worksId,
+      number,
+      title,
+      isbn,
+      summary,
+      creator_visibility,
+      users_id,
+    });
+    const INSERT_VOLUME = `INSERT INTO volumes (works_id, number, title, isbn, summary, creator_visibility, users_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     const [result] = await pool.execute(INSERT_VOLUME, [
       worksId ?? null,
       number ?? null,
@@ -56,7 +62,7 @@ class Volume {
       isbn ?? null,
       summary ?? null,
       creator_visibility ?? null,
-      users_id ?? null
+      users_id ?? null,
     ]);
     return result.insertId; // Récupére l'ID du volume inséré
   }
@@ -76,7 +82,7 @@ class Volume {
       isbn ?? null,
       summary ?? null,
       creator_visibility ?? null,
-      volumesId
+      volumesId,
     ]);
     return result;
   }

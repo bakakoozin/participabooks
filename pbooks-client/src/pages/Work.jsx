@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 
+import { ButtonCreateVolume } from "../components/ButtonCreateVolume";
 import { ButtonAddToShelf } from "../components/ButtonAddToShelf";
 import { Img } from "../components/Img";
 import { useFetch } from "../hooks/useFetch";
@@ -27,6 +28,8 @@ function Work() {
           <p>Format de l&apos;ouvrage : {workInfo.works_format}</p>
         </article>
       )}
+
+      <ButtonCreateVolume item={workInfo} type="work" />
 
       {data.datas.map((volume) => (
         <aside key={volume.vol_id} className="volume-card">

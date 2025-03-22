@@ -9,7 +9,8 @@ import UpdateUserForm from "../pages/user/UpdateUserForm";
 import Shelf from "../pages/user/Shelf";
 import ShelfWorkDetails from "../pages/user/ShelfWorkDetails";
 import CreateWork from "../pages/user/Create";
-import EditWork from "../pages/user/Edit";
+import EditVolume from "../pages/user/EditVolume";
+import CreateVolume from "../pages/user/CreateVolume";
 
 function AppRoutes() {
   return (
@@ -62,18 +63,18 @@ function AppRoutes() {
         path="editVol/:volumeId"
         element={
           <ProtectedRoute>
-            <EditWork />
+            <EditVolume />
           </ProtectedRoute>
         }
       />
-      {/* <Route
-        path="editor/:id"
+      <Route
+        path="createVol/:workId"
         element={
           <ProtectedRoute>
-            <EditWork />
+            <CreateVolume />
           </ProtectedRoute>
         }
-      /> */}
+      />
     </Routes>
   );
 }

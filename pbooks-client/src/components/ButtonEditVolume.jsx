@@ -10,11 +10,11 @@ const ButtonEditVolume = ({ item }) => {
     return null;
   }
 
-  const handleEditWork = () => {
+  const handleEditVolume = () => {
     navigate(`/editVol/${item.vol_id}`);
   };
 
-  return <button onClick={handleEditWork}>Éditer</button>;
+  return <button onClick={handleEditVolume}>Éditer</button>;
 };
 
 ButtonEditVolume.propTypes = {

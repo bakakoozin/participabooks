@@ -5,11 +5,11 @@ import { API_URL } from "../../utils/constants";
 import { useFetch } from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 
-function NewVolume() {
-  const { id } = useParams();
+function CreateVolume() {
+  const { workId } = useParams();
   const refMedia = useRef(null);
   const [formData, setFormData] = useState({
-    works_id: id,
+    works_id: workId,
     number: "",
     title: "",
     isbn: "",
@@ -19,7 +19,7 @@ function NewVolume() {
     authors: [""],
   });
 
-  const { data, isFetching } = useFetch(`/works/${id}`, {
+  const { data, isFetching } = useFetch(`/works/${workId}`, {
     initData: { datas: [] },
   });
 
@@ -92,7 +92,7 @@ function NewVolume() {
     };
 
     try {
-      const response = await fetch(`${API_URL}/works/edit`, {
+      const response = await fetch(`${API_URL}/works/volumes/create`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -104,7 +104,7 @@ function NewVolume() {
       const resJSON = await response.json();
 
       if (response.ok) {
-        toast.success("Ouvrage mis à jour !");
+        toast.success("Volume créé !");
         if (formData.media) {
           const volumesId = resJSON.volumesId;
           console.log(volumesId);
@@ -112,12 +112,12 @@ function NewVolume() {
         }
       } else {
         toast.error(
-          resJSON.message || "Échec de la mise à jour. Veuillez réessayer."
+          resJSON.message || "Échec de la création. Veuillez réessayer."
         );
       }
     } catch (error) {
-      console.error("Erreur lors de la mise à jour.", error);
-      toast.error("Erreur lors de la mise à jour. Veuillez réessayer.");
+      console.error("Erreur lors de la création.", error);
+      toast.error("Erreur lors de la création. Veuillez réessayer.");
     }
   }
 
@@ -134,10 +134,10 @@ function NewVolume() {
       });
 
       if (mediaResponse.ok) {
-        toast.success("Image de couverture mise à jour !");
+        toast.success("Image de couverture ajoutée !");
       } else {
         toast.error(
-          "Échec de la mise à jour de l'image de couverture. Veuillez réessayer."
+          "Échec de l'ajout d'image de couverture. Veuillez réessayer."
         );
       }
     } catch (error) {
@@ -245,4 +245,4 @@ function NewVolume() {
   );
 }
 
-export default NewVolume;
+export default CreateVolume;

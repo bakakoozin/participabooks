@@ -9,7 +9,7 @@ import {
   getAuthorsBySearch,
   getReviews,
   createWork,
-  editWork,
+  createVolume,
   updateVolume,
   updateStatus,
   removeWork,
@@ -26,7 +26,7 @@ router.get("/volumes/:id/reviews", getReviews);
 
 //USERS
 router.post("/create", verifyToken, createWork);
-router.post("/edit", verifyToken, editWork);
+router.post("/volumes/create", verifyToken, createVolume);
 router.patch("/uploads", verifyToken, uploadMedia);
 router.delete("/:id", removeWork);
 // router.patch("/:id", verifyToken, updateWork);

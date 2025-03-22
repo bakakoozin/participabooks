@@ -4,7 +4,7 @@ import { API_URL } from "../../utils/constants";
 import { useFetch } from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 
-function UpdateVolume() {
+function EditVolume() {
   const { volumeId } = useParams();
   const refMedia = useRef(null);
   const [formData, setFormData] = useState({
@@ -26,12 +26,13 @@ function UpdateVolume() {
   // Affichage des erreurs ou des données dans la console
   useEffect(() => {
     console.log(data.datas);
-    if (data.datas) { // On vérifie si data.datas est défini
+    if (data.datas) {
+      // On vérifie si data.datas est défini
       const volumeInfo = data.datas;
-  
+
       // Traitement de l'auteur : on s'assure que c'est un tableau, même s'il n'y a qu'un auteur
       const authors = volumeInfo.author_name ? [volumeInfo.author_name] : [""]; // Si author_name existe, on le met dans un tableau
-  
+
       setFormData((prevData) => ({
         ...prevData,
         number: volumeInfo.number || "",
@@ -120,7 +121,9 @@ function UpdateVolume() {
           await updateMedia(volumesId);
         }
       } else {
-        toast.error(resJSON.message || "Échec de la mise à jour. Veuillez réessayer.");
+        toast.error(
+          resJSON.message || "Échec de la mise à jour. Veuillez réessayer."
+        );
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour.", error);
@@ -155,7 +158,9 @@ function UpdateVolume() {
   return (
     <>
       {formData.number && formData.title && (
-        <h2>Editer le volume n°{formData.number} - {formData.title}</h2>
+        <h2>
+          Editer le volume n°{formData.number} - {formData.title}
+        </h2>
       )}
 
       <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -227,7 +232,8 @@ function UpdateVolume() {
             onChange={handleChange}
           />
           <label htmlFor="creator_visibility">
-            Je souhaite rendre mon pseudo visible en tant que créateur de ce volume
+            Je souhaite rendre mon pseudo visible en tant que créateur de ce
+            volume
           </label>
         </div>
         <button type="submit">Valider</button>
@@ -255,4 +261,4 @@ function UpdateVolume() {
   );
 }
 
-export default UpdateVolume;
+export default EditVolume;
