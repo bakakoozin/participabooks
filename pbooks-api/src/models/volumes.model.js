@@ -45,15 +45,6 @@ class Volume {
     creator_visibility,
     users_id,
   }) {
-    console.log("Données insérées :", {
-      worksId,
-      number,
-      title,
-      isbn,
-      summary,
-      creator_visibility,
-      users_id,
-    });
     const INSERT_VOLUME = `INSERT INTO volumes (works_id, number, title, isbn, summary, creator_visibility, users_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     const [result] = await pool.execute(INSERT_VOLUME, [
       worksId ?? null,
@@ -69,22 +60,34 @@ class Volume {
 
   //============================== UPDATE =======================================//
 
-  static async updateVolume({ volumesId, volumeData }) {
-    const { number, title, isbn, summary, creator_visibility } = volumeData;
+  static async updateVolume({ volumesId, ...volumeData }) {
+    const fieldsToUpdate = Object.entries(volumeData)
+      .filter(([key, value]) => value !== undefined)
+      .map(([key, value]) => `${key} = ?`);
+
+    if (fieldsToUpdate.length === 0) {
+      throw new Error("Aucune donnée à mettre à jour");
+    }
     const UPDATE_VOLUME = `
-  UPDATE volumes
-  SET number = ?, title = ?, isbn = ?, summary = ?, creator_visibility = ?
-  WHERE id = ?
-  `;
-    const [result] = await pool.execute(UPDATE_VOLUME, [
-      number ?? null,
-      title ?? null,
-      isbn ?? null,
-      summary ?? null,
-      creator_visibility ?? null,
-      volumesId,
-    ]);
-    return result;
+      UPDATE volumes
+      SET ${fieldsToUpdate.join(", ")}
+      WHERE id = ?
+      `;
+    const values = Object.values(volumeData).filter(
+      (value) => value !== undefined
+    );
+    values.push(volumesId);
+    try {
+      const [result] = await pool.execute(UPDATE_VOLUME, values);
+
+      if (result && result.affectedRows > 0) {
+        return result;
+      } else {
+        throw new Error("Aucune modification effectuée.");
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   static async updateStatus(status, id) {

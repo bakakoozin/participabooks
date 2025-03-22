@@ -5,8 +5,11 @@ import PropTypes from "prop-types";
 const ButtonEditVolume = ({ item }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  console.log(item);
-  if (!isLogged || item.vol_status !== "en attente" || item.user_id !== infos.id) {
+  if (
+    !isLogged ||
+    item.vol_status !== "en attente" ||
+    item.user_id !== infos.id
+  ) {
     return null;
   }
 

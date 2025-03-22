@@ -207,108 +207,143 @@ const uploadMedia = async (req, res, next) => {
     maxFileSize: 5 * 1024 * 1024,
   };
 
-  handleUpload(req, res, async () => {
-    const volumesId = req.body?.volumesId?.[0];
-    console.log("Fichier téléchargé :", req.fields);
-    console.log("Body reçu :", req.body);
-    if (!req.files || !req.files.media) {
-      return res.status(400).json({ message: "Fichier média manquant." });
-    }
+  handleUpload(
+    req,
+    res,
+    async () => {
+      const volumesId = req.body?.volumesId?.[0];
+      console.log("Fichier téléchargé :", req.fields);
+      console.log("Body reçu :", req.body);
+      if (!req.files || !req.files.media) {
+        return res.status(400).json({ message: "Fichier média manquant." });
+      }
 
-    const mediaFile = Array.isArray(req.files.media) ? req.files.media[0] : req.files.media;
-    if (!mediaFile) {
-      return res.status(400).json({ message: "Fichier média introuvable." });
-    }
+      const mediaFile = Array.isArray(req.files.media)
+        ? req.files.media[0]
+        : req.files.media;
+      if (!mediaFile) {
+        return res.status(400).json({ message: "Fichier média introuvable." });
+      }
 
-    const fileExt = path.extname(mediaFile.originalFilename || "").toLowerCase();
-    const validExtensions = ["jpg", "jpeg", "png", "webp"];
-    if (!validExtensions.includes(fileExt.replace(".", ""))) {
-      return res.status(400).json({ message: "Extension de fichier invalide." });
-    }
+      const fileExt = path
+        .extname(mediaFile.originalFilename || "")
+        .toLowerCase();
+      const validExtensions = ["jpg", "jpeg", "png", "webp"];
+      if (!validExtensions.includes(fileExt.replace(".", ""))) {
+        return res
+          .status(400)
+          .json({ message: "Extension de fichier invalide." });
+      }
 
-    const newFilename = `media_${Date.now()}${fileExt}`;
-    const outputFilePath = path.join(
-      process.cwd(),
-      "public/uploads/medias",
-      newFilename
-    );
+      const newFilename = `media_${Date.now()}${fileExt}`;
+      const outputFilePath = path.join(
+        process.cwd(),
+        "public/uploads/medias",
+        newFilename
+      );
 
-    try {
-      fs.renameSync(mediaFile.filepath, outputFilePath);
-      const existingMedia = await Media.findByVolumeId(volumesId);
-      if (existingMedia) {
-        const oldMediaPath = path.join(process.cwd(), "public/uploads/medias", existingMedia.url);
+      try {
+        fs.renameSync(mediaFile.filepath, outputFilePath);
+        const existingMedia = await Media.findByVolumeId(volumesId);
+        if (existingMedia) {
+          const oldMediaPath = path.join(
+            process.cwd(),
+            "public/uploads/medias",
+            existingMedia.url
+          );
 
-        try {
-          if (fs.unlink(oldMediaPath)) {
-            fs.unlinkSync(oldMediaPath);
-            console.log(`Ancien fichier supprimé : ${existingMedia.url}`);
+          try {
+            if (fs.unlink(oldMediaPath)) {
+              fs.unlinkSync(oldMediaPath);
+              console.log(`Ancien fichier supprimé : ${existingMedia.url}`);
+            }
+          } catch (unlinkError) {
+            console.error(
+              "Erreur lors de la suppression de l'ancien média :",
+              unlinkError
+            );
           }
-        } catch (unlinkError) {
-          console.error("Erreur lors de la suppression de l'ancien média :", unlinkError);
+
+          const queryResult = await Media.updateMedia({
+            url: newFilename,
+            volumes_id: volumesId,
+          });
+          const [result] = queryResult;
+          if (!result || result.affectedRows === 0) {
+            return res.status(500).json({
+              message: "Erreur lors de l'ajout / mise à jour du média.",
+            });
+          }
+          return res.json({
+            message: "Média mis à jour avec succès.",
+            mediaUrl: newFilename,
+          });
         }
 
-        const queryResult = await Media.updateMedia({ url: newFilename, volumes_id: volumesId })
+        const queryResult = await Media.insertMedia({
+          url: newFilename,
+          volumes_id: volumesId,
+        });
         const [result] = queryResult;
         if (!result || result.affectedRows === 0) {
-          return res.status(500).json({ message: "Erreur lors de l'ajout / mise à jour du média." });
+          return res.status(500).json({
+            message: "Erreur lors de l'ajout / mise à jour du média.",
+          });
         }
         return res.json({
-          message: "Média mis à jour avec succès.",
+          message: "Média ajouté avec succès.",
           mediaUrl: newFilename,
         });
-      }
-
-      const queryResult = await Media.insertMedia({ url: newFilename, volumes_id: volumesId });
-      const [result] = queryResult;
-      if (!result || result.affectedRows === 0) {
-        return res.status(500).json({ message: "Erreur lors de l'ajout / mise à jour du média." });
-      }
-      return res.json({
-        message: "Média ajouté avec succès.",
-        mediaUrl: newFilename,
-      });
-    } catch (error) {
-      console.error("Erreur lors du déplacement du fichier média :", error);
-      return res
-        .status(500)
-        .json({
+      } catch (error) {
+        console.error("Erreur lors du déplacement du fichier média :", error);
+        return res.status(500).json({
           message: "Erreur lors du traitement du fichier.",
           error: error.message,
         });
-    }
-  }, formOptions);
+      }
+    },
+    formOptions
+  );
 };
 
 //============================== PATCH =======================================//
 
 const updateVolume = async (req, res, next) => {
-  console.log(req.body);
-  const {
-    number,
-    title,
-    isbn,
-    summary,
-    creator_visibility } = req.body;
-
   try {
     const volumeId = req.params.id;
-    const volumeData = {
-      number,
-      title,
-      isbn,
-      summary,
-      creator_visibility,
-    };
+    if (!volumeId) {
+      return res.status(400).json({ message: "ID de volume manquant." });
+    }
 
-    const [result] = await Volume.updateVolume({ volumesId: volumeId, ...volumeData });
-    if (result && result.affectedRows) {
-      res.json({ message: "Volume mis à jour avec succès." });
+    const updateFields = {};
+
+    if (req.body.number !== undefined) updateFields.number = req.body.number;
+    if (req.body.title !== undefined) updateFields.title = req.body.title;
+    if (req.body.isbn !== undefined) updateFields.isbn = req.body.isbn;
+    if (req.body.summary !== undefined) updateFields.summary = req.body.summary;
+    if (req.body.creator_visibility !== undefined)
+      updateFields.creator_visibility = req.body.creator_visibility;
+
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: "Aucune modification détectée." });
+    }
+
+    const result = await Volume.updateVolume({
+      volumesId: volumeId,
+      ...updateFields,
+    });
+
+    if (result && result.affectedRows > 0) {
+      return res.json({ message: "Volume mis à jour avec succès." });
     } else {
-      res.status(400).json({ message: "Erreur lors de la mise à jour du volume." });
+      return res
+        .status(400)
+        .json({ message: "Aucune modification effectuée." });
     }
   } catch (error) {
-    next(error);
+    return res
+      .status(500)
+      .json({ message: "Erreur interne du serveur.", error: error.message });
   }
 };
 

@@ -29,26 +29,28 @@
 
 - /library -> **en cours** 🟠
   PUBLIC
+  - /        -> *(GET tous)*         `vérif token sans blocage` ✅
   - /:id    -> *(GET une)*                                      ✅
-  - /        -> *(GET tous)*                                    ✅
-  - /volumes/:id/reviews -> *(GET)*                             **en cours** 🟠
+  - /volumes/:id/reviews -> *(GET)*                             **à faire** 🔴
   USERS
   - /works/create -> *(POST créer)*              `token requis` ✅
-  - /works/edit -> *(POST créer)*                `token requis` ✅
-  - /uploads/medias -> *(PATCH)*                 `token requis` ✅
-  - /works/:id -> *(PATCH)*                      `token requis` **en cours** 🟠
-  - /works/:id -> *(DELETE)*                     `token requis` **en cours** 🟠
-  - /volumes/:id -> *(DELETE)*                   `token requis` **en cours** 🟠
+  - /works/:id -> *(PATCH)*                      `token requis` **à faire** 🔴
+  - /works/:id -> *(DELETE)*                     `token requis` **à faire** 🔴
+  - /works/volume/create -> *(POST créer)*       `token requis` ✅
+  - /works/volumes/:id -> *(GET)*                `token requis` ✅
+  - /works/volumes/:id -> *(PATCH)*              `token requis` ✅
+  - /works/volumes/:id -> *(DELETE)*             `token requis` **à faire** 🔴
+  - /works/uploads -> *(PATCH)*                  `token requis` ✅
   MODERATOR
-  - /volumes/:id/status -> *(PATCH)* `token requis` `moderator` **en cours** 🟠
+  - /volumes/:id/status -> *(PATCH)* `token requis` `moderator` **à faire** 🔴
   ADMIN
-  - /authors/search -> *(GET recherche)* `token requis` `admin` **en cours** 🟠
+  - /authors/search -> *(GET recherche)* `token requis` `admin` **à faire** 🔴
  
-- /admin -> **en cours** 🟠 `token requis` `admin`
-  - /       -> *(GET tous)* **en cours** 🟠
-  - /       -> *(PATCH)*    **en cours** 🟠
-  - /       -> *(DELETE)*   **en cours** 🟠
-  - /search -> *(GET)*      **en cours** 🟠
+- /admin -> **à faire** 🔴 `token requis` `admin`
+  - /       -> *(GET tous)* **à faire** 🔴
+  - /       -> *(PATCH)*    **à faire** 🔴
+  - /       -> *(DELETE)*   **à faire** 🔴
+  - /search -> *(GET)*      **à faire** 🔴
 
 ✅ -> accomplie
 🟠 -> priorité dépendante d'une autre tâche

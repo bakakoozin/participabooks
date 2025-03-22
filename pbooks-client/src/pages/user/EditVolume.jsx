@@ -25,7 +25,6 @@ function EditVolume() {
 
   // Affichage des erreurs ou des données dans la console
   useEffect(() => {
-    console.log(data.datas);
     if (data.datas) {
       // On vérifie si data.datas est défini
       const volumeInfo = data.datas;
@@ -92,15 +91,28 @@ function EditVolume() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const jsonData = {
-      volumes_id: formData.volumes_id,
-      number: formData.number || null,
-      title: formData.title || null,
-      isbn: formData.isbn,
-      summary: formData.summary || null,
-      creator_visibility: formData.creator_visibility ? "1" : "0",
-      authors: formData.authors || [],
-    };
+    const updateData = {};
+
+    if (formData.number !== data.datas.number)
+      updateData.number = formData.number;
+    if (formData.title !== data.datas.title) updateData.title = formData.title;
+    if (formData.isbn !== data.datas.isbn) updateData.isbn = formData.isbn;
+    if (formData.summary !== data.datas.summary)
+      updateData.summary = formData.summary;
+    if (formData.creator_visibility !== (data.datas.creator_visibility === "1"))
+      updateData.creator_visibility = formData.creator_visibility ? "1" : "0";
+
+    if (
+      JSON.stringify(formData.authors) !==
+      JSON.stringify([data.datas.author_name])
+    ) {
+      updateData.authors = formData.authors;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      toast.info("Aucune modification détectée.");
+      return;
+    }
 
     try {
       const response = await fetch(`${API_URL}/works/volumes/${volumeId}`, {
@@ -109,7 +121,7 @@ function EditVolume() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(jsonData),
+        body: JSON.stringify(updateData),
       });
 
       const resJSON = await response.json();
