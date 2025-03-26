@@ -78,6 +78,14 @@ function CreateVolume() {
     }));
   }
 
+  function removeAuthor(index) {
+    setFormData((prevData) => {
+      const newAuthors = [...prevData.authors];
+      newAuthors.splice(index, 1);
+      return { ...prevData, authors: newAuthors };
+    });
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -202,6 +210,11 @@ function CreateVolume() {
               value={author}
               onChange={handleChange}
             />
+            {formData.authors.length > 1 && (
+              <button type="button" onClick={() => removeAuthor(index)}>
+                Supprimer
+              </button>
+            )}
           </div>
         ))}
         <button type="button" onClick={addAuthor}>

@@ -8,13 +8,12 @@ const ButtonRemove = ({ item, type }) => {
 
   async function handleRemove() {
     const isWork = type === "work";
-    const url = `${API_URL}/works/${isWork ? "work" : "volume"}/${
-      isWork ? item.works_id : item.vol_id
-    }`;
+    const url = `${API_URL}/works/${isWork ? "work" : "volume"}/${isWork ? item.works_id : item.vol_id
+      }`;
     const bodyData = isWork
       ? { works_id: item.works_id, users_id: infos.id }
       : { volumes_id: item.vol_id, users_id: infos.id };
-
+    console.log(bodyData);
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -34,7 +33,13 @@ const ButtonRemove = ({ item, type }) => {
       console.error("Erreur lors de la suppression:", error);
     }
   }
-  if (!isLogged || (type === "volume" && item.vol_status !== "en attente")) {
+  if (!isLogged) {
+    return null;
+  }
+
+  const hasValidatedVolume = item.volumes && item.volumes.some(vol => vol.vol_status === "validé");
+
+  if ((type === "work" && hasValidatedVolume) || (type === "volume" && item.vol_status === "validé")) {
     return null;
   }
 
