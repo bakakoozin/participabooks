@@ -11,12 +11,21 @@ import ShelfWorkDetails from "../pages/user/ShelfWorkDetails";
 import CreateWork from "../pages/user/Create";
 import EditVolume from "../pages/user/EditVolume";
 import CreateVolume from "../pages/user/CreateVolume";
+import { EditWork } from "../pages/user/EditWork";
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/works/:id" element={<Work />} />
+      <Route
+        path="/works/:id/edit"
+        element={
+          <ProtectedRoute>
+            <EditWork />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/auth/register" element={<Register />} />
       <Route path="/auth/login" element={<Login />} />
       <Route
@@ -59,7 +68,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-         <Route
+      <Route
         path="editVol/:volumeId"
         element={
           <ProtectedRoute>

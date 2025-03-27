@@ -1,38 +1,25 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 import { useFetch } from "../../hooks/useFetch";
+import { useSelector } from "react-redux";
 
-function EditWork() {
-  const { workId } = useParams();
-  const [formData, setFormData] = useState({
-    name: "",
-    edition: "",
-    type: "",
-    format: "",
+export function EditWork() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const initData = {
+    works_name: "",
+    works_edition: "",
+    works_type: "",
+    works_format: "",
+  };
+  const { data, isFetching } = useFetch(`/works/${id}`, {
+    initData: { datas: initData },
   });
 
-  const { data, isFetching } = useFetch(`/works/${workId}`, {
-    initData: { datas: {} },
-  });
-
-  useEffect(() => {
-    if (data.datas) {
-      const workInfo = data.datas;
-
-      setFormData((prevData) => ({
-        ...prevData,
-        name: workInfo.name || "",
-        edition: workInfo.edition || "",
-        type: workInfo.type || "",
-        format: workInfo.format || "",
-      }));
-    }
-  }, [data]);
-
-  if (isFetching) return <p>Chargement...</p>;
+  const [formData, setFormData] = useState(initData);
+  const { infos } = useSelector((state) => state.auth);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -48,50 +35,69 @@ function EditWork() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const updateData = {};
-
-    if (formData.name !== data.datas.name) updateData.name = formData.name;
-    if (formData.edition !== data.datas.edition)
-      updateData.edition = formData.edition;
-    if (formData.type !== data.datas.type) updateData.type = formData.type;
-    if (formData.format !== data.datas.format)
-      updateData.format = formData.format;
-
-    if (Object.keyq(updateData).length === 0) {
-      toast.info("Aucune modification détectée.");
-      return;
-    }
+    const jsonData = {
+      name: formData.name || "",
+      edition: formData.edition || null,
+      type: formData.type,
+      format: formData.format || "",
+    };
 
     try {
-      const response = await fetch(`${API_URL}/works/${workId}`, {
-        method: "PATCH",
+      const response = await fetch(`${API_URL}/works/create`, {
+        method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updateData),
+        body: JSON.stringify(jsonData),
       });
 
       const resJSON = await response.json();
+      console.log("Réponse API :", resJSON);
 
       if (response.ok) {
-        toast.success("Ouvrage mis à jour!");
-        } else {
+        toast.success("Ouvrage créé!");
+        if (formData.media) {
+          const fileData = new FormData();
+
+          await fetch(`${API_URL}/works/create`, {
+            method: "POST",
+            credentials: "include",
+            body: fileData,
+          });
+        }
+        navigate(`/editor/${resJSON.worksId}`);
+      } else {
         toast.error(
-          resJSON.message || "Échec de la mise à jour. Veuillez réessayer."
+          resJSON.message || "Échec de la création. Veuillez réessayer."
         );
       }
     } catch (error) {
-      console.error("Erreur lors de la mise à jour.", error);
-      toast.error("Erreur lors de la mise à jour. Veuillez réessayer.");
+      console.error("Erreur lors de la création.", error);
     }
   }
 
+  useEffect(() => {
+    if (data?.datas.length) {
+      setFormData(data.datas[0]);
+    }
+  }, [data]);
+
+  if (isFetching) return <p>Chargement...</p>;
+
+  if (!data.datas.length) {
+    return <p>Ouvrage introuvable.</p>;
+  }
+  if (
+    data?.datas?.[1].vol_status === "en attente" ||
+    data?.datas?.[1].user_id === infos?.id
+  )
+    return <p>Vous ne pouvez pas modifier cet ouvrage.</p>;
+
   return (
     <>
-    {formData.name && (
-      <h2>Editer l&apos;ouvrage {formData.name}</h2>
-    )}
+      <h2>Créer un nouvel ouvrage</h2>
+
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Titre de l&apos;ouvrage</label>
@@ -99,9 +105,8 @@ function EditWork() {
             type="text"
             id="name"
             name="name"
-            value={formData.name}
+            value={formData.works_name}
             onChange={handleChange}
-            placeholder={formData.name || "Titre de l'ouvrage"}
           />
         </div>
         <div>
@@ -110,9 +115,8 @@ function EditWork() {
             type="text"
             id="edition"
             name="edition"
-            value={formData.edition}
+            value={formData.works_edition}
             onChange={handleChange}
-            placeholder={formData.edition || "Edition"}
           />
         </div>
         <div>
@@ -123,7 +127,7 @@ function EditWork() {
               id="BD"
               name="type"
               value="BD"
-              checked={formData.type === "BD"}
+              checked={formData.works_type === "BD"}
               onChange={handleChange}
             />
             <label htmlFor="BD">BD</label>
@@ -132,7 +136,7 @@ function EditWork() {
               id="Livre"
               name="type"
               value="Livre"
-              checked={formData.type === "Livre"}
+              checked={formData.works_type === "Livre"}
               onChange={handleChange}
             />
             <label htmlFor="Livre">Livre</label>
@@ -141,7 +145,7 @@ function EditWork() {
               id="Manga"
               name="type"
               value="Manga"
-              checked={formData.type === "Manga"}
+              checked={formData.works_type === "Manga"}
               onChange={handleChange}
             />
             <label htmlFor="Manga">Manga</label>
@@ -155,7 +159,7 @@ function EditWork() {
               id="livre"
               name="format"
               value="livre"
-              checked={formData.format === "livre"}
+              checked={formData.works_format === "livre"}
               onChange={handleChange}
             />
             <label htmlFor="livre">livre</label>
@@ -164,7 +168,7 @@ function EditWork() {
               id="poche"
               name="format"
               value="poche"
-              checked={formData.format === "poche"}
+              checked={formData.works_format === "poche"}
               onChange={handleChange}
             />
             <label htmlFor="poche">poche</label>
@@ -173,7 +177,7 @@ function EditWork() {
               id="ebook"
               name="format"
               value="ebook"
-              checked={formData.format === "ebook"}
+              checked={formData.works_format === "ebook"}
               onChange={handleChange}
             />
             <label htmlFor="ebook">ebook</label>
@@ -182,7 +186,7 @@ function EditWork() {
               id="comics"
               name="format"
               value="comics"
-              checked={formData.format === "comics"}
+              checked={formData.works_format === "comics"}
               onChange={handleChange}
             />
             <label htmlFor="comics">comics</label>
@@ -191,7 +195,7 @@ function EditWork() {
               id="manga"
               name="format"
               value="manga"
-              checked={formData.format === "manga"}
+              checked={formData.works_format === "manga"}
               onChange={handleChange}
             />
             <label htmlFor="manga">manga</label>
@@ -202,5 +206,3 @@ function EditWork() {
     </>
   );
 }
-
-export default EditWork;

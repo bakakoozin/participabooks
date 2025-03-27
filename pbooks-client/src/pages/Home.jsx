@@ -6,8 +6,10 @@ import { useFetch } from "../hooks/useFetch";
 import { ButtonAddToShelf } from "../components/ButtonAddToShelf";
 import { ButtonRemove } from "../components/ButtonRemove";
 import { Img } from "../components/Img";
+import { useSelector } from "react-redux";
 
 function Home() {
+  const { infos } = useSelector((state) => state.auth);
   const { data, isFetching, search, setSearch } = useFetch("/works/", {
     initData: { datas: [] },
   });
@@ -48,6 +50,12 @@ function Home() {
               <p>{work.works_format}</p>
               <ButtonAddToShelf item={work} type="work" />
               <ButtonRemove item={work} type="work" />
+              {(work.vol_status === "en attente" ||
+                work.volumes[0].user_id === infos?.id) && (
+                <Link to={`/works/${work.works_id}/edit`} className="cta">
+                  Modifier
+                </Link>
+              )}
             </article>
           ))}
         </div>
