@@ -23,9 +23,12 @@ const userSlice = createSlice({
     setSessionChecked(state, action) {
       state.isSessionChecked = action.payload;
     },
+    updateAvatar(state, action) {
+      state.infos.avatar = action.payload;
+    },
   },
 });
 
-export const { login, logout, setSessionChecked } = userSlice.actions;
+export const { login, logout, setSessionChecked, updateAvatar } = userSlice.actions;
 
 export default userSlice.reducer;

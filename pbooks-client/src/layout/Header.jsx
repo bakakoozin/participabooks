@@ -6,7 +6,7 @@ import { faBars, faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { toggleMenu } from "../features/menuSlice";
 import { logout } from "../features/authSlice";
 import { API_URL, URL_MEDIAS } from "../utils/constants";
-import { Logo } from "../components/Logo";
+
 
 function Header() {
   const dispatch = useDispatch();
@@ -60,9 +60,6 @@ function Header() {
       </nav>
       <div className={`burger-menu`} onClick={handleClick}>
         <FontAwesomeIcon icon={faBars} />
-      </div>
-      <div className="logo">
-        <Logo />
       </div>
       <div className="user-infos">
       <p>{isLogged ? infos.pseudo : "non connecté"}</p>

@@ -16,6 +16,8 @@ import {
   removeVolume,
   uploadMedia,
 } from "../controllers/library.controller.js";
+import isAdmin from "../middlewares/isAdmin.js";
+import isModerator from "../middlewares/isModerator.js";
 
 const router = Router();
 
@@ -34,9 +36,9 @@ router.delete("/volume/:id", verifyToken, removeVolume);
 router.patch("/uploads", verifyToken, uploadMedia);
 
 //MODERATOR
-router.patch("/volumes/:id/status", updateStatus);
+router.patch("/volumes/:id/status", verifyToken, isModerator, updateStatus);
 
 //ADMIN
-router.get("/authors/search", getAuthorsBySearch);
+router.get("/authors/search", verifyToken, isAdmin, getAuthorsBySearch);
 
 export default router;

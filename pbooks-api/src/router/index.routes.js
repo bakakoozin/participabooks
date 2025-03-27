@@ -6,12 +6,13 @@ import libraryRoutes from "./library.routes.js";
 import adminRoutes from "./admin.routes.js";
 
 import verifyToken from "../middlewares/verifyToken.js";
+import isAdmin from "../middlewares/isAdmin.js";
 
 const router = Router();
 
 router.use("/auth", authRoutes);
 router.use("/user", verifyToken, userRoutes);
 router.use("/works", libraryRoutes);
-router.use("/admin", adminRoutes);
+router.use("/admin", verifyToken, isAdmin, adminRoutes);
 
 export default router;

@@ -2,45 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { logout, login } from "../../features/authSlice";
-import { setToken, refresh } from "../../features/refreshSlice";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
+import { FormAvatar } from "../../components/FormAvatar";
 
 function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { infos } = useSelector((state) => state.auth);
-  const { needsRefresh } = useSelector((state) => state.refresh);
   const [theme, setTheme] = useState(infos.theme);
-  const [avatarFile, setAvatarFile] = useState(null);
-
-useEffect(() => {
-  async function fetchNewToken() {
-    try {
-      const response = await fetch(`${API_URL}/auth/session`, {
-        method: "GET",
-        credentials: "include",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        dispatch(setToken(data.token));
-      } else {
-        dispatch(logout());
-        navigate("/login");
-      }
-    } catch (error) {
-      console.error("Erreur lors du rafraîchissement du token.", error);
-      dispatch(logout());
-      navigate("/login");
-    }
-  }
-
-  if (needsRefresh) {
-    fetchNewToken();
-    dispatch(refresh());
-  }
-  }, [needsRefresh, dispatch, navigate]);
 
   async function handleThemeChange(newTheme) {
     try {
@@ -68,44 +38,6 @@ useEffect(() => {
   function toggleTheme() {
     const newTheme = theme === "clair" ? "sombre" : "clair";
     handleThemeChange(newTheme);
-  }
-
-  function handleFile(e) {
-    setAvatarFile(e.target.files[0]);
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!avatarFile) {
-      toast.error("Veuillez sélectionner un fichier.");
-      return;
-    }
-    const formData = new FormData();
-    formData.append("avatar", avatarFile);
-    formData.append("id", infos.id);
-    try {
-      const response = await fetch(`${API_URL}/user/profile/avatar`, {
-        method: "PATCH",
-        body: formData,
-        credentials: "include",
-      });
-      if (response.ok) {
-        const resJSON = await response.json();
-        dispatch(login({ ...infos, avatar: resJSON.avatar }));
-        toast.success("Avatar mis à jour avec succès !");
-      } else {
-        const resJSON = await response.json();
-        toast.error(
-          resJSON.message ||
-            "Échec de la mise à jour de l'avatar. Veuillez réessayer."
-        );
-      }
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour de l'avatar:", error);
-      toast.error(
-        "Erreur lors de la mise à jour de l'avatar. Veuillez réessayer."
-      );
-    }
   }
 
   async function handleDeleteAccount() {
@@ -160,19 +92,7 @@ useEffect(() => {
               </div>
             </label>
           </article>
-          <article>
-            <h3>Avatar</h3>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="file"
-                name="avatar"
-                id="avatar"
-                accept="image/*"
-                onChange={handleFile}
-              />
-              <button type="submit">Envoyer</button>
-            </form>
-          </article>
+          <FormAvatar />
           <div>
             <button onClick={handleDeleteAccount}>
               Supprimer votre compte
