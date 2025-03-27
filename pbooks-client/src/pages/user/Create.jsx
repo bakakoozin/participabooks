@@ -71,7 +71,7 @@ function CreateWork() {
 
   return (
     <>
-      <h2>Créer ou mettre à jour un ouvrage</h2>
+      <h2>Créer un nouvel ouvrage</h2>
 
       <form onSubmit={handleSubmit}>
         <div>

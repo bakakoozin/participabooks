@@ -2,15 +2,45 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { logout, login } from "../../features/authSlice";
+import { setToken, refresh } from "../../features/refreshSlice";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { infos } = useSelector((state) => state.auth);
+  const { needsRefresh } = useSelector((state) => state.refresh);
   const [theme, setTheme] = useState(infos.theme);
   const [avatarFile, setAvatarFile] = useState(null);
+
+useEffect(() => {
+  async function fetchNewToken() {
+    try {
+      const response = await fetch(`${API_URL}/auth/session`, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch(setToken(data.token));
+      } else {
+        dispatch(logout());
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Erreur lors du rafraîchissement du token.", error);
+      dispatch(logout());
+      navigate("/login");
+    }
+  }
+
+  if (needsRefresh) {
+    fetchNewToken();
+    dispatch(refresh());
+  }
+  }, [needsRefresh, dispatch, navigate]);
 
   async function handleThemeChange(newTheme) {
     try {

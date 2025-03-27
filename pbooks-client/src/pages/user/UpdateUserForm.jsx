@@ -124,14 +124,19 @@ function UpdateUserForm() {
       <p className="auth-alert">Veuillez entrer un email valide.</p>
     )}
   </div>
+  <button type="submit">Mettre à jour</button>
+
+  <h2>Changer mot de passe</h2>
+</form>
+<form onSubmit={handleSubmit}>
   <div>
-    <label htmlFor="password">Nouveau mot de passe</label>
     <input
       type="password"
       id="password"
       name="password"
       value={formData.password}
       onChange={handleChange}
+      placeholder="Nouveau mot de passe"
     />
     <input
       type="password"
@@ -145,7 +150,7 @@ function UpdateUserForm() {
       <p className="auth-alert">Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre.</p>
     )}
   </div>
-  <button type="submit">Mettre à jour</button>
+  <button type="submit">Valider</button>
 </form>
     </>
   );

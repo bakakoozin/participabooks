@@ -115,7 +115,6 @@ function CreateVolume() {
         toast.success("Volume créé !");
         if (formData.media) {
           const volumesId = resJSON.volumesId;
-          console.log(volumesId);
           await updateMedia(volumesId);
         }
       } else {
@@ -133,7 +132,6 @@ function CreateVolume() {
     const fileData = new FormData();
     fileData.append("media", refMedia.current.files[0]);
     fileData.append("volumesId", volumesId);
-    console.log(fileData);
     try {
       const mediaResponse = await fetch(`${API_URL}/works/uploads`, {
         method: "PATCH",

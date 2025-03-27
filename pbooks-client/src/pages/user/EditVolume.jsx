@@ -167,7 +167,6 @@ function EditVolume() {
     }
   }
 
-  // Rendu du formulaire avec les données récupérées
   return (
     <>
       {formData.number && formData.title && (
