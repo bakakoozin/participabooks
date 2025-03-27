@@ -35,7 +35,7 @@ const ButtonAddToShelf = ({ item, type }) => {
     }
   }
   if (!isLogged) return null;
-  return <button onClick={handleAddToShelf}>Ajouter à ma bibliothèque</button>;
+  return <button onClick={handleAddToShelf} className="btn">Ajouter à ma bibliothèque</button>;
 };
 
 ButtonAddToShelf.propTypes = {

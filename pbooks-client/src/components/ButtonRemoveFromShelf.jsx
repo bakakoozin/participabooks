@@ -39,7 +39,7 @@ const ButtonRemoveFromShelf = ({ item, type }) => {
   }
   if (!isLogged) return null;
   return (
-    <button onClick={handleRemoveFromShelf}>
+    <button onClick={handleRemoveFromShelf} className="btn">
       Supprimer de ma bibliothèque
     </button>
   );

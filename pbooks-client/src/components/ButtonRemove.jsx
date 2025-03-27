@@ -43,7 +43,7 @@ const ButtonRemove = ({ item, type }) => {
     return null;
   }
 
-  return <button onClick={handleRemove}>Supprimer</button>;
+  return <button onClick={handleRemove} className="btn">Supprimer</button>;
 };
 
 ButtonRemove.propTypes = {

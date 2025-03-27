@@ -25,17 +25,12 @@ a {
   color: inherit;
 }
 
-// .App {
-//   display: flex;
-//   flex-direction: column;
-//   min-height: 100vh;
-// }
-
-// main {
-//     flex: 1;
-// }
-
-// table, td, th {
-//     border: 1px solid;
-//     border-collapse: collapse;
-// }
+.btn {
+  padding: 10px 20px;
+  background-color: $button-bg;
+  color: $secondary-color;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}

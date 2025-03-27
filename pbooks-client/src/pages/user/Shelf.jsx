@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 
-import scrollSlider from "../../utils/slider";
+import { scrollSlider } from "../../utils/slider";
 import { useFetch } from "../../hooks/useFetch";
 import { ButtonRemoveFromShelf } from "../../components/ButtonRemoveFromShelf";
 import { Img } from "../../components/Img";

@@ -36,15 +36,20 @@
   }
 
   .nav-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    $nav-button-size: 18px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     background: $button-bg;
     color: white;
     border: none;
-    padding: 12px;
+    width: $nav-button-size+10;
+    height: $nav-button-size+10;
     cursor: pointer;
-    font-size: 20px;
+    font-size: $nav-button-size;
     z-index: 10;
     border-radius: 50%;
     transition: background 0.3s ease;

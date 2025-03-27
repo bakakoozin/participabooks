@@ -1,0 +1,20 @@
+@import "variables";
+
+.title {
+  margin: 0;
+  font-size: $font-lg;
+}
+
+.workInfos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: $gap-lg;
+}
