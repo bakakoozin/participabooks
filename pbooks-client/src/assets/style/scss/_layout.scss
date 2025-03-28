@@ -8,7 +8,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background-color: $primary-color;
+	background-color: $dark-color;
 	padding: 15px;
 	color: white;
 	font-size: 1.8rem;
@@ -54,6 +54,7 @@
 		font-size: 3rem;
 		cursor: pointer;
 		display: block;
+		color: $button-bg;
 	}
 
 	.user-infos {
@@ -98,6 +99,6 @@
 	height: 40px;
 	text-align: center;
 	padding: 10px;
-	background-color: #333;
+	background-color:$dark-color;
 	color: #fff;
 }

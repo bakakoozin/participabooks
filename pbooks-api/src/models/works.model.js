@@ -35,6 +35,7 @@ class Work {
           (
     volumes.status = 'validé'
     OR users.role = 'moderator'
+    OR users.role = 'admin'
     OR users.id = volumes.users_id
   )
   AND

@@ -29,7 +29,7 @@ class Volume {
       FROM volumes
       LEFT JOIN volumes_authors ON volumes.id = volumes_authors.volumes_id
       LEFT JOIN authors ON authors.id = volumes_authors.authors_id
-      WHERE volumes_id = ?`;
+      WHERE volumes.id = ?`;
     const [rows] = await pool.query(FIND_VOLUME, [volumeId]);
     return rows[0];
   }

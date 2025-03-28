@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import { faBars,faXmark ,faCircleUser } from "@fortawesome/free-solid-svg-icons";
 
 import { toggleMenu } from "../features/menuSlice";
 import { logout } from "../features/authSlice";
@@ -36,6 +36,9 @@ function Header() {
       {/* le state menu permets de gérer dynamiquement l'affichage du menu ouverture/fermeture */}
       {/* attention cependant, le responsive mobile est bon, il faudrait changer les gestionnaire d'événements "handleClick" pour qu'ils ne fonctionnent que lorsqu'on a besoin d'un menu burger...  */}
       <nav className={`nav-links ${isMenuOpen ? "active" : ""}`}>
+      <button onClick={handleClick} className="close-menu">
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
         <NavLink to="/" end onClick={handleClick}>
           Bibliothèque Publique
         </NavLink>

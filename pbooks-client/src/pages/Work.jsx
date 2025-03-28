@@ -9,11 +9,9 @@ import { ButtonRemove } from "../components/ButtonRemove";
 
 function Work() {
   const { id } = useParams();
-  const { data, isFetching } = useFetch(`/works/${id}`, {
+  const { data } = useFetch(`/works/${id}`, {
     initData: { datas: [] },
   });
-
-  if (isFetching) return <p>Chargement...</p>;
 
   const workInfo = data.datas.length > 0 ? data.datas[0] : {};
 

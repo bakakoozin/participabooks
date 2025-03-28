@@ -2,8 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isLogged: false,
-  infos: { pseudo: "non connecté", avatar: "", email: "" },
+  infos: { pseudo: "non connecté", avatar: "", email: "", role: "" },
   isSessionChecked: false,
+  roles: { isAdmin: false, isModerator: false },
 };
 
 const userSlice = createSlice({
@@ -26,9 +27,15 @@ const userSlice = createSlice({
     updateAvatar(state, action) {
       state.infos.avatar = action.payload;
     },
+    setAdmin(state, action) {
+      state.roles.isAdmin = action.payload
+    },
+    setModerator(state, action) {
+      state.roles.isModerator = action.payload
+    },
   },
 });
 
-export const { login, logout, setSessionChecked, updateAvatar } = userSlice.actions;
+export const { login, logout, setSessionChecked, updateAvatar, setAdmin, setModerator } = userSlice.actions;
 
 export default userSlice.reducer;

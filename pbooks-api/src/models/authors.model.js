@@ -14,9 +14,9 @@ class Author {
 
   static async getAuthorsByVolumeId(volumesId) {
     const GET_AUTHORS = `
-      SELECT autors.id, authors.name
+      SELECT authors.id, authors.name
       FROM authors
-      JOIN volumes_authors ON authors.id = volume_authors.authors_id
+      JOIN volumes_authors ON authors.id = volumes_authors.authors_id
       WHERE volumes_authors.volumes_id = ?`;
     return await pool.query(GET_AUTHORS, [volumesId]);
   }
@@ -36,19 +36,45 @@ class Author {
     return result.insertId;
   }
 
-  static async linkAuthorToVolume(volumeId, authorId) { //on écrit dans la table relationnelle volumes_authors
+  static async linkAuthorToVolume(volumeId, authorId) {
     const LINK_AUTHOR = `INSERT INTO volumes_authors (volumes_id, authors_id) VALUES (?, ?)`;
     await pool.execute(LINK_AUTHOR, [volumeId, authorId]);
   }
 
   //============================== DELETE =======================================//
 
-  static async unlinkAuthorFromVolume(volumesId, authorId) { //on supprime de la table relationnelle volumes_authors
+  static async unlinkAuthorFromVolume(volumesId, authorId) {
     const UNLINK_AUTHOR = `
       DELETE FROM volumes_authors
-      WHERE volume_id = ? AND author_id = ?`;
-
+      WHERE volumes_id = ? AND authors_id = ?`;
     await pool.execute(UNLINK_AUTHOR, [volumesId, authorId]);
+  }
+
+  static async deleteAllAuthorsFromVolume(volumesId) {
+    const DELETE_AUTHORS = `DELETE FROM volumes_authors WHERE volumes_id = ?`;
+    await pool.execute(DELETE_AUTHORS, [volumesId]);
+  }
+
+  //============================== UPDATE =======================================//
+
+  static async updateAuthorsForVolume(volumesId, authors) {
+    // Supprimer tous les auteurs liés au volume
+    await this.deleteAllAuthorsFromVolume(volumesId);
+
+    // Ajouter les nouveaux auteurs
+    for (const author of authors) {
+      let authorId;
+      
+      // Si c'est un nouvel auteur, on le crée
+      if (typeof author === "string") {
+        authorId = await this.findOrCreateAuthor(author);
+      } else {
+        authorId = author; // Sinon, c'est un ID existant
+      }
+
+      // Lier l'auteur au volume
+      await this.linkAuthorToVolume(volumesId, authorId);
+    }
   }
 }
 

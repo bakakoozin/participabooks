@@ -9,8 +9,13 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  padding: 2rem;
+}
+
+.workFooter {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .buttons {

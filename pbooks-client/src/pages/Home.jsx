@@ -8,7 +8,10 @@ import { ButtonRemove } from "../components/ButtonRemove";
 import { Img } from "../components/Img";
 import { useSelector } from "react-redux";
 import styles from "../assets/style/scss/Home.module.scss";
-import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Home() {
@@ -19,7 +22,7 @@ function Home() {
   const sliderRef = useRef(null);
 
   return (
-    <section>
+    <main>
       <h1>Bibliothèque Publique</h1>
 
       <input
@@ -30,43 +33,55 @@ function Home() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <div className="slider-container">
+      <section className="slider-container">
         <button
           className="nav-button left"
           onClick={() => scrollSlider(sliderRef, "left")}
         >
-         <FontAwesomeIcon icon={faChevronLeft} />
+          <FontAwesomeIcon icon={faChevronLeft} />
         </button>
 
-        <section className="slider" ref={sliderRef}>
+        <article className="slider" ref={sliderRef}>
           {data?.datas?.map((work) => (
-            <article key={work.works_id} className="work-card">
+            <section key={work.works_id} className="work-card">
               <header>
                 <h2>{work.works_name}</h2>
                 <div className={styles.workInfos}>
                   <p>{work.works_type}</p>
-                  <p>{work.works_score}</p>
+                  <p>Format {work.works_format}</p>
                 </div>
               </header>
-              <Link to={`/works/${work.works_id}`}>
-                <Img src={work.cover_url} alt={work.works_name} />
-              </Link>
-              <p>{work.authors_name}</p>
-              <p>{work.works_edition}</p>
-              <p>{work.works_format}</p>
-              <footer className={styles.buttons}>
-                <ButtonAddToShelf item={work} type="work" />
-                <ButtonRemove item={work} type="work" />
-                {(work.vol_status === "en attente" ||
-                  work.volumes[0].user_id === infos?.id) && (
-                  <Link to={`/works/${work.works_id}/edit`} className="btn">
-                    Modifier
-                  </Link>
-                )}
+              <figure>
+                <Link to={`/works/${work.works_id}`}>
+                  <Img src={work.cover_url} alt={work.works_name} />
+                </Link>
+              </figure>
+              <footer className={styles.workFooter}>
+                <aside>
+                  {work.authors_name &&
+                    work.authors_name
+                      .split(",")
+                      .map((author, index) => (
+                        <p key={index}>{author.trim()}</p>
+                      ))}
+                </aside>
+                <aside className={styles.buttons}>
+                  <p>Edition {work.works_edition}</p>
+                  <ButtonAddToShelf item={work} type="work" />
+                  <ButtonRemove item={work} type="work" />
+                  {work.vol_status === "en attente" &&
+                    (work.volumes[0].user_id === infos?.id ||
+                      infos?.role === "admin" ||
+                      infos?.role === "moderator") && (
+                      <Link to={`/works/${work.works_id}/edit`} className="btn">
+                        Modifier
+                      </Link>
+                    )}
+                </aside>
               </footer>
-            </article>
+            </section>
           ))}
-        </section>
+        </article>
         <div>
           {isFetching && <p>Chargement...</p>}
           {data?.datas?.length === 0 && !isFetching && (
@@ -77,10 +92,10 @@ function Home() {
           className="nav-button right"
           onClick={() => scrollSlider(sliderRef, "right")}
         >
-         <FontAwesomeIcon icon={faChevronRight} />
+          <FontAwesomeIcon icon={faChevronRight} />
         </button>
-      </div>
-    </section>
+      </section>
+    </main>
   );
 }
 

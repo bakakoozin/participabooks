@@ -2,12 +2,13 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 
 import { API_URL } from "../../utils/constants";
-import { useFetch } from "../../hooks/useFetch";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
-function EditVolume() {
+export function EditVolume() {
   const { volumeId } = useParams();
   const refMedia = useRef(null);
+  const { infos } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     volumes_id: volumeId,
     number: "",
@@ -19,9 +20,8 @@ function EditVolume() {
     authors: [""],
   });
 
-  const { data, isFetching } = useFetch(`/works/volumes/${volumeId}`, {
-    initData: { datas: {} },
-  });
+  const [isFetching, setIsFetching] = useState(true);
+  const [error, setError] = useState(null);
 
   function handleChange(e) {
     const { name, value, checked, files } = e.target;
@@ -66,8 +66,9 @@ function EditVolume() {
 
     const updateData = { ...formData };
 
-    if (formData.creator_visibility !== (data.datas.creator_visibility === "1"))
+    if (formData.creator_visibility !== (formData.creator_visibility === "1")) {
       updateData.creator_visibility = formData.creator_visibility ? "1" : "0";
+    }
 
     try {
       const response = await fetch(`${API_URL}/works/volumes/${volumeId}`, {
@@ -110,23 +111,58 @@ function EditVolume() {
   }
 
   useEffect(() => {
-    if (data.datas) {
-      const volumeInfo = data.datas;
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/works/volumes/${volumeId}`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const resJSON = await response.json();
 
-      const authors = volumeInfo.author_name ? [volumeInfo.author_name] : [""];
-      setFormData((prevData) => ({
-        ...prevData,
-        number: volumeInfo.number || "",
-        title: volumeInfo.title || "",
-        isbn: volumeInfo.isbn || "",
-        summary: volumeInfo.summary || "",
-        creator_visibility: volumeInfo.creator_visibility === "1",
-        authors: authors,
-      }));
-    }
-  }, [data]);
+        if (resJSON.datas) {
+          const volumeInfo = resJSON.datas;
+
+          if (volumeInfo.length === 0) {
+            setError("Ouvrage introuvable.");
+            setIsFetching(false);
+            return;
+          }
+
+          if (
+            volumeInfo[1]?.vol_status === "en attente" &&
+            volumeInfo[1]?.user_id === infos?.id
+          ) {
+            setError("Vous ne pouvez pas modifier cet ouvrage.");
+            setIsFetching(false);
+            return;
+          }
+
+          const authors = volumeInfo.author_name
+            ? [volumeInfo.author_name]
+            : [""];
+          setFormData((prevData) => ({
+            ...prevData,
+            number: volumeInfo.number || "",
+            title: volumeInfo.title || "",
+            isbn: volumeInfo.isbn || "",
+            summary: volumeInfo.summary || "",
+            creator_visibility: volumeInfo.creator_visibility === "1",
+            authors: authors,
+          }));
+        }
+        setIsFetching(false);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données.", error);
+        toast.error("Erreur lors de la récupération des données.");
+        setIsFetching(false);
+      }
+    };
+
+    fetchData();
+  }, [volumeId, infos?.id]);
 
   if (isFetching) return <p>Chargement...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <>
@@ -233,5 +269,3 @@ function EditVolume() {
     </>
   );
 }
-
-export default EditVolume;

@@ -89,14 +89,14 @@ export function EditWork() {
     return <p>Ouvrage introuvable.</p>;
   }
   if (
-    data?.datas?.[1].vol_status === "en attente" ||
-    data?.datas?.[1].user_id === infos?.id
+    data?.datas?.[0].vol_status !== "en attente" ||
+    data?.datas?.[0].user_id !== infos?.id
   )
     return <p>Vous ne pouvez pas modifier cet ouvrage.</p>;
 
   return (
     <>
-      <h2>Créer un nouvel ouvrage</h2>
+      <h2>Editer l&apos;ouvrage</h2>
 
       <form onSubmit={handleSubmit}>
         <div>

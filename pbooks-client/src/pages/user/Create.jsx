@@ -45,7 +45,6 @@ function CreateWork() {
       });
 
       const resJSON = await response.json();
-      console.log("Réponse API :", resJSON);
 
       if (response.ok) {
         toast.success("Ouvrage créé!");
@@ -58,7 +57,7 @@ function CreateWork() {
             body: fileData,
           });
         }
-        navigate(`/editor/${resJSON.worksId}`);
+        navigate(`/createVol/${resJSON.worksId}`);
       } else {
         toast.error(
           resJSON.message || "Échec de la création. Veuillez réessayer."

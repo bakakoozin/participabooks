@@ -9,7 +9,7 @@ import UpdateUserForm from "../pages/user/UpdateUserForm";
 import Shelf from "../pages/user/Shelf";
 import ShelfWorkDetails from "../pages/user/ShelfWorkDetails";
 import CreateWork from "../pages/user/Create";
-import EditVolume from "../pages/user/EditVolume";
+import{ EditVolume } from "../pages/user/EditVolume";
 import CreateVolume from "../pages/user/CreateVolume";
 import { EditWork } from "../pages/user/EditWork";
 
