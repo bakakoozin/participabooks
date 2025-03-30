@@ -4,6 +4,7 @@ import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { login } from "../../features/authSlice";
+import styles from "../../assets/style/scss/Auth.module.scss";
 
 function Login() {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ function Login() {
   }
 
   return (
-    <main id="login">
+    <main id="login" className={styles.mainContainer}>
       <h1>Se connecter</h1>
       <form onSubmit={handleSubmit} className="auth">
         <input

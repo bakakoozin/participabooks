@@ -1,7 +1,11 @@
-.container {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 20px;
+@import "variables";
+
+.logo {
+    width: 20vw;
+    margin: 0;
+    padding: 0;
+  display: flex;
+  align-items: center;
 }
 
 .header {
@@ -12,11 +16,11 @@
 	justify-content: space-between;
 	align-items: center;
 	background-color: $layout-bg;
-	padding: 15px;
+	box-shadow: 0 4px 2px $layout-bg;
 	color: white;
 	font-size: 1.8rem;
 
-	.nav-links {
+	.navLinks {
 		display: none;
 		gap: 15px;
 		text-transform: uppercase;
@@ -53,16 +57,18 @@
 		}
 	}
 
-	.burger-menu {
+	.burgerMenu {
+    display: block;
+    padding-left: 1rem;
 		font-size: 3rem;
 		cursor: pointer;
-		display: block;
 		color: $button-bg;
 	}
 
-	.user-infos {
+	.userInfos {
 		display: flex;
 		align-items: center;
+    padding-right: 1rem;
 		font-size: 3rem;
 
 		img {
@@ -94,6 +100,7 @@
 	}
 }
 
+
 .footer {
 	position: fixed;
 	bottom: 0;
@@ -103,5 +110,6 @@
 	text-align: center;
 	padding: 10px;
 	background-color:$layout-bg;
+	box-shadow: 0 -4px 2px $layout-bg;
 	color: #fff;
 }

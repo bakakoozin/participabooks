@@ -7,6 +7,7 @@
   .slider {
     display: flex;
     gap: 20px;
+    padding-bottom: 2rem;
     overflow-x: auto;
     scroll-behavior: smooth;
     scrollbar-width: none; // Masquer la scrollbar pour Firefox
@@ -20,7 +21,7 @@
   .work-card {
     flex: 0 0 100%; // Chaque article prend 100% de la largeur du conteneur
     background: $card-bg;
-    padding: 15px;
+    padding: 1.5rem;
     border-radius: 8px;
     box-shadow: $card-shadow;
     text-align: center;

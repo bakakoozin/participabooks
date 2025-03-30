@@ -22,7 +22,7 @@ function Home() {
   const sliderRef = useRef(null);
 
   return (
-    <main>
+    <main className={styles.mainContainer}>
       <h1>Bibliothèque Publique</h1>
 
       <input
@@ -66,7 +66,7 @@ function Home() {
                       ))}
                 </aside>
                 <aside className={styles.buttons}>
-                  <p>Edition {work.works_edition}</p>
+                  <p>Editions {work.works_edition}</p>
                   <ButtonAddToShelf item={work} type="work" />
                   <ButtonRemove item={work} type="work" />
                   {work.vol_status === "en attente" &&

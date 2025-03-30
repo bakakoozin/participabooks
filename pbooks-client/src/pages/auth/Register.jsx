@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
+import styles from "../../assets/style/scss/Auth.module.scss";
 
 const pseudoRegex = /^[a-zA-Z0-9_]{3,}$/; // Au moins 3 caractères, lettres, chiffres et underscores
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Format d'email basique
@@ -67,7 +68,7 @@ function Register() {
   }
 
   return (
-    <main id="register">
+    <main id="register" className={styles.mainContainer}>
       <h1>Création du compte</h1>
       <form onSubmit={handleSubmit} className="auth">
         <input

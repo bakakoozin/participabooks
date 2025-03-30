@@ -1,15 +1,19 @@
 $primary-color: #BF705E;
 $secondary-color: #f4f4f4;
+$light-color: #BDBF73;
+$red-color: #F24C3D;
 $bg-color: #f8f9fa;
-$button-bg: #BDBF73;
+$button-bg: #593F42;
+$layout-bg: $light-color;
 $button-hover-bg: rgba(0, 0, 0, 0.8);
-$card-bg: #fff;
-$card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$card-bg: $light-color;
+$card-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
 $danger-color: crimson;
 $dark-color: #593F42;
 $font-family: 'Arial', sans-serif;
 $font-size: 1.6rem;
 $border-radius: 5px;
+
 
 $font-lg: $font-size * 1.5;
 
@@ -17,4 +21,4 @@ $gap: 0.5rem;
 $gap-lg: $gap*2;
 $gap-md: $gap*1.5;
 $gap-sm: $gap*0.5;
-$gap-xl: $gap*3;
+$gap-xl: $gap*7;

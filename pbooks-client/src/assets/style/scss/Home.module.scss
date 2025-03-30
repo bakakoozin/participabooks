@@ -1,6 +1,10 @@
 @import "variables";
 
-.title {
+.mainContainer {
+  padding-top: 7rem;
+}
+
+.workTitle {
   margin: 0;
   font-size: $font-lg;
 }
@@ -9,13 +13,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 2rem;
+  padding: 1rem 2rem;
 }
 
 .workFooter {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  padding-top: 1rem;
 }
 
 .buttons {

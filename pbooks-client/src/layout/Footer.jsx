@@ -1,6 +1,8 @@
+import styles from "../assets/style/scss/Layout.module.scss";
+
 function Footer() {
     return (
-        <footer className="footer">
+        <footer className={styles.footer}>
             {/* navigation secondaire */}
 			<p>&copy; 2025 - Baka Dev - Participabooks</p>
 			{/* mentions légales */}

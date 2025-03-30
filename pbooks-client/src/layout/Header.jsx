@@ -6,6 +6,7 @@ import { faBars,faXmark ,faCircleUser } from "@fortawesome/free-solid-svg-icons"
 import { toggleMenu } from "../features/menuSlice";
 import { logout } from "../features/authSlice";
 import { API_URL, URL_MEDIAS } from "../utils/constants";
+import styles from "../assets/style/scss/Layout.module.scss";
 
 
 function Header() {
@@ -32,10 +33,10 @@ function Header() {
   }
 
   return (
-    <header className="header">
+    <header className={styles.header}>
       {/* le state menu permets de gérer dynamiquement l'affichage du menu ouverture/fermeture */}
       {/* attention cependant, le responsive mobile est bon, il faudrait changer les gestionnaire d'événements "handleClick" pour qu'ils ne fonctionnent que lorsqu'on a besoin d'un menu burger...  */}
-      <nav className={`nav-links ${isMenuOpen ? "active" : ""}`}>
+      <nav className={`${styles.navLinks} ${isMenuOpen ? styles.active : ""}`}>
       <button onClick={handleClick} className="close-menu">
             <FontAwesomeIcon icon={faXmark} />
           </button>
@@ -61,10 +62,11 @@ function Header() {
           </>
         )}
       </nav>
-      <div className={`burger-menu`} onClick={handleClick}>
+      <div className={styles.burgerMenu} onClick={handleClick}>
         <FontAwesomeIcon icon={faBars} />
       </div>
-      <div className="user-infos">
+        <img className={styles.logo} src="./logo_pbooks_light.png" alt="Logo de participabooks" />
+      <div className={styles.userInfos}>
       <p>{isLogged ? infos.pseudo : "non connecté"}</p>
         {!isLogged || (infos.avatar === null) ? (
           <FontAwesomeIcon icon={faCircleUser} />
