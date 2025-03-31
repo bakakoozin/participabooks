@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+
 import { useCanEditVolume } from "../hooks/useCanEditVolume";
+import styles from "../assets/style/scss/Button.module.scss";
 
 const ButtonCreateVolume = ({ item }) => {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ const ButtonCreateVolume = ({ item }) => {
     return null;
   }
   return (
-    <button onClick={handleCreateVolume} className="btn">
+    <button onClick={handleCreateVolume} className={styles.btnAlert}>
       Ajouter un volume
     </button>
   );

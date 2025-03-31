@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
 import { API_URL } from "../utils/constants";
+import styles from "../assets/style/scss/Button.module.scss";
 
 const ButtonRemove = ({ item, type }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
@@ -43,7 +44,7 @@ const ButtonRemove = ({ item, type }) => {
     return null;
   }
 
-  return <button onClick={handleRemove} className="btn">Supprimer</button>;
+  return <button onClick={handleRemove} className={styles.btnAlert}>Supprimer</button>;
 };
 
 ButtonRemove.propTypes = {

@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
 import { API_URL } from "../utils/constants";
+import styles from "../assets/style/scss/Button.module.scss";
 
 const ButtonRemoveFromShelf = ({ item, type }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
@@ -39,7 +40,7 @@ const ButtonRemoveFromShelf = ({ item, type }) => {
   }
   if (!isLogged) return null;
   return (
-    <button onClick={handleRemoveFromShelf} className="btn">
+    <button onClick={handleRemoveFromShelf} className={styles.btnAlert}>
       Supprimer de ma bibliothèque
     </button>
   );

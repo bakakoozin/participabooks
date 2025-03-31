@@ -1,30 +1,61 @@
 @import "variables";
 
 .mainContainer {
-  padding-top: 7rem;
-}
+  padding-top: 5rem;
+  background-color: $secondary-text-color;
 
-.workTitle {
-  margin: 0;
-  font-size: $font-lg;
-}
+  h1 {
+    text-align: center;
+    background-color: $orange-color;
+    color: $secondary-text-color;
+    padding: 1rem;
+    border-radius: $border-radius;
+    box-shadow: $card-shadow;
+  }
 
-.workInfos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-}
+  .searchBar {
+    padding-top: $gap-xl;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-.workFooter {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding-top: 1rem;
-}
+    input {
+      width: 50lvw;
+      padding: $gap-sm;
+      border-radius: $border-radius;
+      border: 2px solid $dark-color;
+      font-size: $font-lg;
+      color: $dark-color;
+      background-color: $secondary-text-color;
+    }
+  }
 
-.buttons {
-  display: flex;
-  flex-direction: column;
-  gap: $gap-lg;
+  .workTitle {
+    margin: 0;
+    font-size: $font-lg;
+  }
+  
+  .workInfos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 1rem 0;
+  }
+  
+  .workFooter {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: $gap-md;
+    padding-top: 1rem;
+    .authorsList {
+      font-size: 1.4rem;
+    }
+  
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: $gap-lg;
+    }
+  }
 }

@@ -2,12 +2,12 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  padding: 20px 0;
+  padding: 1.5rem 0;
 
   .slider {
     display: flex;
-    gap: 20px;
-    padding-bottom: 2rem;
+    gap: 2rem;
+    padding: 0 1.2rem 2rem 1.2rem;
     overflow-x: auto;
     scroll-behavior: smooth;
     scrollbar-width: none; // Masquer la scrollbar pour Firefox
@@ -19,11 +19,12 @@
   }
 
   .work-card {
-    flex: 0 0 100%; // Chaque article prend 100% de la largeur du conteneur
+    flex: 0 0 95%; // Chaque article prend 95% de la largeur du conteneur
     background: $card-bg;
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: $card-shadow;
+    color: $dark-color;
     text-align: center;
     transition: transform 0.3s ease-in-out;
 

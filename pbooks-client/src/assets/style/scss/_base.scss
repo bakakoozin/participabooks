@@ -12,12 +12,13 @@ html {
 
 body {
   font-family: $font-family;
-  background-color: $secondary-color;
+  background-color: $secondary-text-color;
   font-size: $font-size;
 }
 
 h1, h2, h3 {
   font-weight: bold;
+  text-transform: uppercase;
 }
 
 a {
@@ -25,12 +26,8 @@ a {
   color: inherit;
 }
 
-.btn {
-  padding: 10px 20px;
-  background-color: $button-bg;
-  color: $secondary-color;
-  border: none;
-  border-radius: $border-radius;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 1.5rem;
 }

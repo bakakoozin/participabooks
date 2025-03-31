@@ -1,0 +1,40 @@
+@import "variables";
+
+.btn {
+  padding: 1rem 2rem;
+  background-color: $button-bg;
+  color: $secondary-text-color;
+  border: none;
+  border-radius: $border-radius;
+  box-shadow: $button-shadow;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btnAlert {
+  padding: 1rem 2rem;
+  background-color: $red-color;
+  color: $secondary-text-color;
+  border: none;
+  border-radius: $border-radius;
+  box-shadow: $button-shadow;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btnContainer {
+  display: flex;
+  justify-content: flex-end;
+
+  .btnReadMore {
+    text-align: right;
+    padding: 0.5rem 2rem;
+    background-color: $orange-color;
+    color: $secondary-text-color;
+    border: none;
+    border-radius: $border-radius;
+    box-shadow: $button-shadow;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+}

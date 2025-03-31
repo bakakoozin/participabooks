@@ -24,14 +24,14 @@ function Home() {
   return (
     <main className={styles.mainContainer}>
       <h1>Bibliothèque Publique</h1>
-
-      <input
-        className="search-bar"
-        type="text"
-        placeholder="Rechercher..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      <form className={styles.searchBar}>
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </form>
 
       <section className="slider-container">
         <button
@@ -57,7 +57,7 @@ function Home() {
                 </Link>
               </figure>
               <footer className={styles.workFooter}>
-                <aside>
+                <aside className={styles.authorsList}>
                   {work.authors_name &&
                     work.authors_name
                       .split(",")

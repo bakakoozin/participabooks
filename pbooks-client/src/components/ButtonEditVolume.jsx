@@ -2,6 +2,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
+import styles from "../assets/style/scss/Button.module.scss";
+
+
 const ButtonEditVolume = ({ item }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -17,7 +20,7 @@ const ButtonEditVolume = ({ item }) => {
     navigate(`/editVol/${item.vol_id}`);
   };
 
-  return <button onClick={handleEditVolume} className="btn">Éditer</button>;
+  return <button onClick={handleEditVolume} className={styles.btnAlert}>Éditer</button>;
 };
 
 ButtonEditVolume.propTypes = {

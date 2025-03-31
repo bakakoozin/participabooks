@@ -20,7 +20,7 @@ const getAll = async (req, res, next) => {
       sendResponse(res, "Ouvrages récupérés.", 200, response);
       return;
     }
-    sendResponse(res, "Aucun ouvrage récupéré.", 400);
+    sendResponse(res, "Aucun ouvrage récupéré.", 200, []);
     return;
   } catch (error) {
     console.log("Erreur lors de la récupération des ouvrages :", error);
