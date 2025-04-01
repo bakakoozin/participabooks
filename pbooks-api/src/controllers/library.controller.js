@@ -333,15 +333,12 @@ const updateVolume = async (req, res, next) => {
       ...updateFields,
     });
 
-console.log(req.body)
-
-const authors = req.body.authors || [];
-await Author.deleteAllAuthorsFromVolume(volumeId);
-for (const author of authors) {
-  const authorId = await Author.findOrCreateAuthor(author);
-  await Author.linkAuthorToVolume(volumeId, authorId);
-}
-
+    const authors = req.body.authors || [];
+    await Author.deleteAllAuthorsFromVolume(volumeId);
+    for (const author of authors) {
+      const authorId = await Author.findOrCreateAuthor(author);
+      await Author.linkAuthorToVolume(volumeId, authorId);
+    }
 
     if (result && result.affectedRows > 0) {
       return res.json({ message: "Volume mis à jour avec succès." });

@@ -65,7 +65,7 @@ function Header() {
       <div className={styles.burgerMenu} onClick={handleClick}>
         <FontAwesomeIcon icon={faBars} />
       </div>
-        <img className={styles.logo} src="./logo_pbooks_light.png" alt="Logo de participabooks" />
+        <img className={styles.logo} src="/logo_pbooks_light.png" alt="Logo de participabooks" />
       <div className={styles.userInfos}>
       <p>{isLogged ? infos.pseudo : "non connecté"}</p>
         {!isLogged || (infos.avatar === null) ? (

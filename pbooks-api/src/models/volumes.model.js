@@ -25,13 +25,23 @@ class Volume {
         creator_visibility, 
         users_id,
         validator_id,
-        authors.name AS author_name
+        COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name
       FROM volumes
       LEFT JOIN volumes_authors ON volumes.id = volumes_authors.volumes_id
       LEFT JOIN authors ON authors.id = volumes_authors.authors_id
-      WHERE volumes.id = ?`;
-    const [rows] = await pool.query(FIND_VOLUME, [volumeId]);
-    return rows[0];
+      WHERE volumes.id = ?
+      GROUP BY volumes.id`;
+    try {
+      const [rows] = await pool.query(FIND_VOLUME, [volumeId]);
+      const volume = rows[0];
+      return {
+        ...volume,
+        authors_name: volume.authors_name ? volume.authors_name.split(",") : [],
+      };
+    } catch (error) {
+      console.error("Erreur lors de la récupération du volume:", error);
+      throw error;
+    }
   }
 
   //============================== INSERT =======================================//

@@ -137,9 +137,7 @@ export function EditVolume() {
             return;
           }
 
-          const authors = volumeInfo.author_name
-            ? [volumeInfo.author_name]
-            : [""];
+          const authors_name = volumeInfo.authors_name
           setFormData((prevData) => ({
             ...prevData,
             number: volumeInfo.number || "",
@@ -147,7 +145,7 @@ export function EditVolume() {
             isbn: volumeInfo.isbn || "",
             summary: volumeInfo.summary || "",
             creator_visibility: volumeInfo.creator_visibility === "1",
-            authors: authors,
+            authors: authors_name,
           }));
         }
         setIsFetching(false);
@@ -217,7 +215,7 @@ export function EditVolume() {
           />
         </div>
         {formData.authors.map((author, index) => (
-          <div key={index}>
+          <div key={author}>
             <label htmlFor={`author-${index}`}>Auteur {index + 1}</label>
             <input
               type="text"
