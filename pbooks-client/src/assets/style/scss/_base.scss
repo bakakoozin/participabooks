@@ -14,9 +14,11 @@ body {
   font-family: $font-family;
   background-color: $secondary-text-color;
   font-size: $font-size;
+  font-weight: $font-weight;
 }
 
 h1, h2, h3 {
+  font-family: $font-family-alt;
   font-weight: bold;
   text-transform: uppercase;
 }

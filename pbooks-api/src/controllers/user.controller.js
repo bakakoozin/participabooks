@@ -97,7 +97,7 @@ const uploadAvatar = async (req, res, next) => {
   const formOptions = {
     multiples: false,
     uploadDir: path.join(process.cwd(), "public/uploads/temp"),
-    maxFileSize: 5 * 1024 * 1024, // 5 Mo max
+    maxFileSize: 5 * 1024 * 1024,
   };
 
   handleUpload(

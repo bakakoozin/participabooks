@@ -72,13 +72,13 @@ function Dashboard() {
             <p>
               <strong>Email :</strong> {infos.email}
             </p>
-            <Link to={"/update-infos"} className="cta">
-              Mettre à jour vos informations
+            <Link to={"/update-infos"} className={styles.btn}>
+              Mettre à jour mes informations
             </Link>
           </article>
           <FormAvatar />
-          
           <article>
+            <h3>Apparence</h3>
             <label>
               Mode sombre :
               <div className="toggle-switch">
@@ -95,10 +95,10 @@ function Dashboard() {
               </div>
             </label>
           </article>
-          
+
           <div>
-            <button onClick={handleDeleteAccount}>
-              Supprimer votre compte
+            <button className={styles.btnDelete} onClick={handleDeleteAccount}>
+              Supprimer mon compte
             </button>
           </div>
         </section>

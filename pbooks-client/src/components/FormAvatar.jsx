@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { API_URL } from "../utils/constants";
 import { updateAvatar } from "../features/authSlice";
+import styles from "../assets/style/scss/Dashboard.module.scss";
 
 export function FormAvatar() {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ export function FormAvatar() {
           accept="image/*"
           onChange={handleFile}
         />
-        <button type="submit">Envoyer</button>
+        <button className={styles.btn} type="submit">Envoyer</button>
       </form>
     </article>
   );
