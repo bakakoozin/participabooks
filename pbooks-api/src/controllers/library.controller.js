@@ -324,14 +324,24 @@ const updateVolume = async (req, res, next) => {
     if (req.body.creator_visibility !== undefined)
       updateFields.creator_visibility = req.body.creator_visibility;
 
-    if (Object.keys(updateFields).length === 0) {
-      return res.status(400).json({ message: "Aucune modification détectée." });
-    }
+    // if (Object.keys(updateFields).length === 0) {
+    //   return res.status(400).json({ message: "Aucune modification détectée." });
+    // }
 
     const result = await Volume.updateVolume({
       volumesId: volumeId,
       ...updateFields,
     });
+
+console.log(req.body)
+
+const authors = req.body.authors || [];
+await Author.deleteAllAuthorsFromVolume(volumeId);
+for (const author of authors) {
+  const authorId = await Author.findOrCreateAuthor(author);
+  await Author.linkAuthorToVolume(volumeId, authorId);
+}
+
 
     if (result && result.affectedRows > 0) {
       return res.json({ message: "Volume mis à jour avec succès." });

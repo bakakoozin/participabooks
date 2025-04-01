@@ -5,6 +5,7 @@ import { logout, login } from "../../features/authSlice";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 import { FormAvatar } from "../../components/FormAvatar";
+import { ThemeToggle } from "../../components/ButtonDarkMode";
 import styles from "../../assets/style/scss/Dashboard.module.scss";
 
 function Dashboard() {
@@ -78,24 +79,8 @@ function Dashboard() {
           </article>
           <FormAvatar />
           <article>
-            <h3>Apparence</h3>
-            <label>
-              Mode sombre :
-              <div className="toggle-switch">
-                <input
-                  type="checkbox"
-                  id="theme-toggle"
-                  checked={theme === "sombre"}
-                  onChange={toggleTheme}
-                />
-                <label htmlFor="theme-toggle" className="toggle-label">
-                  <span className="toggle-inner" />
-                  <span className="toggle-switch" />
-                </label>
-              </div>
-            </label>
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </article>
-
           <div>
             <button className={styles.btnDelete} onClick={handleDeleteAccount}>
               Supprimer mon compte
