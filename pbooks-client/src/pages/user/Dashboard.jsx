@@ -13,8 +13,9 @@ function Dashboard() {
   const navigate = useNavigate();
   const { infos } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(infos.theme);
-
+  
   async function handleThemeChange(newTheme) {
+    document.documentElement.setAttribute("data-theme", newTheme);
     try {
       const response = await fetch(`${API_URL}/user/profile/theme`, {
         method: "PATCH",

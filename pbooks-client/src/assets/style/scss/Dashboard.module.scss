@@ -1,49 +1,39 @@
 @import "variables";
 
 .mainContainer {
-    padding-top: 5rem;
-    background-color: $secondary-text-color;
+  padding-top: 5rem;
+  background-color: $secondary-text-color;
 
-    h2 {
-        text-align: center;
-        background-color: $orange-color;
-        color: $secondary-text-color;
-        padding: 1rem;
-        border-radius: $border-radius;
-        box-shadow: $card-shadow;
-    }
-    
-    article {
-        flex: 0 0 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: 100%;
-        padding: 1rem;
-        color: $dark-color;
-        background-color: $green-color;
-        border-radius: 8px;
-        box-shadow: $card-shadow;
-        margin: 2rem 0;
-    }
+  h2 {
+    text-align: center;
+    background-color: $orange-color;
+    color: $secondary-text-color;
+    padding: 1rem;
+    border-radius: $border-radius;
+    box-shadow: $card-shadow;
+  }
 
-    .btn {
-        padding: 0.5rem 1rem;
-        background-color: $orange-color;
-        text-align: center;
-        color: $secondary-text-color;
-        border: none;
-        border-radius: $border-radius;
-        box-shadow: $button-shadow;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
+  article {
+    flex: 0 0 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: 1rem;
+    color: $dark-color;
+    background-color: $green-color;
+    border-radius: 8px;
+    box-shadow: $card-shadow;
+    margin: 2rem 0;
+  }
 
-}
-
-.btnDelete {
-    padding: 1rem 2rem;
-    background-color: $red-color;
+  .btn {
+    padding: 0.5rem 1rem;
+    background-color: $orange-color;
+    font-size: $font-size;
+    font-weight: $font-weight;
+    font-family: $font-family;
+    text-align: center;
     color: $secondary-text-color;
     border: none;
     border-radius: $border-radius;
@@ -51,3 +41,21 @@
     cursor: pointer;
     transition: background-color 0.3s;
   }
+
+  input {
+    display: none;
+  }
+}
+
+.btnDelete {
+  padding: 1rem 2rem;
+  background-color: $red-color;
+  font-size: $font-size;
+  font-weight: $font-weight;
+  color: $secondary-text-color;
+  border: none;
+  border-radius: $border-radius;
+  box-shadow: $button-shadow;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}

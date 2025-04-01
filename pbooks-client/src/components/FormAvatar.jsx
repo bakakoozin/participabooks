@@ -52,6 +52,7 @@ export function FormAvatar() {
     <article>
       <h3>Avatar</h3>
       <form onSubmit={handleSubmit}>
+       <label htmlFor="avatar" className={styles.btn}>Choisir un fichier</label>
         <input
           type="file"
           name="avatar"
