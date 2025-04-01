@@ -11,8 +11,6 @@ const handleUpload = (req, res, next, options) => {
   });
 
   form.parse(req, async (err, fields, files) => {
-    console.log("Fichiers reçus:", files);
-    console.log("Champs reçus:", fields);
     if (err) {
       console.error("Erreur lors de l'upload", err);
       return res.status(400).json({ message: "Erreur lors de l'upload", error: err.message });

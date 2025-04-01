@@ -9,6 +9,7 @@ import Author from "../models/authors.model.js";
 import Review from "../models/reviews.model.js";
 import sendResponse from "../helpers/sendResponse.js";
 import handleUpload from "../config/formidable.js";
+import { console } from "inspector";
 
 //============================== GET =======================================//
 
@@ -200,7 +201,6 @@ const createVolume = async (req, res, next) => {
 };
 
 const uploadMedia = async (req, res, next) => {
-  console.log("Début de l'upload du média...");
   const formOptions = {
     multiples: false,
     uploadDir: path.join(process.cwd(), "public/uploads/medias"),
@@ -212,12 +212,10 @@ const uploadMedia = async (req, res, next) => {
     res,
     async () => {
       const volumesId = req.body?.volumesId?.[0];
-      console.log("Fichier téléchargé :", req.fields);
-      console.log("Body reçu :", req.body);
       if (!req.files || !req.files.media) {
         return res.status(400).json({ message: "Fichier média manquant." });
       }
-
+console.log(req.query)
       const mediaFile = Array.isArray(req.files.media)
         ? req.files.media[0]
         : req.files.media;

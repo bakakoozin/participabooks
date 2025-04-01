@@ -93,10 +93,10 @@ export function EditVolume() {
     }
   }
 
-  async function updateMedia(volumesId) {
+  async function updateMedia() {
     const fileData = new FormData();
     fileData.append("media", refMedia.current.files[0]);
-    fileData.append("volumesId", volumesId);
+    fileData.append("volumesId", volumeId);
     try {
       await fetch(`${API_URL}/works/uploads`, {
         method: "PATCH",
