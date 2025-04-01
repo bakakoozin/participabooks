@@ -23,7 +23,7 @@ function Home() {
 
   return (
     <main className={styles.mainContainer}>
-      <h1>Bibliothèque Publique</h1>
+      <h1>Bibliothèque</h1>
       <form className={styles.searchBar}>
         <input
           type="text"

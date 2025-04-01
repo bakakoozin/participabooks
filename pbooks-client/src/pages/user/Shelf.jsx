@@ -5,6 +5,12 @@ import { scrollSlider } from "../../utils/slider";
 import { useFetch } from "../../hooks/useFetch";
 import { ButtonRemoveFromShelf } from "../../components/ButtonRemoveFromShelf";
 import { Img } from "../../components/Img";
+import styles from "../../assets/style/scss/Shelf.module.scss";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 function Shelf() {
@@ -14,41 +20,57 @@ function Shelf() {
   const sliderRef = useRef(null);
 
   return (
-    <section>
+    <main className={styles.mainContainer}>
       <h1>Ma bibliothèque</h1>
+      <form className={styles.searchBar}>
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </form>
 
-      <input
-        className="search-bar"
-        type="text"
-        placeholder="Rechercher..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      <div className="slider-container">
+      <section className="slider-container">
         <button
           className="nav-button left"
           onClick={() => scrollSlider(sliderRef, "left")}
         >
-          &lt;
+          <FontAwesomeIcon icon={faChevronLeft} />
         </button>
 
-        <div className="slider" ref={sliderRef}>
+        <article className="slider" ref={sliderRef}>
           {data?.datas?.map((work) => (
-            <article key={work.works_id} className="work-card">
-              <h2>{work.works_name}</h2>
-              <p>{work.works_type}</p>
-              <p>{work.works_score}</p>
-              <Link to={`/shelf/work/${work.works_id}`}>
-                <Img src={work.cover_url} alt={work.works_name} />
-              </Link>
-              <p>{work.authors_name}</p>
-              <p>{work.works_edition}</p>
-              <p>{work.works_format}</p>
-              <ButtonRemoveFromShelf item={work} type="work" />
-            </article>
+            <section key={work.works_id} className="work-card">
+              <header>
+                <h2>{work.works_name}</h2>
+                <div className={styles.workInfos}>
+                  <p>{work.works_type}</p>
+                  <p>Format {work.works_format}</p>
+                </div>
+              </header>
+              <figure>
+                <Link to={`/shelf/work/${work.works_id}`}>
+                  <Img src={work.cover_url} alt={work.works_name} />
+                </Link>
+              </figure>
+              <footer className={styles.workFooter}>
+                <aside className={styles.authorsList}>
+                  {work.authors_name &&
+                    work.authors_name
+                      .split(",")
+                      .map((author, index) => (
+                        <p key={index}>{author.trim()}</p>
+                      ))}
+                </aside>
+                <aside className={styles.buttons}>
+                  <p>{work.works_edition}</p>
+                  <ButtonRemoveFromShelf item={work} type="work" />
+                </aside>
+              </footer>
+            </section>
           ))}
-        </div>
+        </article>
         <div>
           {isFetching && <p>Chargement...</p>}
           {data?.datas?.length === 0 && !isFetching && (
@@ -59,10 +81,11 @@ function Shelf() {
           className="nav-button right"
           onClick={() => scrollSlider(sliderRef, "right")}
         >
-          &gt;
+          <FontAwesomeIcon icon={faChevronRight} />
         </button>
-      </div>
-    </section>
+
+      </section>
+    </main>
   );
 }
 
