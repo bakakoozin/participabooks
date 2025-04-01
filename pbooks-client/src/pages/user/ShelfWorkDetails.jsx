@@ -48,7 +48,7 @@ function ShelfWorkDetails() {
             <Img src={volume.url_media} alt={volume.vol_title} />
           </figure>
           <footer className={styles.volumeCardFooter}>
-            <p>ISBN : {volume.vol_isbn}</p>
+            <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
             <article className={styles.summary}>
               <h3>Résumé</h3>
               <ReadMore text={volume.vol_summary} maxLength={200} />

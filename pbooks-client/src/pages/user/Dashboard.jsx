@@ -5,6 +5,7 @@ import { logout, login } from "../../features/authSlice";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 import { FormAvatar } from "../../components/FormAvatar";
+import styles from "../../assets/style/scss/Dashboard.module.scss";
 
 function Dashboard() {
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ function Dashboard() {
   }
 
   return (
-    <div>
+    <main className={styles.mainContainer}>
       <h2>Profil</h2>
       {infos && (
         <section>
@@ -75,6 +76,8 @@ function Dashboard() {
               Mettre à jour vos informations
             </Link>
           </article>
+          <FormAvatar />
+          
           <article>
             <label>
               Mode sombre :
@@ -92,7 +95,7 @@ function Dashboard() {
               </div>
             </label>
           </article>
-          <FormAvatar />
+          
           <div>
             <button onClick={handleDeleteAccount}>
               Supprimer votre compte
@@ -100,7 +103,7 @@ function Dashboard() {
           </div>
         </section>
       )}
-    </div>
+    </main>
   );
 }
 
