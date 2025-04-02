@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 $orange-color: #BF705E;
 $secondary-text-color: #f4f4f4;
 $green-color: #BDBF73;
@@ -10,10 +12,10 @@ $layout-bg: $green-color;
 $button-hover-bg: rgba(0, 0, 0, 0.8);
 $card-bg: $green-color;
 $card-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
-$button-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+$button-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 
 $font-family: 'Candara';
-$font-family-alt: 'Atkinson Hyperlegible' sans-serif;
+$font-family-alt: 'Atkinson Hyperlegible', sans-serif;
 $font-weight: 600;
 $font-size: 1.6rem;
 $border-radius: 5px;

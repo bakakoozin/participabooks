@@ -4,6 +4,8 @@ import { useState } from "react";
 import { login } from "../../features/authSlice";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
+import styles from "../../assets/style/scss/Form.module.scss";
+
 
 const pseudoRegex = /^[a-zA-Z0-9_]{3,}$/; // Au moins 3 caractères, lettres, chiffres et underscores
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Format d'email basique
@@ -92,67 +94,65 @@ function UpdateUserForm() {
   }
 
   return (
-    <>
-      <h2>Modifier mes informations</h2>
+    <main className={styles.mainContainer}>
+      <section className={styles.formCard}>
+        <h3>Modifier mes informations</h3>
 
-{message && <p>{message}</p>}
+        {message && <p>{message}</p>}
 
-<form onSubmit={handleSubmit}>
-  <div>
-    <label htmlFor="pseudo">Nouveau pseudo</label>
-    <input
-      type="text"
-      id="pseudo"
-      name="pseudo"
-      value={formData.pseudo}
-      onChange={handleChange}
-    />
-    {!isPseudoValid && formData.pseudo && (
-      <p className="auth-alert">Le pseudo doit contenir au moins 3 caractères, lettres, chiffres et underscores.</p>
-    )}
-  </div>
-  <div>
-    <label htmlFor="email">Nouvel email</label>
-    <input
-      type="email"
-      id="email"
-      name="email"
-      value={formData.email}
-      onChange={handleChange}
-    />
-    {!isEmailValid && formData.email && (
-      <p className="auth-alert">Veuillez entrer un email valide.</p>
-    )}
-  </div>
-  <button type="submit">Mettre à jour</button>
-
-  <h2>Changer mot de passe</h2>
-</form>
-<form onSubmit={handleSubmit}>
-  <div>
-    <input
-      type="password"
-      id="password"
-      name="password"
-      value={formData.password}
-      onChange={handleChange}
-      placeholder="Nouveau mot de passe"
-    />
-    <input
-      type="password"
-      id="passwordCheck"
-      name="passwordCheck"
-      value={formData.passwordCheck}
-      onChange={handleChange}
-      placeholder="Confirmer nouveau mot de passe"
-    />
-    {!isPasswordValid && formData.password && (
-      <p className="auth-alert">Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre.</p>
-    )}
-  </div>
-  <button type="submit">Valider</button>
-</form>
-    </>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            id="pseudo"
+            name="pseudo"
+            value={formData.pseudo}
+            onChange={handleChange}
+          />
+          {!isPseudoValid && formData.pseudo && (
+            <p className="auth-alert">Le pseudo doit contenir au moins 3 caractères, lettres, chiffres et underscores.</p>
+          )}
+          <div>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            {!isEmailValid && formData.email && (
+              <p className="auth-alert">Veuillez entrer un email valide.</p>
+            )}
+          </div>
+          <button className={styles.btn} type="submit">Mettre à jour</button>
+          <hr className={styles.separator} />
+          <h3>Changer mot de passe</h3>
+        </form>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.formPassword}>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Nouveau mot de passe"
+            />
+            <input
+              type="password"
+              id="passwordCheck"
+              name="passwordCheck"
+              value={formData.passwordCheck}
+              onChange={handleChange}
+              placeholder="Confirmer nouveau mot de passe"
+            />
+            {!isPasswordValid && formData.password && (
+              <p className="auth-alert">Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre.</p>
+            )}
+          </div>
+          <button className={styles.btn} type="submit">Valider</button>
+        </form>
+      </section>
+    </main>
   );
 }
 

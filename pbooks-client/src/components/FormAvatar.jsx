@@ -8,10 +8,25 @@ import styles from "../assets/style/scss/Dashboard.module.scss";
 export function FormAvatar() {
   const dispatch = useDispatch();
   const [avatarFile, setAvatarFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+
   const { infos } = useSelector((state) => state.auth);
 
+
   function handleFile(e) {
-    setAvatarFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setAvatarFile(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setAvatarFile(null);
+      setPreview(null);
+    }
   }
 
   async function handleSubmit(e) {
@@ -23,6 +38,7 @@ export function FormAvatar() {
     const formData = new FormData();
     formData.append("avatar", avatarFile);
     formData.append("id", infos.id);
+
     try {
       const response = await fetch(`${API_URL}/user/profile/avatar`, {
         method: "PATCH",
@@ -37,7 +53,7 @@ export function FormAvatar() {
         const resJSON = await response.json();
         toast.error(
           resJSON.message ||
-            "Échec de la mise à jour de l'avatar. Veuillez réessayer."
+          "Échec de la mise à jour de l'avatar. Veuillez réessayer."
         );
       }
     } catch (error) {
@@ -52,7 +68,7 @@ export function FormAvatar() {
     <article>
       <h3>Avatar</h3>
       <form onSubmit={handleSubmit}>
-       <label htmlFor="avatar" className={styles.btn}>Choisir un fichier</label>
+        <label htmlFor="avatar" className={styles.btn}>Choisir un fichier</label>
         <input
           type="file"
           name="avatar"
@@ -60,7 +76,16 @@ export function FormAvatar() {
           accept="image/*"
           onChange={handleFile}
         />
-        <button className={styles.btn} type="submit">Envoyer</button>
+        {preview && (
+          <div className={styles.previewContainer}>
+            <img src={preview} alt="Aperçu de l'avatar" className={styles.preview} />
+          </div>
+        )}
+         {avatarFile && (
+          <button className={styles.btn} type="submit">
+            Envoyer
+          </button>
+        )}
       </form>
     </article>
   );
