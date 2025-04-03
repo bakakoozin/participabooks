@@ -1,11 +1,14 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import { API_URL } from "../../utils/constants";
 import { useFetch } from "../../hooks/useFetch";
-import { toast } from "react-toastify";
+import styles from "../../assets/style/scss/Form.module.scss";
 
-function CreateVolume() {
+export function CreateVolume() {
   const { workId } = useParams();
   const refMedia = useRef(null);
   const [formData, setFormData] = useState({
@@ -19,35 +22,24 @@ function CreateVolume() {
     authors: [""],
   });
 
+  const [preview, setPreview] = useState(null);
   const { data, isFetching } = useFetch(`/works/${workId}`, {
     initData: { datas: [] },
   });
-
-  useEffect(() => {
-    if (data.datas.length > 0) {
-      const workInfo = data.datas[0];
-      setFormData((prevData) => ({
-        ...prevData,
-        number: workInfo.number || "",
-        title: workInfo.title || "",
-        isbn: workInfo.isbn || "",
-        summary: workInfo.summary || "",
-        creator_visibility: workInfo.creator_visibility === "1",
-        authors: workInfo.authors || [""],
-      }));
-    }
-  }, [data]);
-
-  if (isFetching) return <p>Chargement...</p>;
+  const navigate = useNavigate();
 
   function handleChange(e) {
     const { name, value, checked, files } = e.target;
 
     if (name === "media") {
+      const file = files[0];
       setFormData((prevData) => ({
         ...prevData,
-        media: files[0],
+        media: file,
       }));
+      if (file) {
+        setPreview(URL.createObjectURL(file));
+      }
     }
     if (name.startsWith("author")) {
       const index = parseInt(name.split("-")[1], 10);
@@ -117,6 +109,7 @@ function CreateVolume() {
           const volumesId = resJSON.volumesId;
           await updateMedia(volumesId);
         }
+        navigate("/works/:id");
       } else {
         toast.error(
           resJSON.message || "Échec de la création. Veuillez réessayer."
@@ -154,106 +147,145 @@ function CreateVolume() {
 
   const workInfo = data.datas.length > 0 ? data.datas[0] : {};
 
-  return (
-    <>
-      {workInfo && <h2>Editer l&apos;ouvrage {workInfo.works_name}</h2>}
+  useEffect(() => {
+    if (data.datas.length > 0) {
+      const workInfo = data.datas[0];
+      setFormData((prevData) => ({
+        ...prevData,
+        number: workInfo.number || "",
+        title: workInfo.title || "",
+        isbn: workInfo.isbn || "",
+        summary: workInfo.summary || "",
+        creator_visibility: workInfo.creator_visibility === "1",
+        authors: workInfo.authors || [""],
+      }));
+    }
+  }, [data]);
 
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <div>
-          <label htmlFor="number">Numéro du volume</label>
-          <input
-            type="number"
-            id="number"
-            name="number"
-            value={formData.number}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="title">Titre du volume</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="isbn">ISBN</label>
-          <input
-            type="number"
-            id="isbn"
-            name="isbn"
-            value={formData.isbn}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="summary">Résumé</label>
-          <textarea
-            id="summary"
-            name="summary"
-            value={formData.summary}
-            onChange={handleChange}
-          />
-        </div>
-        {formData.authors.map((author, index) => (
-          <div key={index}>
-            <label htmlFor={`author-${index}`}>Auteur {index + 1}</label>
+  if (isFetching) return <p>Chargement...</p>;
+
+  return (
+    <main className={styles.mainContainer}>
+      {workInfo && (
+        <h2>Ajouter un volume à l&apos;ouvrage {workInfo.works_name}</h2>
+      )}
+      <section className={styles.formCard}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <div>
+            <label htmlFor="number">Numéro du volume</label>
             <input
-              type="text"
-              id={`author-${index}`}
-              name={`author-${index}`}
-              value={author}
+              type="number"
+              id="number"
+              name="number"
+              value={formData.number}
               onChange={handleChange}
             />
-            {formData.authors.length > 1 && (
-              <button type="button" onClick={() => removeAuthor(index)}>
-                Supprimer
-              </button>
-            )}
           </div>
-        ))}
-        <button type="button" onClick={addAuthor}>
-          Ajouter un auteur
-        </button>
-        <div>
-          <input
-            type="checkbox"
-            id="creator_visibility"
-            name="creator_visibility"
-            checked={formData.creator_visibility}
-            onChange={handleChange}
-          />
-          <label htmlFor="creator_visibility">
-            Je souhaite rendre mon pseudo visible en tant que créateur de ce
-            volume
+          <div>
+            <label htmlFor="title">Titre du volume</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="isbn">ISBN</label>
+            <input
+              type="number"
+              id="isbn"
+              name="isbn"
+              value={formData.isbn}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="summary">Résumé</label>
+            <textarea
+              id="summary"
+              name="summary"
+              value={formData.summary}
+              onChange={handleChange}
+            />
+          </div>
+          <fieldset>
+            <legend>Auteur(s)</legend>
+            {formData.authors.map((author, index) => (
+              <div key={index}>
+                <input
+                  type="text"
+                  id={`author-${index}`}
+                  name={`author-${index}`}
+                  value={author}
+                  onChange={handleChange}
+                />
+                {formData.authors.length > 1 && index > 0 && (
+                  <button
+                    type="button"
+                    className={styles.btnClose}
+                    onClick={() => removeAuthor(index)}
+                  >
+                    <FontAwesomeIcon icon={faXmark} />
+                  </button>
+                )}
+                {index === formData.authors.length - 1 && (
+                  <button
+                    type="button"
+                    className={styles.btnAuthor}
+                    onClick={addAuthor}
+                  >
+                    Ajouter un auteur
+                  </button>
+                )}
+              </div>
+            ))}
+          </fieldset>
+          <div>
+            <input
+              className={styles.checkbox}
+              type="checkbox"
+              id="creator_visibility"
+              name="creator_visibility"
+              checked={formData.creator_visibility}
+              onChange={handleChange}
+            />
+            <label htmlFor="creator_visibility">
+              Je souhaite rendre mon pseudo visible en tant que créateur de ce
+              volume
+            </label>
+          </div>
+          <button type="submit" className={styles.btn}>
+            Ajouter volume
+          </button>
+        </form>
+        <hr className={styles.separator} />
+        <p>Ajouter une image de couverture</p>
+        <div className={styles.uploadContainer}>
+          <label htmlFor="media" className={styles.btn}>
+            Choisir un fichier
           </label>
-        </div>
-        <button type="submit">Valider</button>
-      </form>
-
-      {formData.works_id && (
-        <div>
-          <h3>Ajouter une image de couverture</h3>
-          <form onSubmit={(e) => e.preventDefault()}>
-            <div>
-              <label htmlFor="media">Image de couverture</label>
-              <input
-                ref={refMedia}
-                type="file"
-                id="media"
-                name="media"
-                accept="image/*"
-                onChange={handleChange}
+          <input
+            ref={refMedia}
+            type="file"
+            id="media"
+            name="media"
+            accept="image/*"
+            onChange={handleChange}
+            className={styles.hiddenInput}
+          />
+          {preview && (
+            <div className={styles.mediaPreview}>
+              <img
+                src={preview}
+                alt="Aperçu du media"
+                className={styles.preview}
               />
             </div>
-          </form>
+          )}
         </div>
-      )}
-    </>
+      </section>
+    </main>
   );
 }
-
-export default CreateVolume;

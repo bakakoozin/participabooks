@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -24,16 +24,22 @@ export function EditVolume() {
   });
 
   const [isFetching, setIsFetching] = useState(true);
+  const [preview, setPreview] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   function handleChange(e) {
     const { name, value, checked, files } = e.target;
 
     if (name === "media") {
+      const file = files[0];
       setFormData((prevData) => ({
         ...prevData,
-        media: files[0],
+        media: file,
       }));
+      if (file) {
+        setPreview(URL.createObjectURL(file));
+      }
     }
     if (name.startsWith("author")) {
       const index = parseInt(name.split("-")[1], 10);
@@ -98,6 +104,7 @@ export function EditVolume() {
         const volumesId = resJSON.volumesId;
         await updateMedia(volumesId);
       }
+      navigate(-1);
     } catch (error) {
       console.error("Erreur lors de la mise à jour.", error);
       toast.error("Erreur lors de la mise à jour. Veuillez réessayer.");
@@ -114,7 +121,6 @@ export function EditVolume() {
         credentials: "include",
         body: fileData,
       });
-      toast.success("Image de couverture mise à jour !");
     } catch (error) {
       console.error("Erreur lors de l'upload du média.", error);
       toast.error("Erreur lors de l'upload du média.");
@@ -148,7 +154,7 @@ export function EditVolume() {
             return;
           }
 
-          const authors_name = volumeInfo.authors_name
+          const authors_name = volumeInfo.authors_name;
           setFormData((prevData) => ({
             ...prevData,
             number: volumeInfo.number || "",
@@ -228,7 +234,7 @@ export function EditVolume() {
           <fieldset>
             <legend>Auteur(s)</legend>
             {formData.authors.map((author, index) => (
-              <div key={author}>
+              <div key={index}>
                 <input
                   type="text"
                   id={`author-${index}`}
@@ -238,13 +244,23 @@ export function EditVolume() {
                   placeholder={`Auteur ${index + 1}`}
                 />
                 {formData.authors.length > 1 && index > 0 && (
-                  <button type="button" className={styles.btnClose} onClick={() => removeAuthor(index)}>
+                  <button
+                    type="button"
+                    className={styles.btnClose}
+                    onClick={() => removeAuthor(index)}
+                  >
                     <FontAwesomeIcon icon={faXmark} />
                   </button>
                 )}
-                <button type="button" className={styles.btnAuthor} onClick={addAuthor}>
-                  Ajouter un auteur
-                </button>
+                {index === formData.authors.length - 1 && (
+                  <button
+                    type="button"
+                    className={styles.btnAuthor}
+                    onClick={addAuthor}
+                  >
+                    Ajouter un auteur
+                  </button>
+                )}
               </div>
             ))}
           </fieldset>
@@ -262,27 +278,35 @@ export function EditVolume() {
               volume
             </label>
           </div>
-          <button type="submit" className={styles.btn}>Valider formulaire</button>
+          <button type="submit" className={styles.btn}>
+            Valider modifications
+          </button>
         </form>
-
         <hr className={styles.separator} />
-
+        <p>Image de couverture</p>
         {formData.volumes_id && (
-          <div>
-            <h3>Ajouter une image de couverture</h3>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div>
-                <label htmlFor="media">Image de couverture</label>
-                <input
-                  ref={refMedia}
-                  type="file"
-                  id="media"
-                  name="media"
-                  accept="image/*"
-                  onChange={handleChange}
+          <div className={styles.uploadContainer}>
+            <label htmlFor="media" className={styles.btn}>
+              Choisir un fichier
+            </label>
+            <input
+              ref={refMedia}
+              type="file"
+              id="media"
+              name="media"
+              accept="image/*"
+              onChange={handleChange}
+              className={styles.hiddenInput}
+            />
+            {preview && (
+              <div className={styles.mediaPreview}>
+                <img
+                  src={preview}
+                  alt="Aperçu du media"
+                  className={styles.preview}
                 />
               </div>
-            </form>
+            )}
           </div>
         )}
       </section>
