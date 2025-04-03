@@ -1,5 +1,69 @@
 @import "variables";
 
 .mainContainer {
-    padding-top: 7rem;
+  padding-top: 5rem;
+  background-color: $secondary-text-color;
+
+  h1 {
+    text-align: center;
+    background-color: $orange-color;
+    color: $secondary-text-color;
+    padding: 1rem;
+    border-radius: $border-radius;
+    box-shadow: $card-shadow;
+    margin-bottom: 2rem;
   }
+
+  .authForm {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: $green-color;
+    color: $dark-color;
+    padding: 1rem 2rem;
+    border-radius: $border-radius;
+    box-shadow: $card-shadow;
+
+    input {
+      width: 95%;
+      padding: 0.4rem;
+      margin: 1rem 0;
+      border-radius: $border-radius;
+      border: none;
+      box-shadow: $form-shadow;
+      font-size: $font-size;
+      color: $dark-color;
+      background-color: $secondary-text-color;
+
+      &:focus {
+        outline: none;
+        box-shadow: $form-shadow-focus;
+      }
+
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      background-color: $button-bg;
+      color: $secondary-text-color;
+      border: none;
+      border-radius: $border-radius;
+      box-shadow: $button-shadow;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    p {
+      padding-top: 1rem;
+    }
+
+    .authAlert {
+      color: $red-color;
+    }
+
+    strong {
+      color: $orange-color;
+    }
+  }
+
+}

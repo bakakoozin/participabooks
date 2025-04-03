@@ -70,7 +70,8 @@ function Register() {
   return (
     <main id="register" className={styles.mainContainer}>
       <h1>Création du compte</h1>
-      <form onSubmit={handleSubmit} className="auth">
+      <section className={styles.authForm}> 
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           id="pseudo"
@@ -78,9 +79,9 @@ function Register() {
           onChange={handleChangePseudo}
           placeholder="Entrer votre pseudo"
           required
-        />
+          />
         {!isPseudoValid && pseudo && (
-          <p className="auth-alert">
+          <p className={styles.authAlert}>
             Le pseudo doit contenir au moins 3 caractères, lettres, chiffres et
             underscores.
           </p>
@@ -92,9 +93,9 @@ function Register() {
           onChange={handleChangeEmail}
           placeholder="Entrer votre email"
           required
-        />
+          />
         {!isEmailValid && email && (
-          <p className="auth-alert">Veuillez entrer un email valide.</p>
+          <p className={styles.authAlert}>Veuillez entrer un email valide.</p>
         )}
         <input
           type="password"
@@ -103,19 +104,20 @@ function Register() {
           onChange={handleChangePassword}
           placeholder="Choisir un mot de passe"
           required
-        />
+          />
         {!isPasswordValid && password && (
-          <p className="auth-alert">
+          <p className={styles.authAlert}>
             Le mot de passe doit contenir au moins 8 caractères, une lettre et
             un chiffre.
           </p>
         )}
-        <button type="submit">Créer compte</button>
-        {message && <p className="auth-alert">{message}</p>}
+        <button className={styles.btn} type="submit">Créer compte</button>
+        {message && <p className={styles.authAlert}>{message}</p>}
       </form>
       <p>
-        Déjà inscrit ? <Link to="/auth/login">Se connecter</Link>
+        Déjà inscrit ? <strong><Link to="/auth/login">Se connecter</Link></strong>
       </p>
+        </section>
     </main>
   );
 }

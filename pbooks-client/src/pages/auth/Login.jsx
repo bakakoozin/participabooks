@@ -50,29 +50,31 @@ function Login() {
   return (
     <main id="login" className={styles.mainContainer}>
       <h1>Se connecter</h1>
-      <form onSubmit={handleSubmit} className="auth">
+      <section className={styles.authForm}>
+      <form onSubmit={handleSubmit}>
         <input
           type="email"
           id="email"
           ref={emailRef}
-          placeholder="Entrer votre email"
+          placeholder="Email"
           required
-        />
+          />
         <input
           type="password"
           id="password"
           ref={passwordRef}
-          placeholder="Entrer votre mot de passe"
+          placeholder="Mot de passe"
           required
-        />
+          />
 
         {message && <p className="auth-alert">{message}</p>}
 
-        <button type="submit">Se connecter</button>
+        <button className={styles.btn} type="submit">Se connecter</button>
       </form>
       <p>
-        Pas encore inscrit ? <Link to={"/auth/register"}>Créer un compte</Link>
+        Pas encore inscrit ? <strong><Link to={"/auth/register"}>Créer un compte</Link></strong>
       </p>
+          </section>
     </main>
   );
 }
