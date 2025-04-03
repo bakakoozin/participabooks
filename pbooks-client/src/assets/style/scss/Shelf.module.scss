@@ -1,7 +1,7 @@
 @import "variables";
 
 .mainContainer {
-  padding-top: 5rem;
+  padding: 5rem 0;
   background-color: $secondary-text-color;
 
   h1 {
@@ -23,10 +23,16 @@
       width: 50lvw;
       padding: $gap-sm;
       border-radius: $border-radius;
-      border: 2px solid $dark-color;
+      border: none;
+      box-shadow: $search-shadow;
       font-size: $font-lg;
       color: $dark-color;
       background-color: $secondary-text-color;
+
+      &:focus {
+        outline: none;
+        box-shadow: $form-shadow-focus;
+      }
     }
   }
 

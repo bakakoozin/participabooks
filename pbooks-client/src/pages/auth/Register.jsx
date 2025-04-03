@@ -69,7 +69,7 @@ function Register() {
 
   return (
     <main id="register" className={styles.mainContainer}>
-      <h1>Création du compte</h1>
+      <h2>Création du compte</h2>
       <section className={styles.authForm}> 
       <form onSubmit={handleSubmit}>
         <input

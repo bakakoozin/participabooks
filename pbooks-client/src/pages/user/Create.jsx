@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
+
+import { API_URL } from "../../utils/constants";
+import styles from "../../assets/style/scss/Form.module.scss";
 
 function CreateWork() {
   const navigate = useNavigate();
@@ -69,115 +71,125 @@ function CreateWork() {
   }
 
   return (
-    <>
+    <main className={styles.mainContainer}>
       <h2>Créer un nouvel ouvrage</h2>
+      <section className={styles.formCard}>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Titre de l&apos;ouvrage</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="edition">Edition</label>
-          <input
-            type="text"
-            id="edition"
-            name="edition"
-            value={formData.edition}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label>Type d&apos;ouvrage</label>
-          <div>
+        <form onSubmit={handleSubmit}>
+          <article>
+            <label htmlFor="name">Titre de l&apos;ouvrage</label>
             <input
-              type="radio"
-              id="BD"
-              name="type"
-              value="BD"
-              checked={formData.type === "BD"}
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
             />
-            <label htmlFor="BD">BD</label>
+          </article>
+          <article>
+            <label htmlFor="edition">Editions</label>
             <input
-              type="radio"
-              id="Livre"
-              name="type"
-              value="Livre"
-              checked={formData.type === "Livre"}
+              type="text"
+              id="edition"
+              name="edition"
+              value={formData.edition}
               onChange={handleChange}
             />
-            <label htmlFor="Livre">Livre</label>
-            <input
-              type="radio"
-              id="Manga"
-              name="type"
-              value="Manga"
-              checked={formData.type === "Manga"}
-              onChange={handleChange}
-            />
-            <label htmlFor="Manga">Manga</label>
-          </div>
-        </div>
-        <div>
-          <label>Format</label>
-          <div>
-            <input
-              type="radio"
-              id="livre"
-              name="format"
-              value="livre"
-              checked={formData.format === "livre"}
-              onChange={handleChange}
-            />
-            <label htmlFor="livre">livre</label>
-            <input
-              type="radio"
-              id="poche"
-              name="format"
-              value="poche"
-              checked={formData.format === "poche"}
-              onChange={handleChange}
-            />
-            <label htmlFor="poche">poche</label>
-            <input
-              type="radio"
-              id="ebook"
-              name="format"
-              value="ebook"
-              checked={formData.format === "ebook"}
-              onChange={handleChange}
-            />
-            <label htmlFor="ebook">ebook</label>
-            <input
-              type="radio"
-              id="comics"
-              name="format"
-              value="comics"
-              checked={formData.format === "comics"}
-              onChange={handleChange}
-            />
-            <label htmlFor="comics">comics</label>
-            <input
-              type="radio"
-              id="manga"
-              name="format"
-              value="manga"
-              checked={formData.format === "manga"}
-              onChange={handleChange}
-            />
-            <label htmlFor="manga">manga</label>
-          </div>
-        </div>
-        <button type="submit">Valider</button>
-      </form>
-    </>
+          </article>
+          <fieldset>
+            <legend>Type d&apos;ouvrage</legend>
+            <div>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="BD"
+                name="type"
+                value="BD"
+                checked={formData.type === "BD"}
+                onChange={handleChange}
+              />
+              <label htmlFor="BD">BD</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="Livre"
+                name="type"
+                value="Livre"
+                checked={formData.type === "Livre"}
+                onChange={handleChange}
+              />
+              <label htmlFor="Livre">Livre</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="Manga"
+                name="type"
+                value="Manga"
+                checked={formData.type === "Manga"}
+                onChange={handleChange}
+              />
+              <label htmlFor="Manga">Manga</label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Format</legend>
+            <div>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="livre"
+                name="format"
+                value="livre"
+                checked={formData.format === "livre"}
+                onChange={handleChange}
+              />
+              <label htmlFor="livre">livre</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="poche"
+                name="format"
+                value="poche"
+                checked={formData.format === "poche"}
+                onChange={handleChange}
+              />
+              <label htmlFor="poche">poche</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="ebook"
+                name="format"
+                value="ebook"
+                checked={formData.format === "ebook"}
+                onChange={handleChange}
+              />
+              <label htmlFor="ebook">ebook</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="comics"
+                name="format"
+                value="comics"
+                checked={formData.format === "comics"}
+                onChange={handleChange}
+              />
+              <label htmlFor="comics">comics</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="manga"
+                name="format"
+                value="manga"
+                checked={formData.format === "manga"}
+                onChange={handleChange}
+              />
+              <label htmlFor="manga">manga</label>
+            </div>
+          </fieldset>
+          <button type="submit" className={styles.btn}>Valider</button>
+        </form>
+      </section>
+    </main>
   );
 }
 

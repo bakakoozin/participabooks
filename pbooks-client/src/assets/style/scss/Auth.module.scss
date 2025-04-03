@@ -4,9 +4,9 @@
   padding-top: 5rem;
   background-color: $secondary-text-color;
 
-  h1 {
+  h2 {
     text-align: center;
-    background-color: $orange-color;
+    background-color: $dark-color;
     color: $secondary-text-color;
     padding: 1rem;
     border-radius: $border-radius;
@@ -24,9 +24,13 @@
     border-radius: $border-radius;
     box-shadow: $card-shadow;
 
+    article {
+      padding: 1rem 0;
+    }
+
     input {
       width: 95%;
-      padding: 0.4rem;
+      padding: 0.5rem;
       margin: 1rem 0;
       border-radius: $border-radius;
       border: none;
@@ -39,7 +43,6 @@
         outline: none;
         box-shadow: $form-shadow-focus;
       }
-
     }
 
     .btn {

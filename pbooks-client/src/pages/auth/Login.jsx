@@ -49,7 +49,7 @@ function Login() {
 
   return (
     <main id="login" className={styles.mainContainer}>
-      <h1>Se connecter</h1>
+      <h2>Se connecter</h2>
       <section className={styles.authForm}>
       <form onSubmit={handleSubmit}>
         <input

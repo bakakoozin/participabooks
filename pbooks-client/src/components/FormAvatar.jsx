@@ -12,7 +12,6 @@ export function FormAvatar() {
 
   const { infos } = useSelector((state) => state.auth);
 
-
   function handleFile(e) {
     const file = e.target.files[0];
     if (file) {

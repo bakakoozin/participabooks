@@ -1,33 +1,87 @@
 @import "variables";
 
 .mainContainer {
-    padding-top: 5rem;
+    padding: 5rem 0;
     background-color: $secondary-text-color;
 
+    h2,
+    h3 {
+        text-align: center;
+        background-color: $dark-color;
+        color: $secondary-text-color;
+        padding: 1rem;
+        border-radius: $border-radius;
+        box-shadow: $card-shadow;
+        margin-bottom: 2rem;
+    }
+
     .formCard {
-        flex: 0 0 100%;
         display: flex;
         flex-direction: column;
-        height: 100%;
-        padding: 2rem;
+        flex-wrap: wrap;
+        padding: 1rem 2rem;
         background-color: $green-color;
         border-radius: 8px;
+        border-radius: $border-radius;
         box-shadow: $card-shadow;
         margin-bottom: 2rem;
 
-        h3 {
+        article, div {
             padding: 1rem 0;
         }
 
         input {
             width: 95%;
-            padding: 0.3rem;
+            padding: 0.6rem;
             margin: 1rem 0;
             border-radius: $border-radius;
-            border: 2px solid $dark-color;
+            border: none;
+            box-shadow: $form-shadow;
             font-size: $font-size;
             color: $dark-color;
             background-color: $secondary-text-color;
+
+            &:focus {
+                outline: none;
+                box-shadow: $form-shadow-focus;
+            }
+        }
+
+        fieldset {
+            border: 2px solid $orange-color;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+
+            legend {
+                padding: 0 0.5rem;
+            }
+
+            input {
+                width: 80%;
+            }
+        }
+
+        .radio {
+            width: 2rem;
+            box-shadow: none;
+            accent-color: $red-color;
+            padding: 1rem 0;
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        .checkbox {
+            width: 2rem;
+            box-shadow: none;
+            accent-color: $red-color;
+            padding: 1rem 0;
+    
+            &:focus {
+                box-shadow: none;
+            }
         }
 
         .formPassword {
@@ -36,19 +90,42 @@
             align-items: center;
             width: 80lvw;
         }
-
     }
 
     .separator {
         margin: 2rem 0;
         border: none;
-        height: 3px;
-        background-color: $orange-color; // Couleur gris clair
-      }
+        height: 2px;
+        background-color: $dark-color;
+    }
 
     .btn {
         padding: 1rem 2rem;
         background-color: $button-bg;
+        color: $secondary-text-color;
+        border: none;
+        border-radius: $border-radius;
+        box-shadow: $button-shadow;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btnAuthor {
+        padding: 0.5rem;
+        background-color: $dark-color;
+        color: $secondary-text-color;
+        border: none;
+        border-radius: $border-radius;
+        box-shadow: $button-shadow;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btnClose {
+        padding: 0.5rem;
+        margin-left: 1rem;
+        font-size: 1.5rem;
+        background-color: $dark-color;
         color: $secondary-text-color;
         border: none;
         border-radius: $border-radius;
