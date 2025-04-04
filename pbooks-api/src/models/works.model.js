@@ -2,10 +2,10 @@ import pool from "../config/db.js";
 
 class Work {
 
-    //============================== SELECT =======================================//
-    
-    static async findAll(search = "", user_id) {
-      const SELECT_ALL = `SELECT 
+  //============================== SELECT =======================================//
+
+  static async findAll(search = "", user_id) {
+    const SELECT_ALL = `SELECT 
         works.id AS works_id, 
         works.name AS works_name,
         works.edition AS works_edition,
@@ -44,12 +44,12 @@ class Work {
     OR volumes.title LIKE CONCAT('%', ?, '%')
   )
       GROUP BY works.id, works.name`;
-      
-      return await pool.query(SELECT_ALL, [user_id, `%${search}%`, `%${search}%`]);
-    }
-    
-      static async findOne(id) {
-        const SELECT_WORK = `SELECT 
+
+    return await pool.query(SELECT_ALL, [user_id, `%${search}%`, `%${search}%`]);
+  }
+
+  static async findOne(id) {
+    const SELECT_WORK = `SELECT 
           works.id AS works_id,
           works.name AS works_name,
           works.edition AS works_edition,
@@ -77,48 +77,61 @@ class Work {
         WHERE works.id = ?
         GROUP BY volumes.id, works.id, users.id, medias.url
         ORDER BY vol_num`;
-        return await pool.query(SELECT_WORK, [id]);
-      }
+    return await pool.query(SELECT_WORK, [id]);
+  }
 
-      static async findWork({ name, edition, type, format }) {
-        const FIND_WORK = `SELECT id FROM works WHERE name = ? AND edition = ? AND type = ? AND format = ? LIMIT 1`;
-        const [rows] = await pool.execute(FIND_WORK, [name, edition, type, format]);
-        return rows.length > 0 ? rows[0].id : null;
-      }
-    
-    //============================== INSERT =======================================//
-    
-      static async insertWork({ name, edition, type, format }) {
-        const INSERT_WORK = `INSERT INTO works (name, edition, type, format) VALUES (?, ?, ?, ?)`;
-        const [result] = await pool.execute(INSERT_WORK, [name, edition, type, format]);
-        return result.insertId; // Récupére l'ID de l'oeuvre insérée
-      }
-    
-      static async findOrCreateWork(props) {
-        const worksId = await Work.findWork(props);
-        return worksId || await Work.insertWork(props);
-      }
-    
-    //============================== UPDATE =======================================//
-    
-    static async updateWork({ worksId, ...fields }) {
-      try {
-        const setClause = Object.keys(fields).map((key) => `${key} = ?`).join(', ');
-        const values = Object.values(fields);
-        const QUERY = `UPDATE works SET ${setClause} WHERE id = ?`;
-        await pool.execute(QUERY, [...values, worksId]);
-      } catch (error) {
-        console.error("Erreur updateWork:", error);
-        throw error;
-      }
+  static async findWork({ name, edition, type, format }) {
+    const FIND_WORK = `SELECT id FROM works WHERE name = ? AND edition = ? AND type = ? AND format = ? LIMIT 1`;
+    const [rows] = await pool.execute(FIND_WORK, [name, edition, type, format]);
+    return rows.length > 0 ? rows[0].id : null;
+  }
+
+  //============================== INSERT =======================================//
+
+  static async insertWork({ name, edition, type, format }) {
+    const INSERT_WORK = `INSERT INTO works (name, edition, type, format) VALUES (?, ?, ?, ?)`;
+    const [result] = await pool.execute(INSERT_WORK, [name, edition, type, format]);
+    return result.insertId; // Récupére l'ID de l'oeuvre insérée
+  }
+
+  static async findOrCreateWork(props) {
+    const worksId = await Work.findWork(props);
+    return worksId || await Work.insertWork(props);
+  }
+
+  //============================== UPDATE =======================================//
+
+  static async updateWork({ worksId, ...workData }) {
+    const fieldsToUpdate = Object.entries(workData)
+      .filter(([key, value]) => value !== undefined)
+      .map(([key, value]) => `${key} = ?`);
+
+    if (fieldsToUpdate.length === 0) {
+      throw new Error("Aucune donnée à mettre à jour");
     }
-    
-    //============================== DELETE =======================================//
-    
-      static async deleteWork(id) {
-        const DELETE_WORK = `DELETE FROM works WHERE id =?`;
-        return await pool.execute(DELETE_WORK, [id]);
-      }
+    const UPDATE_WORK = `
+      UPDATE works
+      SET ${fieldsToUpdate.join(", ")}
+      WHERE id = ?
+      `;
+    const values = Object.values(workData).filter(
+      (value) => value !== undefined
+    );
+    values.push(worksId);
+    try {
+      const [result] = await pool.execute(UPDATE_WORK, values);
+      return result;
+    } catch (error) {
+      throw error;
     }
-    
-    export default Work;
+  }
+
+  //============================== DELETE =======================================//
+
+  static async deleteWork(id) {
+    const DELETE_WORK = `DELETE FROM works WHERE id =?`;
+    return await pool.execute(DELETE_WORK, [id]);
+  }
+}
+
+export default Work;

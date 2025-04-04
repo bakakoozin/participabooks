@@ -63,6 +63,18 @@
       display: flex;
       flex-direction: column;
       gap: $gap-lg;
+      font-weight: 400;
+
+      .btnAlert {
+        padding: 0.8rem 2rem;
+        background-color: $red-color;
+        color: $secondary-text-color;
+        border: none;
+        border-radius: $border-radius;
+        box-shadow: $button-shadow;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
     }
   }
 }

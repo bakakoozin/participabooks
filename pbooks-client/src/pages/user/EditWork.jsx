@@ -1,9 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
-import { useFetch } from "../../hooks/useFetch";
 import { useSelector } from "react-redux";
+
+import { useFetch } from "../../hooks/useFetch";
+import { API_URL } from "../../utils/constants";
+import styles from "../../assets/style/scss/Form.module.scss";
 
 export function EditWork() {
   const navigate = useNavigate();
@@ -34,17 +36,16 @@ export function EditWork() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
     const jsonData = {
-      name: formData.name || "",
-      edition: formData.edition || null,
-      type: formData.type,
-      format: formData.format || "",
+      name: formData.works_name || "",
+      edition: formData.works_edition || null,
+      type: formData.works_type || "",
+      format: formData.works_format || "",
     };
 
     try {
-      const response = await fetch(`${API_URL}/works/create`, {
-        method: "POST",
+      const response = await fetch(`${API_URL}/works/${id}`, {
+        method: "PATCH",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
@@ -53,27 +54,17 @@ export function EditWork() {
       });
 
       const resJSON = await response.json();
-      console.log("Réponse API :", resJSON);
 
       if (response.ok) {
-        toast.success("Ouvrage créé!");
-        if (formData.media) {
-          const fileData = new FormData();
-
-          await fetch(`${API_URL}/works/create`, {
-            method: "POST",
-            credentials: "include",
-            body: fileData,
-          });
-        }
-        navigate(`/editor/${resJSON.worksId}`);
+        toast.success("Ouvrage mis à jour!");
+        navigate(-1);
       } else {
         toast.error(
-          resJSON.message || "Échec de la création. Veuillez réessayer."
+          resJSON.message || "Échec de la mise à jour. Veuillez réessayer."
         );
       }
     } catch (error) {
-      console.error("Erreur lors de la création.", error);
+      console.error("Erreur lors de la mise à jour.", error);
     }
   }
 
@@ -95,114 +86,127 @@ export function EditWork() {
     return <p>Vous ne pouvez pas modifier cet ouvrage.</p>;
 
   return (
-    <>
+    <main className={styles.mainContainer}>
       <h2>Editer l&apos;ouvrage</h2>
-
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Titre de l&apos;ouvrage</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.works_name}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="edition">Edition</label>
-          <input
-            type="text"
-            id="edition"
-            name="edition"
-            value={formData.works_edition}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label>Type d&apos;ouvrage</label>
+      <section className={styles.formCard}>
+        <form onSubmit={handleSubmit}>
           <div>
+            <label htmlFor="name">Titre de l&apos;ouvrage</label>
             <input
-              type="radio"
-              id="BD"
-              name="type"
-              value="BD"
-              checked={formData.works_type === "BD"}
+              type="text"
+              id="name"
+              name="works_name"
+              value={formData.works_name}
               onChange={handleChange}
+              placeholder={"Nom de l'ouvrage"}
             />
-            <label htmlFor="BD">BD</label>
-            <input
-              type="radio"
-              id="Livre"
-              name="type"
-              value="Livre"
-              checked={formData.works_type === "Livre"}
-              onChange={handleChange}
-            />
-            <label htmlFor="Livre">Livre</label>
-            <input
-              type="radio"
-              id="Manga"
-              name="type"
-              value="Manga"
-              checked={formData.works_type === "Manga"}
-              onChange={handleChange}
-            />
-            <label htmlFor="Manga">Manga</label>
           </div>
-        </div>
-        <div>
-          <label>Format</label>
           <div>
+            <label htmlFor="edition">Editions</label>
             <input
-              type="radio"
-              id="livre"
-              name="format"
-              value="livre"
-              checked={formData.works_format === "livre"}
+              type="text"
+              id="edition"
+              name="works_edition"
+              value={formData.works_edition}
               onChange={handleChange}
+              placeholder={"Editions"}
             />
-            <label htmlFor="livre">livre</label>
-            <input
-              type="radio"
-              id="poche"
-              name="format"
-              value="poche"
-              checked={formData.works_format === "poche"}
-              onChange={handleChange}
-            />
-            <label htmlFor="poche">poche</label>
-            <input
-              type="radio"
-              id="ebook"
-              name="format"
-              value="ebook"
-              checked={formData.works_format === "ebook"}
-              onChange={handleChange}
-            />
-            <label htmlFor="ebook">ebook</label>
-            <input
-              type="radio"
-              id="comics"
-              name="format"
-              value="comics"
-              checked={formData.works_format === "comics"}
-              onChange={handleChange}
-            />
-            <label htmlFor="comics">comics</label>
-            <input
-              type="radio"
-              id="manga"
-              name="format"
-              value="manga"
-              checked={formData.works_format === "manga"}
-              onChange={handleChange}
-            />
-            <label htmlFor="manga">manga</label>
           </div>
-        </div>
-        <button type="submit">Valider</button>
-      </form>
-    </>
+          <fieldset>
+            <legend>Type d&apos;ouvrage</legend>
+            <div>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="BD"
+                name="works_type"
+                value="BD"
+                checked={formData.works_type === "BD"}
+                onChange={handleChange}
+              />
+              <label htmlFor="BD">BD</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="Livre"
+                name="works_type"
+                value="Livre"
+                checked={formData.works_type === "Livre"}
+                onChange={handleChange}
+              />
+              <label htmlFor="Livre">Livre</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="Manga"
+                name="works_type"
+                value="Manga"
+                checked={formData.works_type === "Manga"}
+                onChange={handleChange}
+              />
+              <label htmlFor="Manga">Manga</label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Format</legend>
+            <div>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="livre"
+                name="works_format"
+                value="livre"
+                checked={formData.works_format === "livre"}
+                onChange={handleChange}
+              />
+              <label htmlFor="livre">livre</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="poche"
+                name="works_format"
+                value="poche"
+                checked={formData.works_format === "poche"}
+                onChange={handleChange}
+              />
+              <label htmlFor="poche">poche</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="ebook"
+                name="works_format"
+                value="ebook"
+                checked={formData.works_format === "ebook"}
+                onChange={handleChange}
+              />
+              <label htmlFor="ebook">ebook</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="comics"
+                name="works_format"
+                value="comics"
+                checked={formData.works_format === "comics"}
+                onChange={handleChange}
+              />
+              <label htmlFor="comics">comics</label>
+              <input
+                className={styles.radio}
+                type="radio"
+                id="manga"
+                name="works_format"
+                value="manga"
+                checked={formData.works_format === "manga"}
+                onChange={handleChange}
+              />
+              <label htmlFor="manga">manga</label>
+            </div>
+          </fieldset>
+          <div className={styles.validateContainer}>
+            <button type="submit" className={styles.btn}>Valider</button>
+          </div>
+        </form>
+      </section>
+    </main>
   );
 }

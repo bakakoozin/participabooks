@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
+import { Home } from "../pages/Home";
 import Work from "../pages/Work";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
@@ -8,7 +8,7 @@ import ProtectedRoute from "./ProtectedRoutes";
 import UpdateUserForm from "../pages/user/UpdateUserForm";
 import Shelf from "../pages/user/Shelf";
 import ShelfWorkDetails from "../pages/user/ShelfWorkDetails";
-import CreateWork from "../pages/user/Create";
+import { CreateWork } from "../pages/user/Create";
 import{ EditVolume } from "../pages/user/EditVolume";
 import { CreateVolume } from "../pages/user/CreateVolume";
 import { EditWork } from "../pages/user/EditWork";
@@ -73,6 +73,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <EditVolume />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="editWork/:workId"
+        element={
+          <ProtectedRoute>
+            <EditWork />
           </ProtectedRoute>
         }
       />

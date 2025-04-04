@@ -86,7 +86,7 @@
             width: 2rem;
             box-shadow: none;
             accent-color: $red-color;
-            padding: 1rem 0;
+            padding: 1rem;
 
             &:focus {
                 box-shadow: none;
@@ -174,5 +174,12 @@
         box-shadow: $button-shadow;
         cursor: pointer;
         transition: background-color 0.3s;
+    }
+
+    .validateContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
     }
 }

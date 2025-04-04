@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { API_URL } from "../../utils/constants";
 import styles from "../../assets/style/scss/Form.module.scss";
 
-function CreateWork() {
+export function CreateWork() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -74,9 +74,8 @@ function CreateWork() {
     <main className={styles.mainContainer}>
       <h2>Créer un nouvel ouvrage</h2>
       <section className={styles.formCard}>
-
         <form onSubmit={handleSubmit}>
-          <article>
+          <div>
             <label htmlFor="name">Titre de l&apos;ouvrage</label>
             <input
               type="text"
@@ -85,8 +84,8 @@ function CreateWork() {
               value={formData.name}
               onChange={handleChange}
             />
-          </article>
-          <article>
+          </div>
+          <div>
             <label htmlFor="edition">Editions</label>
             <input
               type="text"
@@ -95,7 +94,7 @@ function CreateWork() {
               value={formData.edition}
               onChange={handleChange}
             />
-          </article>
+          </div>
           <fieldset>
             <legend>Type d&apos;ouvrage</legend>
             <div>
@@ -186,11 +185,11 @@ function CreateWork() {
               <label htmlFor="manga">manga</label>
             </div>
           </fieldset>
-          <button type="submit" className={styles.btn}>Valider</button>
+          <div className={styles.validateContainer}>
+            <button type="submit" className={styles.btn}>Valider</button>
+          </div>
         </form>
       </section>
     </main>
   );
 }
-
-export default CreateWork;

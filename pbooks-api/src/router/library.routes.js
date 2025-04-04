@@ -10,6 +10,7 @@ import {
   getReviews,
   createWork,
   createVolume,
+  updateWork,
   updateVolume,
   updateStatus,
   removeWork,
@@ -28,6 +29,7 @@ router.get("/volumes/:id/reviews", getReviews);
 
 //USERS
 router.post("/create", verifyToken, createWork);
+router.patch("/:id", verifyToken, updateWork);
 router.delete("/work/:id", verifyToken, removeWork);
 router.get("/volumes/:id", verifyToken, getVolumeDetails);
 router.post("/volumes/create", verifyToken, createVolume);

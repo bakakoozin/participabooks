@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function Home() {
+export function Home() {
   const { infos } = useSelector((state) => state.auth);
   const { data, isFetching, search, setSearch } = useFetch("/works/", {
     initData: { datas: [] },
@@ -68,15 +68,15 @@ function Home() {
                 <aside className={styles.buttons}>
                   <p>Editions {work.works_edition}</p>
                   <ButtonAddToShelf item={work} type="work" />
-                  <ButtonRemove item={work} type="work" />
-                  {work.vol_status === "en attente" &&
+                  {work.volumes[0].vol_status === "en attente" &&
                     (work.volumes[0].user_id === infos?.id ||
                       infos?.role === "admin" ||
                       infos?.role === "moderator") && (
-                      <Link to={`/works/${work.works_id}/edit`} className="btn">
-                        Modifier
+                      <Link to={`/works/${work.works_id}/edit`} className={styles.btnAlert}>
+                        Editer
                       </Link>
                     )}
+                  <ButtonRemove item={work} type="work" />
                 </aside>
               </footer>
             </section>
@@ -98,5 +98,3 @@ function Home() {
     </main>
   );
 }
-
-export default Home;

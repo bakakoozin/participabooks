@@ -215,7 +215,7 @@ const uploadMedia = async (req, res, next) => {
       if (!req.files || !req.files.media) {
         return res.status(400).json({ message: "Fichier média manquant." });
       }
-console.log(req.query)
+      console.log(req.query)
       const mediaFile = Array.isArray(req.files.media)
         ? req.files.media[0]
         : req.files.media;
@@ -306,6 +306,40 @@ console.log(req.query)
 
 //============================== PATCH =======================================//
 
+const updateWork = async (req, res, next) => {
+  try {
+    const workId = req.params.id;
+    if (!workId) {
+      return res.status(400).json({ message: "ID d'ouvrage manquant." });
+    }
+
+    const updateFields = {};
+    if (req.body.name !== undefined) updateFields.name = req.body.name;
+    if (req.body.edition !== undefined)
+      updateFields.edition = req.body.edition;
+    if (req.body.type !== undefined) updateFields.type = req.body.type;
+    if (req.body.format !== undefined)
+      updateFields.format = req.body.format;
+
+    const result = await Work.updateWork({
+      worksId: workId,
+      ...updateFields,
+    });
+
+    if (result && result.affectedRows > 0) {
+      return res.json({ message: "Ouvrage mis à jour avec succès." });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Aucune modification effectuée." });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Erreur interne du serveur.", error: error.message });
+  }
+};
+
 const updateVolume = async (req, res, next) => {
   try {
     const volumeId = req.params.id;
@@ -321,10 +355,6 @@ const updateVolume = async (req, res, next) => {
     if (req.body.summary !== undefined) updateFields.summary = req.body.summary;
     if (req.body.creator_visibility !== undefined)
       updateFields.creator_visibility = req.body.creator_visibility;
-
-    // if (Object.keys(updateFields).length === 0) {
-    //   return res.status(400).json({ message: "Aucune modification détectée." });
-    // }
 
     const result = await Volume.updateVolume({
       volumesId: volumeId,
@@ -409,6 +439,7 @@ export {
   getReviews,
   createWork,
   createVolume,
+  updateWork,
   updateVolume,
   updateStatus,
   removeWork,
