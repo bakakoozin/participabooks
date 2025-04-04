@@ -204,6 +204,13 @@ export function EditWork() {
           </fieldset>
           <div className={styles.validateContainer}>
             <button type="submit" className={styles.btn}>Valider</button>
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.cancelBtn}`}
+              onClick={() => navigate(-1)}
+            >
+              Annuler
+            </button>
           </div>
         </form>
       </section>

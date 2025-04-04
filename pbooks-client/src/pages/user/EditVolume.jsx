@@ -278,9 +278,18 @@ export function EditVolume() {
               volume
             </label>
           </div>
-          <button type="submit" className={styles.btn}>
-            Valider modifications
-          </button>
+          <div className={styles.validateContainer}>
+            <button type="submit" className={styles.btn}>
+              Valider modifications
+            </button>
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.cancelBtn}`}
+              onClick={() => navigate(-1)}
+            >
+              Annuler
+            </button>
+          </div>
         </form>
         <hr className={styles.separator} />
         <p>Image de couverture</p>

@@ -152,6 +152,10 @@
         transition: background-color 0.3s;
     }
 
+    .btn.cancelBtn {
+        background-color: $dark-color;
+    }
+
     .btnAuthor {
         padding: 0.5rem;
         background-color: $dark-color;
@@ -178,7 +182,7 @@
 
     .validateContainer {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         gap: 1rem;
     }
