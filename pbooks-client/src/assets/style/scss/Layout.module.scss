@@ -1,11 +1,11 @@
 @import "variables";
 
 .logo {
-    width: 20vw;
-    margin: 0;
-    padding: 0;
-  display: flex;
-  align-items: center;
+	width: 20vw;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
 }
 
 .header {
@@ -17,24 +17,35 @@
 	align-items: center;
 	background-color: $layout-bg;
 	box-shadow: 0 4px 2px $layout-bg;
-	color: white;
+	color: $secondary-text-color;
 	font-size: 1.8rem;
 
 	.navLinks {
 		display: none;
 		gap: 15px;
 		text-transform: uppercase;
+		font-size: 2.5rem;
+		font-weight: $font-weight-bold;
+
 
 		button {
 			border: none;
-			background-color: transparent;
+			background-color: $green-color;
 			text-transform: uppercase;
-			font-size: 1.8rem;
+			color: $secondary-text-color;
+			font-size: 2.5rem;
+			font-weight: $font-weight-bold;
 			cursor: pointer;
+			padding: 0.5rem 1rem;
+			width: 100%;
 		}
 
 		a {
-			color: $dark-color;
+			color: $secondary_text-color;
+			background-color: $green-color;
+			padding: 0.5rem 1rem;
+			width: 100%;
+
 
 			&:hover,
 			&.active {
@@ -50,16 +61,31 @@
 			position: fixed;
 			top: 0;
 			left: 0;
-			background-color: #fff;
+			background-color: $dark-color;
+			opacity: 0.95;
 			width: 60vw;
 			height: 80vh;
+			border-radius: 0 0 8px 0;
 			z-index: 1000;
+			box-shadow: $card-shadow;
+
+			.closeMenu {
+				position: fixed;
+				left:1rem;
+				top:0.5rem;
+				width: auto;
+				padding: 0;
+				font-size: 3rem;
+				cursor: pointer;
+				color: $green-color;
+				background-color: transparent;
+			}
 		}
 	}
 
 	.burgerMenu {
-    display: block;
-    padding-left: 1rem;
+		display: block;
+		padding-left: 1rem;
 		font-size: 3rem;
 		cursor: pointer;
 		color: $dark-color;
@@ -68,7 +94,7 @@
 	.userInfos {
 		display: flex;
 		align-items: center;
-    padding-right: 1rem;
+		padding-right: 1rem;
 		font-size: 3rem;
 
 		img {
@@ -76,6 +102,7 @@
 			height: 30px;
 			border-radius: 50%;
 		}
+
 		p {
 			font-size: $font-size;
 			margin-right: 1rem;
@@ -109,7 +136,7 @@
 	height: 40px;
 	text-align: center;
 	padding: 10px;
-	background-color:$layout-bg;
+	background-color: $layout-bg;
 	box-shadow: 0 -4px 2px $layout-bg;
 	color: #fff;
 }

@@ -37,7 +37,7 @@ function Header() {
       {/* le state menu permets de gérer dynamiquement l'affichage du menu ouverture/fermeture */}
       {/* attention cependant, le responsive mobile est bon, il faudrait changer les gestionnaire d'événements "handleClick" pour qu'ils ne fonctionnent que lorsqu'on a besoin d'un menu burger...  */}
       <nav className={`${styles.navLinks} ${isMenuOpen ? styles.active : ""}`}>
-        <button onClick={handleClick} className="close-menu">
+        <button onClick={handleClick} className={styles.closeMenu}>
           <FontAwesomeIcon icon={faXmark} />
         </button>
         <NavLink to="/" end onClick={handleClick}>
