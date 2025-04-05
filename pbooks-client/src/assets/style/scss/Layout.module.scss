@@ -1,142 +1,158 @@
 @import "variables";
 
 .logo {
-	width: 20vw;
-	margin: 0;
-	padding: 0;
-	display: flex;
-	align-items: center;
+  width: 20vw;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px); // flou doux
+  z-index: 900; // en dessous du menu (menu = 1000)
+  transition: opacity 0.3s ease;
 }
 
 .header {
-	position: fixed;
-	z-index: 1000;
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	background-color: $layout-bg;
-	box-shadow: 0 4px 2px $layout-bg;
-	color: $secondary-text-color;
-	font-size: 1.8rem;
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $layout-bg;
+  box-shadow: 0 4px 2px $layout-bg;
+  color: $secondary-text-color;
+  font-size: 1.8rem;
 
-	.navLinks {
-		display: none;
-		gap: 15px;
-		text-transform: uppercase;
-		font-size: 2.5rem;
-		font-weight: $font-weight-bold;
+  .navLinks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform-origin: top left;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    width: 70vw;
+    height: 70vh;
+    pointer-events: none;
+    gap: 3rem;
+    text-transform: uppercase;
+    font-size: 2.5rem;
+    font-weight: $font-weight-bold;
 
+    button {
+      border: none;
+      background-color: $orange-color;
+      text-transform: uppercase;
+      color: $secondary-text-color;
+      font-size: 2.5rem;
+      font-weight: $font-weight-bold;
+      cursor: pointer;
+      padding: 1rem 0.5rem;
+      width: 100%;
+    }
 
-		button {
-			border: none;
-			background-color: $green-color;
-			text-transform: uppercase;
-			color: $secondary-text-color;
-			font-size: 2.5rem;
-			font-weight: $font-weight-bold;
-			cursor: pointer;
-			padding: 0.5rem 1rem;
-			width: 100%;
-		}
+    a {
+      color: $secondary_text-color;
+      background-color: $green-color;
+      padding: 2rem 1rem;
+      width: 100%;
 
-		a {
-			color: $secondary_text-color;
-			background-color: $green-color;
-			padding: 0.5rem 1rem;
-			width: 100%;
+      &:hover,
+      &.active {
+        color: $green-color;
+        background-color: $orange-color;
+      }
+    }
 
+    &.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: $dark-color-transparent;
+      border-radius: 0 0 8px 0;
+      z-index: 1000;
+      box-shadow: $card-shadow;
+      transform: scale(1);
+      opacity: 1;
+      pointer-events: auto;
 
-			&:hover,
-			&.active {
-				text-decoration: underline;
-			}
-		}
+      .closeMenu {
+        position: fixed;
+        left: 1rem;
+        top: 0.5rem;
+        width: auto;
+        padding: 0;
+        font-size: 3rem;
+        cursor: pointer;
+        color: $green-color;
+        background-color: transparent;
+      }
+    }
+  }
 
-		&.active {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			position: fixed;
-			top: 0;
-			left: 0;
-			background-color: $dark-color;
-			opacity: 0.95;
-			width: 60vw;
-			height: 80vh;
-			border-radius: 0 0 8px 0;
-			z-index: 1000;
-			box-shadow: $card-shadow;
+  .burgerMenu {
+    display: block;
+    padding-left: 1rem;
+    font-size: 3rem;
+    cursor: pointer;
+    color: $dark-color;
+  }
 
-			.closeMenu {
-				position: fixed;
-				left:1rem;
-				top:0.5rem;
-				width: auto;
-				padding: 0;
-				font-size: 3rem;
-				cursor: pointer;
-				color: $green-color;
-				background-color: transparent;
-			}
-		}
-	}
+  .userInfos {
+    display: flex;
+    align-items: center;
+    padding-right: 1rem;
+    font-size: 3rem;
 
-	.burgerMenu {
-		display: block;
-		padding-left: 1rem;
-		font-size: 3rem;
-		cursor: pointer;
-		color: $dark-color;
-	}
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
 
-	.userInfos {
-		display: flex;
-		align-items: center;
-		padding-right: 1rem;
-		font-size: 3rem;
-
-		img {
-			width: 30px;
-			height: 30px;
-			border-radius: 50%;
-		}
-
-		p {
-			font-size: $font-size;
-			margin-right: 1rem;
-		}
-	}
+    p {
+      font-size: $font-size;
+      margin-right: 1rem;
+    }
+  }
 }
 
 @media (min-width: 768px) {
-	.header {
-		.burger-menu {
-			display: none;
-		}
+  .header {
+    .burger-menu {
+      display: none;
+    }
 
-		.nav-links {
-			display: flex;
-			flex-direction: row;
-			position: static;
-			width: auto;
-			height: auto;
-			background-color: transparent;
-		}
-	}
+    .nav-links {
+      display: flex;
+      flex-direction: row;
+      position: static;
+      width: auto;
+      height: auto;
+      background-color: transparent;
+    }
+  }
 }
 
-
 .footer {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	height: 40px;
-	text-align: center;
-	padding: 10px;
-	background-color: $layout-bg;
-	box-shadow: 0 -4px 2px $layout-bg;
-	color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  padding: 10px;
+  background-color: $layout-bg;
+  box-shadow: 0 -4px 2px $layout-bg;
+  color: #fff;
 }

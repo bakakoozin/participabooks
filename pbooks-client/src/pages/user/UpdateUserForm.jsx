@@ -6,7 +6,6 @@ import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 import styles from "../../assets/style/scss/Form.module.scss";
 
-
 const pseudoRegex = /^[a-zA-Z0-9_]{3,}$/; // Au moins 3 caractères, lettres, chiffres et underscores
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Format d'email basique
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // Au moins 8 caractères, une lettre et un chiffre
@@ -85,7 +84,9 @@ function UpdateUserForm() {
         }
       } else {
         const resJSON = await response.json();
-        toast.error(resJSON.message || "Échec de la mise à jour. Veuillez réessayer.");
+        toast.error(
+          resJSON.message || "Échec de la mise à jour. Veuillez réessayer."
+        );
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour.", error);
@@ -109,7 +110,10 @@ function UpdateUserForm() {
             onChange={handleChange}
           />
           {!isPseudoValid && formData.pseudo && (
-            <p className="auth-alert">Le pseudo doit contenir au moins 3 caractères, lettres, chiffres et underscores.</p>
+            <p className="auth-alert">
+              Le pseudo doit contenir au moins 3 caractères, lettres, chiffres
+              et underscores.
+            </p>
           )}
           <div>
             <input
@@ -123,7 +127,9 @@ function UpdateUserForm() {
               <p className="auth-alert">Veuillez entrer un email valide.</p>
             )}
           </div>
-          <button className={styles.btn} type="submit">Mettre à jour</button>
+          <button className={styles.btn} type="submit">
+            Mettre à jour
+          </button>
           <hr className={styles.separator} />
           <h3>Changer mot de passe</h3>
         </form>
@@ -146,10 +152,24 @@ function UpdateUserForm() {
               placeholder="Confirmer nouveau mot de passe"
             />
             {!isPasswordValid && formData.password && (
-              <p className="auth-alert">Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre.</p>
+              <p className="auth-alert">
+                Le mot de passe doit contenir au moins 8 caractères, une lettre
+                et un chiffre.
+              </p>
             )}
           </div>
-          <button className={styles.btn} type="submit">Valider</button>
+          <div className={styles.validateContainer}>
+            <button className={styles.btn} type="submit">
+              Valider
+            </button>
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.cancelBtn}`}
+              onClick={() => navigate(-1)}
+            >
+              Annuler
+            </button>
+          </div>
         </form>
       </section>
     </main>

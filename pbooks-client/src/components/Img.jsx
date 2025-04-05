@@ -11,7 +11,7 @@ const Img=({src,alt})=>{
 }
 Img.propTypes={
   src:PropTypes.string,
-  alt:PropTypes.string.isRequired
+  alt:PropTypes.string
 }
 
 export {Img};

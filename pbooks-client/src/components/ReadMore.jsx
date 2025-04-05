@@ -27,7 +27,7 @@ const ReadMore = ({ text, maxLength = 100 }) => {
 };
 
 ReadMore.propTypes = {
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
   maxLength: PropTypes.number,
 };
 

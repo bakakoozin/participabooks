@@ -9,11 +9,14 @@ import { ToastContainer } from "react-toastify";
 import { login } from "./features/authSlice";
 import { API_URL } from "./utils/constants";
 import { useSession } from "./hooks/useSession";
+import { toggleMenu } from "./features/menuSlice";
+import styles from "./assets/style/scss/Layout.module.scss";
 
 function App() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { isLogged } = useSelector((state) => state.auth);
+  const { isMenuOpen } = useSelector((state) => state.menu);
   useSession();
 
   useEffect(() => {
@@ -42,6 +45,12 @@ function App() {
   return (
     <div className="App">
       <Header />
+      {isMenuOpen && (
+        <div
+          className={styles.overlay}
+          onClick={() => dispatch(toggleMenu())}
+        ></div>
+      )}
       <main className="container" id={handlePathname()}>
         <AppRoutes />
       </main>

@@ -34,7 +34,9 @@ a {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 7rem 1.5rem;
+  background-color: $secondary-text-color;
+  color: $dark-color;
 }
 
 button {
