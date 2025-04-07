@@ -3,13 +3,10 @@ import { updateByAdmin, getAll, getBySearch, remove } from "../controllers/user.
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    res.json({ success: true, message: "Admin route"});
-});
-
-router.get("/", getAll);
-router.patch("/", updateByAdmin);
-router.delete("/", remove);
-router.get("/search", getBySearch);
+router.get("/users", getAll);
+  
+router.patch("/users", updateByAdmin);
+router.delete("/users", remove);
+router.get("/users/search", getBySearch);
 
 export default router;

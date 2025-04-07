@@ -12,7 +12,7 @@ import { logout } from "../features/authSlice";
 import { API_URL, URL_MEDIAS } from "../utils/constants";
 import styles from "../assets/style/scss/Layout.module.scss";
 
-function Header() {
+export function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { infos } = useSelector((state) => state.auth);
@@ -63,6 +63,11 @@ function Header() {
               <NavLink to="dashboard" end onClick={handleClick}>
                 Mon Profil
               </NavLink>
+              {infos.role === "admin" && (
+                <NavLink to="admin" end onClick={handleClick} className={styles.adminLink}>
+                  Admin
+                </NavLink>
+              )}
               <button onClick={handleLogout}>Se déconnecter</button>
             </>
           )}
@@ -88,5 +93,3 @@ function Header() {
       </header>
   );
 }
-
-export default Header;

@@ -41,6 +41,6 @@ router.patch("/uploads", verifyToken, uploadMedia);
 router.patch("/volumes/:id/status", verifyToken, isModerator, updateStatus);
 
 //ADMIN
-router.get("/authors/search", verifyToken, isAdmin, getAuthorsBySearch);
+// router.get("/authors/search", verifyToken, isAdmin, getAuthorsBySearch);
 
 export default router;

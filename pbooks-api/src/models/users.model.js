@@ -6,6 +6,7 @@ class User {
   static async findAll() {
     const SELECT_ALL = `SELECT id, email, pseudo, created_at, role, status, avatar
 FROM users`;
+console.log("Exécution de la requête : ", SELECT_ALL);
     return await pool.query(SELECT_ALL);
   }
 

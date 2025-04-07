@@ -12,6 +12,7 @@ import { CreateWork } from "../pages/user/Create";
 import{ EditVolume } from "../pages/user/EditVolume";
 import { CreateVolume } from "../pages/user/CreateVolume";
 import { EditWork } from "../pages/user/EditWork";
+import { AdminDashboard } from "../pages/admin/Admin";
 
 function AppRoutes() {
   return (
@@ -90,6 +91,22 @@ function AppRoutes() {
           <ProtectedRoute>
             <CreateVolume />
           </ProtectedRoute>
+        }
+      />
+      <Route
+        path="admin"
+        element={
+          <ProtectedRoute>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <main style={{ padding: "1rem" }}>
+            <p>404 - Page not found</p>
+          </main>
         }
       />
     </Routes>

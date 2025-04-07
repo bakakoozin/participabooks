@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-import Header from "./layout/Header";
+import { Header } from "./layout/Header";
 import Footer from "./layout/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";

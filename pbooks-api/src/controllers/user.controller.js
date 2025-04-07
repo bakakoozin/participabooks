@@ -10,8 +10,9 @@ import handleUpload from "../config/formidable.js";
 
 const getAll = async (req, res, next) => {
   try {
+    console.log("getAll appelé !");
     const [users] = await User.findAll();
-    req.json({ datas: users });
+    res.json({ datas: users });
   } catch (error) {
     next(error);
   }
