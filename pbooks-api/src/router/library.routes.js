@@ -28,14 +28,14 @@ router.get("/:id", getOne);
 router.get("/volumes/:id/reviews", getReviews);
 
 //USERS
-router.post("/create", verifyToken, createWork);
 router.patch("/:id", verifyToken, updateWork);
+router.post("/create", verifyToken, createWork);
+router.patch("/uploads", verifyToken, uploadMedia);
 router.delete("/work/:id", verifyToken, removeWork);
 router.get("/volumes/:id", verifyToken, getVolumeDetails);
-router.post("/volumes/create", verifyToken, createVolume);
 router.patch("/volumes/:id", verifyToken, updateVolume);
 router.delete("/volume/:id", verifyToken, removeVolume);
-router.patch("/uploads", verifyToken, uploadMedia);
+router.post("/volumes/create", verifyToken, createVolume);
 
 //MODERATOR
 router.patch("/volumes/:id/status", verifyToken, isModerator, updateStatus);

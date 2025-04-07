@@ -142,13 +142,11 @@ const uploadAvatar = async (req, res, next) => {
         await User.updateAvatar(newFilename, userId);
         return res.send(newFilename);
       } catch (error) {
-        return res
-          .status(500)
-          .json({
-            success: false,
-            message: "Erreur lors du traitement de l'image.",
-            error: error.message,
-          });
+        return res.status(500).json({
+          success: false,
+          message: "Erreur lors du traitement de l'image.",
+          error: error.message,
+        });
       }
     },
     formOptions
@@ -159,11 +157,11 @@ const updateByAdmin = async (req, res, next) => {
   const { id, status, role } = req.body;
 
   const userInfos = {};
-  if (status !== undefined) userInfos.status = status;
-  if (role !== undefined) userInfos.role = role;
+  if (status) userInfos.status = status;
+  if (role) userInfos.role = role;
 
-  if (Object.keys(userInfos).length === 0) {
-    return res.status(400).json({ message: "Aucune mise à jour à effectuer." });
+  if (!id || Object.keys(userInfos).length === 0) {
+    return res.status(400).json({ message: "ID ou données manquantes" });
   }
 
   const fields = Object.keys(userInfos)
@@ -181,7 +179,7 @@ const updateByAdmin = async (req, res, next) => {
       return res.status(500).json(result);
     }
 
-    res.status(200).json({ success: "Utilisateur mis à jour par l'admin." });
+    res.json({ success: "Utilisateur mis à jour par l'admin." });
   } catch (error) {
     next(error);
   }
@@ -207,19 +205,32 @@ const updateTheme = async (req, res, next) => {
 //============================== DELETE =======================================//
 
 const remove = async (req, res, next) => {
+  const id = req.body.id || req.user.id;
+
+  if (!id) {
+    return res.status(400).json({ message: "ID utilisateur manquant." });
+  }
+
+  if (req.user.role === "admin" && id === req.user.id) {
+    return res.status(400).json({
+      message: "Un administrateur ne peut pas supprimer son propre compte.",
+    });
+  }
+
   try {
-    const [response] = await User.delete(req.user.id);
+    const [response] = await User.delete(id);
+
     if (response.affectedRows) {
-      res.clearCookie("jwt", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      });
-      res.json({ message: "Compte supprimé." });
-      return;
+      if (id === req.user.id) {
+        res.clearCookie("jwt", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        });
+      }
+      return res.json({ message: "Compte supprimé." });
     }
-    res.status(400).json({ message: "Ce compte n'existe pas." });
-    return;
+    return res.status(400).json({ message: "Ce compte n'existe pas." });
   } catch (error) {
     next(error);
   }
