@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
-import { API_URL } from "../utils/constants";
-import styles from "../assets/style/scss/Button.module.scss";
+import { API_URL } from "../../utils/constants";
+import styles from "../../assets/style/scss/Button.module.scss";
 
 const ButtonRemoveFromShelf = ({ item, type }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);

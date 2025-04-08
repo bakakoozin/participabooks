@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 import { scrollSlider } from "../utils/slider";
 import { useFetch } from "../hooks/useFetch";
-import { ButtonAddToShelf } from "../components/ButtonAddToShelf";
-import { ButtonRemove } from "../components/ButtonRemove";
+import { ButtonAddToShelf } from "../components/UI/ButtonAddToShelf";
+import { ButtonRemove } from "../components/UI/ButtonRemove";
 import { Img } from "../components/Img";
 import { useSelector } from "react-redux";
 import styles from "../assets/style/scss/Home.module.scss";

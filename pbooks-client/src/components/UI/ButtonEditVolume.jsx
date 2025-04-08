@@ -1,18 +1,22 @@
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import styles from "../assets/style/scss/Button.module.scss";
+import styles from "../../assets/style/scss/Button.module.scss";
+import { useCanEditVolume } from "../../hooks/useCanEditVolume";
 
 
 const ButtonEditVolume = ({ item }) => {
-  const { isLogged, infos } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const { canEditVolume } = useCanEditVolume();
+
+  const isEditable = item.vol_status === "en attente" && canEditVolume(item);
+
+  if (!isEditable) {
+    return null;
+  }
+
   if (
-    !isLogged ||
-    item.vol_status !== "en attente" ||
-    (item.user_id !== infos.id && infos.role !== "moderator" && infos.role !== "admin")
-  ) {
+    !canEditVolume(item)) {
     return null;
   }
 

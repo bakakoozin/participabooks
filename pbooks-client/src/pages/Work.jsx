@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 
-import { ButtonCreateVolume } from "../components/ButtonCreateVolume";
-import { ButtonAddToShelf } from "../components/ButtonAddToShelf";
+import { ButtonCreateVolume } from "../components/UI/ButtonCreateVolume";
+import { ButtonAddToShelf } from "../components/UI/ButtonAddToShelf";
 import { Img } from "../components/Img";
 import { useFetch } from "../hooks/useFetch";
-import { ButtonEditVolume } from "../components/ButtonEditVolume";
-import { ButtonRemove } from "../components/ButtonRemove";
+import { ButtonEditVolume } from "../components/UI/ButtonEditVolume";
+import { ButtonRemove } from "../components/UI/ButtonRemove";
 import { ReadMore } from "../components/ReadMore";
 import styles from "../assets/style/scss/Work.module.scss";
 

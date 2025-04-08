@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-import { ButtonRemoveFromShelf } from "../../components/ButtonRemoveFromShelf";
+import { ButtonRemoveFromShelf } from "../../components/UI/ButtonRemoveFromShelf";
 import { Img } from "../../components/Img";
 import { useFetch } from "../../hooks/useFetch";
 import { ReadMore } from "../../components/ReadMore";

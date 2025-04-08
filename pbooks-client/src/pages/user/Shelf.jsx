@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { scrollSlider } from "../../utils/slider";
 import { useFetch } from "../../hooks/useFetch";
-import { ButtonRemoveFromShelf } from "../../components/ButtonRemoveFromShelf";
+import { ButtonRemoveFromShelf } from "../../components/UI/ButtonRemoveFromShelf";
 import { Img } from "../../components/Img";
 import styles from "../../assets/style/scss/Shelf.module.scss";
 import {

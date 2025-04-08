@@ -5,7 +5,7 @@ import { logout, login } from "../../features/authSlice";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 import { FormAvatar } from "../../components/FormAvatar";
-import { ThemeToggle } from "../../components/ButtonDarkMode";
+import { ThemeToggle } from "../../components/UI/ButtonDarkMode";
 import styles from "../../assets/style/scss/Dashboard.module.scss";
 
 function Dashboard() {
