@@ -33,18 +33,21 @@ const getInfos = async (req, res, next) => {
   }
 };
 
-const getBySearch = async (req, res, next) => {
-  const formattedSearch = `%${req.query.q.trim() || ""}%`;
-  try {
-    const [response] = await User.findBySearch(formattedSearch);
+const getBySearch = async (req, res) => {
+  const { q } = req.query;
 
-    if (response.length) {
-      sendResponse(res, "Utilisateurs récupérés.", 200, response);
-    }
-    sendResponse(res, "Aucun utilisateur trouvé.", 400);
-    return;
-  } catch (error) {
-    next(error);
+  if (!q) {
+    return res.status(400).json({ message: "Paramètre de recherche manquant." });
+  }
+
+  try {
+    const formatted = `%${q}%`;
+    const [datas] = await User.findBySearch(formatted);
+    
+    return res.status(200).json({ datas });
+  } catch (err) {
+    console.error("Erreur dans getBySearch :", err);
+    return res.status(500).json({ message: "Erreur serveur lors de la recherche." });
   }
 };
 
@@ -114,7 +117,7 @@ const uploadAvatar = async (req, res, next) => {
         .toLowerCase();
       const validExtensions = [".jpg", ".jpeg", ".png", ".webp"];
       if (!validExtensions.includes(fileExt)) {
-        fs.unlink(avatarFile.path, () => {});
+        fs.unlink(avatarFile.path, () => { });
         return res
           .status(400)
           .json({ message: "Format de fichier non autorisé." });
@@ -135,7 +138,7 @@ const uploadAvatar = async (req, res, next) => {
         if (oldAvatar && oldAvatar !== "default-avatar.png") {
           fs.unlink(
             path.join(process.cwd(), "public/uploads/avatars", oldAvatar),
-            () => {}
+            () => { }
           );
         }
 

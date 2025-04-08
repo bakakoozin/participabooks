@@ -6,7 +6,6 @@ class User {
   static async findAll() {
     const SELECT_ALL = `SELECT id, email, pseudo, created_at, role, status, avatar
 FROM users`;
-console.log("Exécution de la requête : ", SELECT_ALL);
     return await pool.query(SELECT_ALL);
   }
 
@@ -18,8 +17,14 @@ FROM users WHERE id = ?`;
 
   static async findBySearch(search) {
     const SEARCH_USER = `SELECT id, email, pseudo, created_at, role, avatar, status
-        FROM users WHERE pseudo LIKE ?, email LIKE ?, created_at LIKE ?, role LIKE ?, status LIKE ?`;
-    return await pool.query(SEARCH_USER, [search]);
+    FROM users
+    WHERE pseudo LIKE ?
+      OR email LIKE ?
+      OR created_at LIKE ?
+      OR role LIKE ?
+      OR status LIKE ?
+  `;
+    return await pool.query(SEARCH_USER, [search, search, search, search, search]);
   }
 
   //============================== UPDATE =======================================//

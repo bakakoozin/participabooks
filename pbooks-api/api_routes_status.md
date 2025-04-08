@@ -46,11 +46,11 @@
   ADMIN
   - /authors/search -> *(GET recherche)* `token requis` `admin` **à faire** 🔴
  
-- /admin -> **en cours** 🟠 `token requis` `admin`
+- /admin -> **terminé** ✅ `token requis` `admin`
   - /users -> *(GET tous)*   ✅
   - /users -> *(PATCH)*      ✅
   - /users -> *(DELETE)*     ✅
-  - /users/search -> *(GET)* **en cours** 🟠
+  - /users/search -> *(GET)* ✅
 
 ✅ -> accomplie
 🟠 -> priorité dépendante d'une autre tâche
