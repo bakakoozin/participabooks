@@ -24,7 +24,7 @@ export function AdminDashboard() {
             }
         } catch (error) {
             console.error(error);
-            setError("Erreur lors du chargement des utilisateurs.");
+            setError("Accès refusé! Rôle insuffisant!");
         } finally {
             setLoading(false);
         }

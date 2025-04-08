@@ -11,7 +11,7 @@ const ButtonEditVolume = ({ item }) => {
   if (
     !isLogged ||
     item.vol_status !== "en attente" ||
-    item.user_id !== infos.id
+    (item.user_id !== infos.id && infos.role !== "moderator" && infos.role !== "admin")
   ) {
     return null;
   }

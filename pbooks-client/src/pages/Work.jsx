@@ -40,28 +40,28 @@ function Work() {
               {volume.vol_num}. {volume.vol_title}
             </h3>
             <article className={styles.authorsList}>
-            {volume.authors_name &&
-              volume.authors_name.split(",").map((author, index) => (
-                <p key={index}>
-                  {author.trim()}
-                </p>
-              ))}
-                </article>
+              {volume.authors_name &&
+                volume.authors_name.split(",").map((author, index) => (
+                  <p key={index}>
+                    {author.trim()}
+                  </p>
+                ))}
+            </article>
           </header>
           <figure>
             <Img src={volume.url_media} alt={volume.vol_title} />
           </figure>
           <footer className={styles.volumeCardFooter}>
-          <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
-          <article className={styles.summary}>
-          <h3>Résumé</h3>
-          <ReadMore text={volume.vol_summary} maxLength={200}/>
-          </article>
-          <div className={styles.btnContainer}>
-            <ButtonAddToShelf item={volume} type="volume" />
-            <ButtonEditVolume item={volume} type="volume" />
-            <ButtonRemove item={volume} type="volume" />
-          </div>
+            <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
+            <article className={styles.summary}>
+              <h3>Résumé</h3>
+              <ReadMore text={volume.vol_summary} maxLength={200} />
+            </article>
+            <div className={styles.btnContainer}>
+              <ButtonAddToShelf item={volume} type="volume" />
+              <ButtonEditVolume item={volume} type="volume" />
+              <ButtonRemove item={volume} type="volume" />
+            </div>
           </footer>
         </section>
       ))}
