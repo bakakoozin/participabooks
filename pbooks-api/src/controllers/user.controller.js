@@ -3,7 +3,6 @@ import path from "path";
 import fs from "fs";
 
 import User from "../models/users.model.js";
-import sendResponse from "../helpers/sendResponse.js";
 import handleUpload from "../config/formidable.js";
 
 //============================== GET =======================================//

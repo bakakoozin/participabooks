@@ -6,7 +6,6 @@ import {
   getAll,
   getOne,
   getVolumeDetails,
-  getReviews,
   createWork,
   createVolume,
   updateWork,
@@ -22,7 +21,6 @@ const router = Router();
 //PUBLIC
 router.get("/", verifyTokenNoBlock, getAll);
 router.get("/:id", getOne);
-router.get("/volumes/:id/reviews", getReviews);
 
 //USERS
 router.patch("/:id", verifyToken, updateWork);

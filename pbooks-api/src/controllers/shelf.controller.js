@@ -1,7 +1,5 @@
 import Shelf from "../models/shelfs.model.js";
 import Volume from "../models/volumes.model.js";
-import Review from "../models/reviews.model.js";
-import sendResponse from "../helpers/sendResponse.js";
 import pool from "../config/db.js";
 
 //============================== GET =======================================//
@@ -24,9 +22,11 @@ const getAllUserWorks = async (req, res, next) => {
 };
 
 const getOneUserWork = async (req, res, next) => {
-
   try {
-    const [datas] = await Shelf.findOne({ user_id:req.user.id, works_id:req.params.id });
+    const [datas] = await Shelf.findOne({
+      user_id: req.user.id,
+      works_id: req.params.id,
+    });
 
     if (!datas.length)
       res.status(400).json({ message: "Aucun ouvrage trouvé." });
@@ -43,9 +43,12 @@ const getOneUserWork = async (req, res, next) => {
 
 const addVolumeToShelf = async (req, res, next) => {
   const { users_id, volumes_id } = req.body;
+
   try {
     await Shelf.insertVolume({ users_id, volumes_id });
-    sendResponse(res, "Volume ajouté à la bibliothèque personnelle.", 201);
+    res
+      .status(201)
+      .json({ message: "Volume ajouté à la bibliothèque personnelle." });
   } catch (error) {
     next(error);
   }
@@ -54,13 +57,13 @@ const addVolumeToShelf = async (req, res, next) => {
 const addAllVolumesToShelf = async (req, res, next) => {
   const { users_id, works_id } = req.body;
   const connection = await pool.getConnection();
+  await connection.beginTransaction();
+
   try {
-    await connection.beginTransaction();
     const volumesIds = await Volume.findAllByWorkId(works_id);
-    if (volumesIds.length === 0) {
-      sendResponse(res, "Aucun volume trouvé pour cet ouvrage.", 400);
-      return;
-    }
+    if (volumesIds.length === 0)
+      return res.status(400).json({ message: "Aucun volume trouvé." });
+
     await Promise.all(
       volumesIds.map((volume_id) => {
         return Shelf.insertVolume(
@@ -69,37 +72,16 @@ const addAllVolumesToShelf = async (req, res, next) => {
         );
       })
     );
-    sendResponse(
-      res,
-      "Tous les volumes de l'ouvrage ont été ajoutés à la bibliothèque personnelle.",
-      201
-    );
+
+    res.status(201).json({
+      message:
+        "Tous les volumes de l'ouvrage ont été ajoutés à la bibliothèque personnelle.",
+    });
   } catch (error) {
     await connection.rollback();
     next(error);
   } finally {
     connection.release();
-  }
-};
-
-const addReview = async (req, res, next) => {
-  const { score, comment, users_id, volumes_id } = req.body;
-
-  try {
-    const [response] = await Review.addReview({
-      score,
-      comment,
-      users_id,
-      volumes_id,
-    });
-
-    if (response.affectedRows) {
-      res.json({ message: "Avis ajouté." });
-      return;
-    }
-    res.status(400).json({ message: "Erreur lors de l'ajout de l'avis." });
-  } catch (error) {
-    next(error);
   }
 };
 
@@ -124,48 +106,15 @@ const updateStatusOnShelf = async (req, res, next) => {
   }
 };
 
-const updateScore = async (req, res, next) => {
-  try {
-    const [response] = await Review.updateScore(req.body.score, req.params.id);
-    if (response.affectedRows) {
-      res.json({ message: "Note mise à jour." });
-    }
-    res
-      .status(400)
-      .json({ message: "Erreur lors de la mise à jour de la note." });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const updateComment = async (req, res, next) => {
-  try {
-    const [response] = await Review.updateComment(
-      req.body.comment,
-      req.params.id
-    );
-    if (response.affectedRows) {
-      res.json({ message: "Commentaire mis à jour." });
-    }
-    res
-      .status(400)
-      .json({ message: "Erreur lors de la mise à jour du commentaire." });
-  } catch (error) {
-    next(error);
-  }
-};
-
 //============================== DELETE =======================================//
 
 const removeVolumeFromShelf = async (req, res, next) => {
   try {
     const [response] = await Shelf.deleteVolume(req.params.id, req.user.id);
-    if (response.affectedRows) {
-      sendResponse(res, "Volume retiré de la bibliothèque personnelle.", 200);
-      return;
-    }
-    sendResponse(res, "Ce volume n'existe pas.", 400);
-    return;
+
+    if (!response.affectedRows)
+      return res.status(400).json({ message: "Ce volume n'existe pas." });
+    res.json({ message: "Volume retiré de la bibliothèque personnelle." });
   } catch (error) {
     next(error);
   }
@@ -174,26 +123,10 @@ const removeVolumeFromShelf = async (req, res, next) => {
 const removeWorkFromShelf = async (req, res, next) => {
   try {
     const [response] = await Shelf.deleteAllVolumes(req.params.id, req.user.id);
-    if (response.affectedRows) {
-      sendResponse(res, "Ouvrage retiré de la bibliothèque personnelle.", 200);
-      return;
-    }
-    sendResponse(res, "Cet ouvrage n'existe pas.", 400);
-    return;
-  } catch (error) {
-    next(error);
-  }
-};
 
-const removeReview = async (req, res, next) => {
-  try {
-    const [response] = await Review.deleteReview(req.params.id);
-    if (response.affectedRows) {
-      res.json({ message: "Avis supprimé." });
-      return;
-    }
-    res.status(400).json({ message: "Cet avis n'existe pas." });
-    return;
+    if (!response.affectedRows)
+      return res.status(400).json({ message: "Cet ouvrage n'existe pas." });
+    res.json({ message: "Ouvrage retiré de la bibliothèque personnelle." });
   } catch (error) {
     next(error);
   }
@@ -204,11 +137,7 @@ export {
   getOneUserWork,
   addVolumeToShelf,
   addAllVolumesToShelf,
-  addReview,
   updateStatusOnShelf,
-  updateComment,
-  updateScore,
   removeVolumeFromShelf,
   removeWorkFromShelf,
-  removeReview,
 };
