@@ -4,7 +4,7 @@ const SECRET = process.env.JWT_SECRET;
 
 export default (req, res, next) => {
   const token = req.cookies.jwt;
-
+  console.log("Token:", token);
   if (!token) {
     return res.status(401).json({
       success: false,
@@ -14,11 +14,13 @@ export default (req, res, next) => {
 
   try {
     jwt.verify(token, SECRET, (err, decoded) => {
-      const message =
-        err.name === "TokenExpiredError" ? "Token expiré." : "Token invalide.";
-        
-      if (err) throw new Error({ message, status: 403 });
-
+      if (err) {
+        const message =
+          err.name === "TokenExpiredError"
+            ? "Token expiré."
+            : "Token invalide.";
+        throw new Error({ message, status: 403 });
+      }
       req.user = decoded;
       next();
     });

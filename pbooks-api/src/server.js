@@ -39,11 +39,11 @@ app.get("/", (_req, res) => {
 
 app.use(base_url, router);
 
-app.use((_err, _req, res, _next) => {
-    res.status(500).json({
-        msg: "Une erreur s'est produite. Veuillez réessayer plus tard.",
-    });
-    return;
-});
+// app.use((_err, _req, res, _next) => {
+//     res.status(500).json({
+//         msg: "Une erreur s'est produite. Veuillez réessayer plus tard.",
+//     });
+//     return;
+// });
 
 app.listen(PORT, () => console.log(`running at http://${HOST}:${PORT}`));
