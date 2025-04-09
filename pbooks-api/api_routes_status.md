@@ -16,33 +16,33 @@
   SHELF
   - /shelf               -> *(GET tous)*      ✅
   - /shelf/volume        -> *(POST ajouter)*  ✅
-  - /shelf/volume/status -> *(PATCH)*         **en cours** 🔴
+  - /shelf/volume/status -> *(PATCH)*         **à faire** 🔴
   - /shelf/volume/:id    -> *(DELETE)*        ✅
   - /shelf/work          -> *(POST ajouter)*  ✅
   - /shelf/work/:id      -> *(GET une)*       ✅
   - /shelf/work/:id      -> *(DELETE)*        ✅
   REVIEWS
-  - /shelf/volumes/:id/reviews -> *(POST)*          **à faire** 🔴
-  - /shelf/volumes/:id/reviews/comment -> *(PATCH)* **à faire** 🔴
-  - /shelf/volumes/:id/reviews/score -> *(PATCH)*   **à faire** 🔴
-  - /shelf/volumes/:id/reviews/:id -> *(PDELETE)*   **à faire** 🔴
+  - /shelf/volumes/:id/reviews -> *(POST)*          **à faire plus tard** 🔴
+  - /shelf/volumes/:id/reviews/comment -> *(PATCH)* **à faire plus tard** 🔴
+  - /shelf/volumes/:id/reviews/score -> *(PATCH)*   **à faire plus tard** 🔴
+  - /shelf/volumes/:id/reviews/:id -> *(PDELETE)*   **à faire plus tard** 🔴
 
 - /works -> **en cours** 🟠
   PUBLIC
-  - /        -> *(GET tous)*   `vérif token sans blocage` ✅
-  - /:id    -> *(GET une)*                                ✅
-  - /volumes/:id/reviews -> *(GET)*           **à faire** 🔴
+  - /        -> *(GET tous)* `vérif token sans blocage` ✅
+  - /:id    -> *(GET une)*                              ✅
+  - /volumes/:id/reviews -> *(GET)*           **à faire plus tard** 🔴
   USERS
-  - /:id -> *(PATCH)*                      `token requis` ✅
-  - /create -> *(POST créer)*              `token requis` ✅
-  - /uploads -> *(PATCH)*                  `token requis` ✅
-  - /work/:id -> *(DELETE)*                `token requis` ✅
-  - /volumes/:id -> *(GET)*                `token requis` ✅
-  - /volumes/:id -> *(PATCH)*              `token requis` ✅
-  - /volume/:id -> *(DELETE)*              `token requis` ✅
-  - /volumes/create -> *(POST créer)*      `token requis` ✅
+  - /:id -> *(PATCH)*                    `token requis` ✅
+  - /create -> *(POST créer)*            `token requis` ✅
+  - /uploads -> *(PATCH)*                `token requis` ✅
+  - /work/:id -> *(DELETE)*              `token requis` ✅
+  - /volumes/:id -> *(GET)*              `token requis` ✅
+  - /volumes/:id -> *(PATCH)*            `token requis` ✅
+  - /volume/:id -> *(DELETE)*            `token requis` ✅
+  - /volumes/create -> *(POST créer)*    `token requis` ✅
   MODERATOR
-  - /volumes/:id/status -> *(PATCH)* `token requis` `moderator` **à faire** 🔴
+  - /volumes/:id/status -> *(PATCH)*     `token requis` ✅
   ADMIN
   - /authors/search -> *(GET recherche)* `token requis` `admin` **à faire** 🔴
  

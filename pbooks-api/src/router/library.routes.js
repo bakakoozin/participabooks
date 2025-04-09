@@ -38,7 +38,7 @@ router.delete("/volume/:id", verifyToken, removeVolume);
 router.post("/volumes/create", verifyToken, createVolume);
 
 //MODERATOR
-router.patch("/volumes/:id/status", verifyToken, isModerator, updateStatus);
+router.patch("/volumes/:id/status", verifyToken, updateStatus);
 
 //ADMIN
 // router.get("/authors/search", verifyToken, isAdmin, getAuthorsBySearch);

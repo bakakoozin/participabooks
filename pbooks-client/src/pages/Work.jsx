@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import { ButtonCreateVolume } from "../components/UI/ButtonCreateVolume";
 import { ButtonAddToShelf } from "../components/UI/ButtonAddToShelf";
+import { ButtonSelectStatus } from "../components/UI/ButtonSelectStatus";
 import { Img } from "../components/Img";
 import { useFetch } from "../hooks/useFetch";
 import { ButtonEditVolume } from "../components/UI/ButtonEditVolume";
@@ -15,7 +17,23 @@ function Work() {
     initData: { datas: [] },
   });
 
-  const workInfo = data.datas.length > 0 ? data.datas[0] : {};
+  const [volumes, setVolumes] = useState([]);
+
+  useEffect(() => {
+    if (data.datas.length > 0) {
+      setVolumes(data.datas);
+    }
+  }, [data]);
+
+  const workInfo = volumes.length > 0 ? volumes[0] : {};
+
+  const handleStatusUpdate = (volId, newStatus) => {
+    setVolumes((prevVolumes) =>
+      prevVolumes.map((vol) =>
+        vol.vol_id === volId ? { ...vol, vol_status: newStatus } : vol
+      )
+    );
+  };
 
   return (
     <main className={styles.mainContainer}>
@@ -30,10 +48,12 @@ function Work() {
           <p>Éditions {workInfo.works_edition}</p>
         </section>
       )}
+
       <div className={styles.btnContainer}>
         <ButtonCreateVolume item={workInfo} type="work" />
       </div>
-      {data.datas.map((volume) => (
+
+      {volumes.map((volume) => (
         <section key={volume.vol_id} className={styles.volumeCard}>
           <header className={styles.volumeCardHeader}>
             <h3>
@@ -42,25 +62,33 @@ function Work() {
             <article className={styles.authorsList}>
               {volume.authors_name &&
                 volume.authors_name.split(",").map((author, index) => (
-                  <p key={index}>
-                    {author.trim()}
-                  </p>
+                  <p key={index}>{author.trim()}</p>
                 ))}
             </article>
           </header>
+
           <figure>
             <Img src={volume.url_media} alt={volume.vol_title} />
           </figure>
+
           <footer className={styles.volumeCardFooter}>
             <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
+
             <article className={styles.summary}>
               <h3>Résumé</h3>
               <ReadMore text={volume.vol_summary} maxLength={200} />
             </article>
+
             <div className={styles.btnContainer}>
               <ButtonAddToShelf item={volume} type="volume" />
               <ButtonEditVolume item={volume} type="volume" />
               <ButtonRemove item={volume} type="volume" />
+              <ButtonSelectStatus
+                item={volume}
+                onStatusUpdate={(newStatus) =>
+                  handleStatusUpdate(volume.vol_id, newStatus)
+                }
+              />
             </div>
           </footer>
         </section>
