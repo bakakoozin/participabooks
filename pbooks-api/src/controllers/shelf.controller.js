@@ -7,37 +7,33 @@ import pool from "../config/db.js";
 //============================== GET =======================================//
 
 const getAllUserWorks = async (req, res, next) => {
-  const users_id = req.user.id;
   const formattedSearch = req.query.q?.trim() || "";
+
   try {
-    const [response] = await Shelf.findAll(users_id, formattedSearch);
-    if (response.length) {
-      sendResponse(
-        res,
-        "Ouvrages récupérés pour l'utilisateur.",
-        200,
-        response
-      );
-      return;
-    }
-    sendResponse(res, "Aucun ouvrage récupéré pour l'utilisateur.", 400);
-    return;
+    const [datas] = await Shelf.findAll(req.user.id, formattedSearch);
+
+    if (!datas.length)
+      res.status(400).json({ message: "Aucun ouvrage trouvé." });
+
+    res.json({
+      datas,
+    });
   } catch (error) {
     next(error);
   }
 };
 
 const getOneUserWork = async (req, res, next) => {
-  const users_id = req.user.id;
-  const works_id = req.params.id;
+
   try {
-    const [response] = await Shelf.findOne({ users_id, works_id });
-    if (response.length) {
-      sendResponse(res, "Ouvrage récupéré.", 200, response);
-      return;
-    }
-    sendResponse(res, "Aucun ouvrage récupéré.", 400);
-    return;
+    const [datas] = await Shelf.findOne({ user_id:req.user.id, works_id:req.params.id });
+
+    if (!datas.length)
+      res.status(400).json({ message: "Aucun ouvrage trouvé." });
+
+    res.json({
+      datas,
+    });
   } catch (error) {
     next(error);
   }
@@ -67,7 +63,10 @@ const addAllVolumesToShelf = async (req, res, next) => {
     }
     await Promise.all(
       volumesIds.map((volume_id) => {
-        return Shelf.insertVolume({volumes_id: volume_id, users_id }, connection);
+        return Shelf.insertVolume(
+          { volumes_id: volume_id, users_id },
+          connection
+        );
       })
     );
     sendResponse(

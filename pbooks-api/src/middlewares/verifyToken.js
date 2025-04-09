@@ -1,10 +1,11 @@
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
+import User from "../models/users.model.js";
 
 const SECRET = process.env.JWT_SECRET;
 
 export default (req, res, next) => {
   const token = req.cookies.jwt;
-  console.log("Token:", token);
+
   if (!token) {
     return res.status(401).json({
       success: false,
@@ -13,7 +14,7 @@ export default (req, res, next) => {
   }
 
   try {
-    jwt.verify(token, SECRET, (err, decoded) => {
+    jwt.verify(token, SECRET, async (err, decoded) => {
       if (err) {
         const message =
           err.name === "TokenExpiredError"
@@ -21,7 +22,10 @@ export default (req, res, next) => {
             : "Token invalide.";
         throw new Error({ message, status: 403 });
       }
-      req.user = decoded;
+      const [response] = await User.findOne(decoded.id);
+      req.user = response[0];
+      if (!req.user)
+        throw new Error({ message: "Utilisateur non trouvé.", status: 404 });
       next();
     });
   } catch (error) {

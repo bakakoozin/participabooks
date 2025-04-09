@@ -74,37 +74,7 @@ const logout = (req, res, next) => {
 };
 
 const getSession = async (req, res, next) => {
-  try {
-    const token = req.cookies.jwt;
-    if (!token) {
-      return res.status(401).json({ message: "Token manquant." });
-    }
-
-    jwt.verify(token, SECRET, async (err, decoded) => {
-      if (err) {
-        return res.status(403).json({ message: "Token invalide." });
-      }
-
-      const [[user]] = await Auth.findUserForAuth(decoded.email);
-      if (!user) {
-        return res.status(404).json({ message: "Utilisateur non trouvé." });
-      }
-
-      res.json({
-        user: {
-          id: user.id,
-          email: user.email,
-          pseudo: user.pseudo,
-          role: user.role,
-          avatar: user.avatar,
-          theme: user.theme,
-          status: user.status,
-        },
-      });
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  res.json({user: req.user});
+}
 
 export { register, login, logout, getSession };
