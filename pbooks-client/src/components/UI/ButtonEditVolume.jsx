@@ -10,15 +10,7 @@ const ButtonEditVolume = ({ item }) => {
   const { canEditVolume } = useCanEditVolume();
 
   const isEditable = item.vol_status === "en attente" && canEditVolume(item);
-
-  if (!isEditable) {
-    return null;
-  }
-
-  if (
-    !canEditVolume(item)) {
-    return null;
-  }
+  if (!isEditable) return null;
 
   const handleEditVolume = () => {
     navigate(`/editVol/${item.vol_id}`);
