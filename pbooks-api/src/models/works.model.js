@@ -106,9 +106,6 @@ class Work {
       .filter(([key, value]) => value !== undefined)
       .map(([key, value]) => `${key} = ?`);
 
-    if (fieldsToUpdate.length === 0) {
-      throw new Error("Aucune donnée à mettre à jour");
-    }
     const UPDATE_WORK = `
       UPDATE works
       SET ${fieldsToUpdate.join(", ")}

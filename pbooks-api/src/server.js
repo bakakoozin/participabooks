@@ -33,19 +33,13 @@ app.use(
     express.static(path.join(process.cwd(), "public", "uploads", "avatars"))
 );
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
     res.json({ msg: "API is running" });
 });
 
 app.use(base_url, router);
 
-app.use((err, req, res, next) => {
-    if (err.code === "ER_DUP_ENTRY") {
-        res.status(409).json({
-            message: "Donnée déjà existante.",
-        });
-        return;
-    }
+app.use((_err, _req, res, _next) => {
     res.status(500).json({
         msg: "Une erreur s'est produite. Veuillez réessayer plus tard.",
     });

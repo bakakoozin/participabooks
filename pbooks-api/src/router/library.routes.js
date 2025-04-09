@@ -17,8 +17,6 @@ import {
   removeVolume,
   uploadMedia,
 } from "../controllers/library.controller.js";
-import isAdmin from "../middlewares/isAdmin.js";
-import isModerator from "../middlewares/isModerator.js";
 
 const router = Router();
 
@@ -30,7 +28,7 @@ router.get("/volumes/:id/reviews", getReviews);
 //USERS
 router.patch("/:id", verifyToken, updateWork);
 router.post("/create", verifyToken, createWork);
-router.patch("/uploads", verifyToken, uploadMedia);
+router.patch("/uploads/:id", verifyToken, uploadMedia);
 router.delete("/work/:id", verifyToken, removeWork);
 router.get("/volumes/:id", verifyToken, getVolumeDetails);
 router.patch("/volumes/:id", verifyToken, updateVolume);

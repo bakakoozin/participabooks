@@ -161,17 +161,13 @@ const createVolume = async (req, res, next) => {
       const parsedAuthors = authors ? JSON.parse(authors) : [];
 
       if (Array.isArray(parsedAuthors) && parsedAuthors.length > 0) {
-        console.log("Ajout des auteurs :", parsedAuthors);
         await Promise.all(
           parsedAuthors.map(async (authorName) => {
             const authorId = await Author.findOrCreateAuthor(authorName);
             await Author.linkAuthorToVolume(volumesId, authorId);
-            console.log(`Auteur "${authorName}" lié au volume ${volumesId}`);
           })
         );
-      } else {
-        console.log("Aucun auteur à ajouter.");
-      }
+      } 
 
       // Validation de la transaction
       await connection.commit();
@@ -211,14 +207,16 @@ const uploadMedia = async (req, res, next) => {
     req,
     res,
     async () => {
+      console.log("Fichiers reçus : ", req.files);
       const volumesId = req.body?.volumesId?.[0];
       if (!req.files || !req.files.media) {
         return res.status(400).json({ message: "Fichier média manquant." });
       }
-      console.log(req.query)
+      console.log(req.query);
       const mediaFile = Array.isArray(req.files.media)
         ? req.files.media[0]
         : req.files.media;
+        console.log("Fichier média : ", mediaFile);
       if (!mediaFile) {
         return res.status(400).json({ message: "Fichier média introuvable." });
       }
@@ -315,11 +313,9 @@ const updateWork = async (req, res, next) => {
 
     const updateFields = {};
     if (req.body.name !== undefined) updateFields.name = req.body.name;
-    if (req.body.edition !== undefined)
-      updateFields.edition = req.body.edition;
+    if (req.body.edition !== undefined) updateFields.edition = req.body.edition;
     if (req.body.type !== undefined) updateFields.type = req.body.type;
-    if (req.body.format !== undefined)
-      updateFields.format = req.body.format;
+    if (req.body.format !== undefined) updateFields.format = req.body.format;
 
     const result = await Work.updateWork({
       worksId: workId,

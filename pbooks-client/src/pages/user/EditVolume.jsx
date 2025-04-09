@@ -116,7 +116,7 @@ export function EditVolume() {
     fileData.append("media", refMedia.current.files[0]);
     fileData.append("volumesId", volumeId);
     try {
-      await fetch(`${API_URL}/works/uploads`, {
+      await fetch(`${API_URL}/works/uploads/${volumeId}`, {
         method: "PATCH",
         credentials: "include",
         body: fileData,
