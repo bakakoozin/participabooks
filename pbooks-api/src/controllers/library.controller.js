@@ -28,14 +28,11 @@ const getAll = async (req, res, next) => {
 
 const getOne = async (req, res, next) => {
   try {
-    const [response] = await Work.findOne(req.params.id);
+    const [datas] = await Work.findOne(req.params.id);
 
-    if (response.length) {
-      sendResponse(res, "Ouvrage récupéré.", 200, response);
-      return;
-    }
-    sendResponse(res, "Aucun ouvrage récupéré.", 400);
-    return;
+    if (!datas.length)
+      res.status(400).json({ message: "Aucun ouvrage trouvé." });
+    res.json({datas});
   } catch (error) {
     next(error);
   }

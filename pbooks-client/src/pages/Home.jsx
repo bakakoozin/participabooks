@@ -13,6 +13,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Pagination } from "../components/Pagination";
 
 export function Home() {
   const { infos } = useSelector((state) => state.auth);
@@ -23,6 +24,7 @@ export function Home() {
 
   return (
     <main className={styles.mainContainer}>
+      <Pagination totalPages={10}/>
       <h1>Bibliothèque</h1>
       <form className={styles.searchBar}>
         <input
