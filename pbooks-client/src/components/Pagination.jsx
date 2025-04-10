@@ -7,7 +7,7 @@ export function Pagination({ totalPages }) {
   const [searchParams, setSearchParams] = useSearchParams({ page: 1 });
   const page = parseInt(searchParams.get("page")) || 1;
   const pages = useMemo(() => {
-    const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+    const pagesArray = Array.from({ length: totalPages - 1 }, (_, i) => i + 1);
     return pagesArray;
   }, [totalPages]);
 
@@ -27,7 +27,7 @@ export function Pagination({ totalPages }) {
           <button
             className="page-link"
             disabled={page === 1}
-            onClick={() => handlePageChange(0)}
+            onClick={() => handlePageChange(1)}
           >
             Premier
           </button>

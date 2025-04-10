@@ -6,21 +6,20 @@ import Volume from "../models/volumes.model.js";
 import Work from "../models/works.model.js";
 import Media from "../models/medias.model.js";
 import Author from "../models/authors.model.js";
-import sendResponse from "../helpers/sendResponse.js";
 import handleUpload from "../config/formidable.js";
+import { get } from "http";
+import { getPage } from "../utils/getPage.js";
 
 //============================== GET =======================================//
 
 const getAll = async (req, res, next) => {
   const formattedSearch = req.query.q?.trim() || "";
+  const page = getPage(req);
+
   try {
-    const [response] = await Work.findAll(formattedSearch, req?.user?.id || "");
-    if (response.length) {
-      sendResponse(res, "Ouvrages récupérés.", 200, response);
-      return;
-    }
-    sendResponse(res, "Aucun ouvrage récupéré.", 200, []);
-    return;
+    const {datas,count} = await Work.findAll(formattedSearch, req?.user?.id || "", page);
+
+    res.json({ datas, totalPages: count });
   } catch (error) {
     next(error);
   }
@@ -32,7 +31,7 @@ const getOne = async (req, res, next) => {
 
     if (!datas.length)
       res.status(400).json({ message: "Aucun ouvrage trouvé." });
-    res.json({datas});
+    res.json({ datas });
   } catch (error) {
     next(error);
   }
@@ -43,16 +42,11 @@ const getVolumeDetails = async (req, res, next) => {
     const volumeId = req.params.id;
     const volume = await Volume.findById(volumeId);
 
-    if (volume) {
-      return res.status(200).json({
-        message: "Volume récupéré.",
-        data: volume,
-      });
-    } else {
-      return res.status(404).json({
+    if (!volume)
+      res.status(404).json({
         message: "Aucun volume trouvé.",
       });
-    }
+    res.status(200).json({ volume });
   } catch (error) {
     next(error);
   }
@@ -61,11 +55,10 @@ const getVolumeDetails = async (req, res, next) => {
 const getAuthorsBySearch = async (req, res, next) => {
   try {
     const searchTerm = req.query.q ? req.query.q.trim() : "";
-    if (!searchTerm) {
-      return res
-        .status(400)
-        .json({ message: "Paramètre de recherche requis." });
-    }
+
+    if (!searchTerm)
+      res.status(400).json({ message: "Paramètre de recherche requis." });
+
     const authors = await Author.findByName(searchTerm);
     res.json(authors);
   } catch (error) {
@@ -92,7 +85,6 @@ const createWork = async (req, res, next) => {
     });
 
     res.status(201).json({ worksId: worksId, message: "Ouvrage ajouté." });
-    console.log("Ouvrage ajouté :", worksId);
   } catch (error) {
     console.error("Erreur lors de l'ajout de l'ouvrage :", error);
     res.status(500).json({ error: "Erreur lors de l'ajout de l'ouvrage." });

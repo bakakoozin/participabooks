@@ -18,13 +18,13 @@ import { Pagination } from "../components/Pagination";
 export function Home() {
   const { infos } = useSelector((state) => state.auth);
   const { data, isFetching, search, setSearch } = useFetch("/works/", {
-    initData: { datas: [] },
+    initData: { datas: [], totalPages: 0 },
   });
   const sliderRef = useRef(null);
-
+console.log(data);
   return (
     <main className={styles.mainContainer}>
-      <Pagination totalPages={10}/>
+      <Pagination totalPages={data.totalPages}/>
       <h1>Bibliothèque</h1>
       <form className={styles.searchBar}>
         <input

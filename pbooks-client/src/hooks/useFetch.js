@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../utils/constants";
 import { useDebounce } from "./useDebounce";
+import { useSearchParams } from "react-router-dom";
 
 export const useFetch = (url, { initData }) => {
   const [data, setData] = useState(initData);
   const [search, setSearch] = useState("");
   const searchDebounced = useDebounce(search, 500);
   const [isFetching, setIsFetching] = useState(false);
+  const [searchParams] = useSearchParams({ page: 1 });
+  const page = parseInt(searchParams.get("page")) || 1;
 
   async function fetcher() {
     if (isFetching) return;
     setIsFetching(true);
     try {
-      const res = await fetch(`${API_URL}${url}?q=${search}`, {
+      const res = await fetch(`${API_URL}${url}?q=${search}&page=${page}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +40,7 @@ export const useFetch = (url, { initData }) => {
 
   useEffect(() => {
     fetcher();
-  }, [searchDebounced]);
+  }, [searchDebounced, page]);
 
   return { fetcher, search, setSearch, data, isFetching };
 };
