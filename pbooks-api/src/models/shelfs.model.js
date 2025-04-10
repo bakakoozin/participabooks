@@ -74,9 +74,13 @@ class Shelf {
 
   //============================== UPDATE =======================================//
 
-  static async updateStatus({ status, volumes_id }) {
-    const UPDATE_STATUS = `UPDATE shelfs SET status = ? WHERE volumes_id = ?`;
-    return await pool.execute(UPDATE_STATUS, [status, volumes_id]);
+  static async updateStatus({ status, volumes_id, users_id }) {
+    const UPDATE_STATUS = `
+      UPDATE shelfs
+      SET status = ?
+      WHERE volumes_id = ? AND users_id = ?
+    `;
+    return await pool.execute(UPDATE_STATUS, [status, volumes_id, users_id]);
   }
 
   //============================== DELETE =======================================//

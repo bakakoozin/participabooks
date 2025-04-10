@@ -1,10 +1,13 @@
 import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+
 
 import { ButtonRemoveFromShelf } from "../../components/UI/ButtonRemoveFromShelf";
 import { Img } from "../../components/Img";
 import { useFetch } from "../../hooks/useFetch";
 import { ReadMore } from "../../components/ReadMore";
 import styles from "../../assets/style/scss/ShelfWorkDetails.module.scss";
+import { API_URL } from "../../utils/constants";
 
 function ShelfWorkDetails() {
   const { id } = useParams();
@@ -12,27 +15,43 @@ function ShelfWorkDetails() {
     initData: { datas: [] },
   });
 
+  const [volumes, setVolumes] = useState([]);
+
   const updateVolumeStatus = async (volumeId, status) => {
     try {
-      const response = await fetch(`/user/shelf/volume/${volumeId}/status`, {
+      const response = await fetch(`${API_URL}/user/shelf/volume/${volumeId}/status`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ status }),
       });
-      
-      if (!response.ok) {
-        window.location.reload();
+  
+      if (response.ok) {
+        setVolumes((prev) =>
+          prev.map((v) =>
+            v.vol_id === volumeId ? { ...v, status } : v
+          )
+        );
+      } else {
+        console.error("Erreur lors de la mise à jour du statut côté serveur");
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour du statut :", error);
     }
   };
+  
+
+  useEffect(() => {
+    if (data.datas.length > 0) {
+      setVolumes(data.datas);
+    }
+  }, [data]);
 
   if (isFetching) return <p>Chargement...</p>;
 
-  const workInfo = data.datas.length > 0 ? data.datas[0] : {};
+  const workInfo = volumes.length > 0 ? volumes[0] : {};
 
   return (
     <main className={styles.mainContainer}>
@@ -47,7 +66,7 @@ function ShelfWorkDetails() {
           <p>Éditions {workInfo.works_edition}</p>
         </section>
       )}
-      {data.datas.map((volume) => (
+      {volumes.map((volume) => (
         <section key={volume.vol_id} className={styles.volumeCard}>
           <header className={styles.volumeCardHeader}>
             <h3>
@@ -71,7 +90,6 @@ function ShelfWorkDetails() {
               <h3>Résumé</h3>
               <ReadMore text={volume.vol_summary} maxLength={200} />
             </article>
-
             <div className={styles.checkboxContainer}>
               <label>
                 <input
@@ -84,7 +102,6 @@ function ShelfWorkDetails() {
                 Marquer comme {volume.status === "lu" ? "à lire" : "lu"}
               </label>
             </div>
-
             <div className={styles.btnContainer}>
               <ButtonRemoveFromShelf item={volume} type="volume" />
             </div>

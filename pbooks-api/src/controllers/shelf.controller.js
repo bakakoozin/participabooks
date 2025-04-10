@@ -85,18 +85,17 @@ const addAllVolumesToShelf = async (req, res, next) => {
 
 const updateStatusOnShelf = async (req, res, next) => {
   try {
-    const [response] = await Volume.updateStatus(
-      req.body.status,
-      req.params.id
-    );
+    const { status } = req.body;
+    const volumes_id = req.params.id;
+    const users_id = req.user.id;
+
+    const [response] = await Volume.updateStatus({ status, volumes_id, users_id });
+
     if (response.affectedRows) {
-      res.status(201).json({ message: "Status du volume mis à jour." });
+      res.status(201).json({ message: "Statut mis à jour." });
       return;
     }
-    res
-      .status(400)
-      .json({ message: "un problème est survenu, veuillez réessayer." });
-    return;
+    res.status(400).json({ message: "Problème lors de la mise à jour." });
   } catch (error) {
     next(error);
   }

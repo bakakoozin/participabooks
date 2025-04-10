@@ -4,9 +4,11 @@ class Auth {
   //============================== SELECT =======================================//
 
   static async findUserForAuth(email) {
-    const SELECT_USER = `SELECT
-            id
-            FROM users WHERE email = ?`;
+    const SELECT_USER = `
+      SELECT id, email, pseudo, password, role, avatar, theme, status
+      FROM users
+      WHERE email = ?
+    `;
     return await pool.query(SELECT_USER, [email]);
   }
 
