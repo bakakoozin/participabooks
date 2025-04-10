@@ -24,16 +24,12 @@ const getAllUserWorks = async (req, res, next) => {
 const getOneUserWork = async (req, res, next) => {
   try {
     const [datas] = await Shelf.findOne({
-      user_id: req.user.id,
+      users_id: req.user.id,
       works_id: req.params.id,
     });
 
-    if (!datas.length)
-      res.status(400).json({ message: "Aucun ouvrage trouvé." });
-
-    res.json({
-      datas,
-    });
+    if (!datas.length) res.status(400).json({ message: "Aucun ouvrage trouvé." });
+    res.json({ datas });
   } catch (error) {
     next(error);
   }

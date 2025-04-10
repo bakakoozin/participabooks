@@ -16,7 +16,7 @@
   SHELF
   - /shelf               -> *(GET tous)*      ✅
   - /shelf/volume        -> *(POST ajouter)*  ✅
-  - /shelf/volume/status -> *(PATCH)*         **à faire** 🔴
+  - /shelf/volume/status -> *(PATCH)*         **à faire** 🟠
   - /shelf/volume/:id    -> *(DELETE)*        ✅
   - /shelf/work          -> *(POST ajouter)*  ✅
   - /shelf/work/:id      -> *(GET une)*       ✅
@@ -27,7 +27,7 @@
   - /shelf/volumes/:id/reviews/score -> *(PATCH)*   **à faire plus tard** 🔴
   - /shelf/volumes/:id/reviews/:id -> *(PDELETE)*   **à faire plus tard** 🔴
 
-- /works -> **en cours** 🟠
+- /works ->**terminé** ✅
   PUBLIC
   - /        -> *(GET tous)* `vérif token sans blocage` ✅
   - /:id    -> *(GET une)*                              ✅
@@ -44,7 +44,7 @@
   MODERATOR
   - /volumes/:id/status -> *(PATCH)*     `token requis` ✅
   ADMIN
-  - /authors/search -> *(GET recherche)* `token requis` `admin` **à faire** 🔴
+  - /authors/search -> *(GET recherche)* `token requis` `admin` **à faire plus tard** 🔴
  
 - /admin -> **terminé** ✅ `token requis` `admin`
   - /users -> *(GET tous)*   ✅
@@ -112,12 +112,12 @@
   - updateWork -> *(UPDATE)*                ✔️
   - deleteWork -> *(DELETE)*                ✔️
 
-- reviews.model -> **terminé** ✔️
-  - findByVolume -> *(SELECT)*  ✔️
-  - addReview -> *(INSERT)*     ✔️
-  - updateScore -> *(UPDATE)*   ✔️
-  - updateComment -> *(UPDATE)* ✔️
-  - deleteReview -> *(DELETE)*  ✔️
+- reviews.model -> **à faire plus tard** ❗
+  - findByVolume -> *(SELECT)*  **à faire plus tard** ❗
+  - addReview -> *(INSERT)*     **à faire plus tard** ❗
+  - updateScore -> *(UPDATE)*   **à faire plus tard** ❗
+  - updateComment -> *(UPDATE)* **à faire plus tard** ❗
+  - deleteReview -> *(DELETE)*  **à faire plus tard** ❗
 
 
 

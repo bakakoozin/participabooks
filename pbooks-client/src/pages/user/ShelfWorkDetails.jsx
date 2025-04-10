@@ -12,6 +12,24 @@ function ShelfWorkDetails() {
     initData: { datas: [] },
   });
 
+  const updateVolumeStatus = async (volumeId, status) => {
+    try {
+      const response = await fetch(`/user/shelf/volume/${volumeId}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+      
+      if (!response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du statut :", error);
+    }
+  };
+
   if (isFetching) return <p>Chargement...</p>;
 
   const workInfo = data.datas.length > 0 ? data.datas[0] : {};
@@ -53,6 +71,20 @@ function ShelfWorkDetails() {
               <h3>Résumé</h3>
               <ReadMore text={volume.vol_summary} maxLength={200} />
             </article>
+
+            <div className={styles.checkboxContainer}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={volume.status === "lu"}
+                  onChange={(e) =>
+                    updateVolumeStatus(volume.vol_id, e.target.checked ? "lu" : "à lire")
+                  }
+                />
+                Marquer comme {volume.status === "lu" ? "à lire" : "lu"}
+              </label>
+            </div>
+
             <div className={styles.btnContainer}>
               <ButtonRemoveFromShelf item={volume} type="volume" />
             </div>

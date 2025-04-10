@@ -8,7 +8,6 @@ import Media from "../models/medias.model.js";
 import Author from "../models/authors.model.js";
 import sendResponse from "../helpers/sendResponse.js";
 import handleUpload from "../config/formidable.js";
-import { console } from "inspector";
 
 //============================== GET =======================================//
 
@@ -23,7 +22,6 @@ const getAll = async (req, res, next) => {
     sendResponse(res, "Aucun ouvrage récupéré.", 200, []);
     return;
   } catch (error) {
-    console.log("Erreur lors de la récupération des ouvrages :", error);
     next(error);
   }
 };
@@ -47,10 +45,16 @@ const getVolumeDetails = async (req, res, next) => {
   try {
     const volumeId = req.params.id;
     const volume = await Volume.findById(volumeId);
+
     if (volume) {
-      sendResponse(res, "Volume récupéré.", 200, volume);
+      return res.status(200).json({
+        message: "Volume récupéré.",
+        data: volume,
+      });
     } else {
-      sendResponse(res, "Aucun volume trouvé.", 404);
+      return res.status(404).json({
+        message: "Aucun volume trouvé.",
+      });
     }
   } catch (error) {
     next(error);
@@ -126,7 +130,6 @@ const createVolume = async (req, res, next) => {
       users_id,
     };
 
-    // Connexion à la base de données
     const connection = await pool.getConnection();
     try {
       await connection.beginTransaction();
@@ -151,9 +154,8 @@ const createVolume = async (req, res, next) => {
             await Author.linkAuthorToVolume(volumesId, authorId);
           })
         );
-      } 
+      }
 
-      // Validation de la transaction
       await connection.commit();
       res.status(201).json({
         message: "Volume ajoutés avec succès.",
@@ -200,7 +202,7 @@ const uploadMedia = async (req, res, next) => {
       const mediaFile = Array.isArray(req.files.media)
         ? req.files.media[0]
         : req.files.media;
-        console.log("Fichier média : ", mediaFile);
+      console.log("Fichier média : ", mediaFile);
       if (!mediaFile) {
         return res.status(400).json({ message: "Fichier média introuvable." });
       }

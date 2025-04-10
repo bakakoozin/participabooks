@@ -30,7 +30,7 @@ router.patch("/profile/theme", updateTheme);
 //SHELF
 router.get("/shelf", getAllUserWorks);
 router.post("/shelf/volume", addVolumeToShelf);
-router.patch("/shelf/volume/status", updateStatusOnShelf);
+router.patch("/shelf/volume/:id/status", updateStatusOnShelf);
 router.delete("/shelf/volume/:id", removeVolumeFromShelf);
 router.post("/shelf/work", addAllVolumesToShelf);
 router.get("/shelf/work/:id", getOneUserWork);

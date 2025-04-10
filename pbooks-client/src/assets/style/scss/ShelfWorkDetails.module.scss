@@ -78,6 +78,15 @@
     }
   }
 
+  .statusText {
+    font-weight: bold;
+    margin: 0.5rem 0;
+  }
+  
+  .checkboxContainer {
+    margin-top: 1rem;
+  }
+
   .btnContainer {
     display: flex;
     flex-direction: column;
