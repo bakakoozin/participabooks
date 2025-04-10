@@ -1,7 +1,6 @@
 @import "variables";
 
 .mainContainer {
-
   h1,
   h2 {
     text-align: center;
@@ -62,29 +61,20 @@
     }
 
     .volumeCardFooter {
-        padding: 0 2rem;
+      padding: 0 2rem;
 
-        .isbn {
-          font-size: $font-sm;
-          font-family: $font-family-alt;
-        }
+      .isbn {
+        font-size: $font-sm;
+        font-family: $font-family-alt;
+      }
 
-        .summary {
-            padding-top: 1rem;
-            p {
-                text-align: justify;
-            }
+      .summary {
+        padding-top: 1rem;
+        p {
+          text-align: justify;
         }
+      }
     }
-  }
-
-  .statusText {
-    font-weight: bold;
-    margin: 0.5rem 0;
-  }
-  
-  .checkboxContainer {
-    margin-top: 1rem;
   }
 
   .btnContainer {

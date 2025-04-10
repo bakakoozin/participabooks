@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-
 import { ButtonRemoveFromShelf } from "../../components/UI/ButtonRemoveFromShelf";
 import { Img } from "../../components/Img";
 import { useFetch } from "../../hooks/useFetch";
@@ -17,31 +16,37 @@ function ShelfWorkDetails() {
 
   const [volumes, setVolumes] = useState([]);
 
-  const updateVolumeStatus = async (volumeId, status) => {
+  const handleStatusToggle = async (volumeId, currentStatus) => {
+    const newStatus = currentStatus === "lu" ? "à lire" : "lu";
     try {
-      const response = await fetch(`${API_URL}/user/shelf/volume/${volumeId}/status`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ status }),
-      });
-  
+      const response = await fetch(
+        `${API_URL}/user/shelf/volume/${volumeId}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+          credentials: "include",
+        }
+      );
+
       if (response.ok) {
+        // met à jour localement le statut dans volumes
         setVolumes((prev) =>
-          prev.map((v) =>
-            v.vol_id === volumeId ? { ...v, status } : v
+          prev.map((volume) =>
+            volume.vol_id === volumeId
+              ? { ...volume, status: newStatus }
+              : volume
           )
         );
       } else {
-        console.error("Erreur lors de la mise à jour du statut côté serveur");
+        console.error("Erreur de mise à jour du statut");
       }
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour du statut :", error);
+    } catch (err) {
+      console.error("Erreur:", err);
     }
   };
-  
 
   useEffect(() => {
     if (data.datas.length > 0) {
@@ -72,13 +77,24 @@ function ShelfWorkDetails() {
             <h3>
               {volume.vol_num}. {volume.vol_title}
             </h3>
+            <label className={styles.statusCheckbox}>
+              <input
+                type="checkbox"
+                checked={volume.status === "lu"}
+                onChange={() =>
+                  handleStatusToggle(volume.vol_id, volume.status)
+                }
+                aria-label={`Marquer comme ${
+                  volume.status === "lu" ? "à lire" : "lu"
+                }`}
+              />
+              {volume.status === "lu" ? "Lu" : "À lire"}
+            </label>
             <article className={styles.authorsList}>
               {volume.authors_name &&
-                volume.authors_name.split(",").map((author, index) => (
-                  <p key={index}>
-                    {author.trim()}
-                  </p>
-                ))}
+                volume.authors_name
+                  .split(",")
+                  .map((author, index) => <p key={index}>{author.trim()}</p>)}
             </article>
           </header>
           <figure>
@@ -90,18 +106,6 @@ function ShelfWorkDetails() {
               <h3>Résumé</h3>
               <ReadMore text={volume.vol_summary} maxLength={200} />
             </article>
-            <div className={styles.checkboxContainer}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={volume.status === "lu"}
-                  onChange={(e) =>
-                    updateVolumeStatus(volume.vol_id, e.target.checked ? "lu" : "à lire")
-                  }
-                />
-                Marquer comme {volume.status === "lu" ? "à lire" : "lu"}
-              </label>
-            </div>
             <div className={styles.btnContainer}>
               <ButtonRemoveFromShelf item={volume} type="volume" />
             </div>

@@ -1,5 +1,5 @@
 import Shelf from "../models/shelfs.model.js";
-import Volume from "../models/volumes.model.js";
+import Volume from "../models/shelfs.model.js";
 import pool from "../config/db.js";
 
 //============================== GET =======================================//
@@ -28,7 +28,8 @@ const getOneUserWork = async (req, res, next) => {
       works_id: req.params.id,
     });
 
-    if (!datas.length) res.status(400).json({ message: "Aucun ouvrage trouvé." });
+    if (!datas.length)
+      res.status(400).json({ message: "Aucun ouvrage trouvé." });
     res.json({ datas });
   } catch (error) {
     next(error);
@@ -89,13 +90,15 @@ const updateStatusOnShelf = async (req, res, next) => {
     const volumes_id = req.params.id;
     const users_id = req.user.id;
 
-    const [response] = await Volume.updateStatus({ status, volumes_id, users_id });
+    const [response] = await Volume.updateStatus({
+      status,
+      volumes_id,
+      users_id,
+    });
 
-    if (response.affectedRows) {
-      res.status(201).json({ message: "Statut mis à jour." });
-      return;
-    }
-    res.status(400).json({ message: "Problème lors de la mise à jour." });
+    if (!response.affectedRows)
+      res.status(400).json({ message: "Problème lors de la mise à jour." });
+    res.status(201).json({ message: "Statut mis à jour." });
   } catch (error) {
     next(error);
   }
