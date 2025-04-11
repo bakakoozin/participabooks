@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -10,7 +10,6 @@ import styles from "../../assets/style/scss/Form.module.scss";
 
 export function CreateVolume() {
   const { workId } = useParams();
-  const refMedia = useRef(null);
   const [formData, setFormData] = useState({
     works_id: workId,
     number: "",
@@ -18,29 +17,17 @@ export function CreateVolume() {
     isbn: "",
     summary: "",
     creator_visibility: 0,
-    media: null,
     authors: [""],
   });
 
-  const [preview, setPreview] = useState(null);
   const { data, isFetching } = useFetch(`/works/${workId}`, {
     initData: { datas: [] },
   });
   const navigate = useNavigate();
 
   function handleChange(e) {
-    const { name, value, checked, files } = e.target;
+    const { name, value, checked } = e.target;
 
-    if (name === "media") {
-      const file = files[0];
-      setFormData((prevData) => ({
-        ...prevData,
-        media: file,
-      }));
-      if (file) {
-        setPreview(URL.createObjectURL(file));
-      }
-    }
     if (name.startsWith("author")) {
       const index = parseInt(name.split("-")[1], 10);
       const newAuthors = [...formData.authors];
@@ -49,8 +36,7 @@ export function CreateVolume() {
         ...prevData,
         authors: newAuthors,
       }));
-    }
-    if (name === "creator_visibility") {
+    } else if (name === "creator_visibility") {
       setFormData((prevData) => ({
         ...prevData,
         [name]: checked,
@@ -105,11 +91,7 @@ export function CreateVolume() {
 
       if (response.ok) {
         toast.success("Volume créé !");
-        if (formData.media) {
-          const volumesId = resJSON.volumesId;
-          await updateMedia(volumesId);
-        }
-        navigate("/works/:id");
+        navigate(`/works/${workId}`);
       } else {
         toast.error(
           resJSON.message || "Échec de la création. Veuillez réessayer."
@@ -118,30 +100,6 @@ export function CreateVolume() {
     } catch (error) {
       console.error("Erreur lors de la création.", error);
       toast.error("Erreur lors de la création. Veuillez réessayer.");
-    }
-  }
-
-  async function updateMedia(volumesId) {
-    const fileData = new FormData();
-    fileData.append("media", refMedia.current.files[0]);
-    fileData.append("volumesId", volumesId);
-    try {
-      const mediaResponse = await fetch(`${API_URL}/works/uploads`, {
-        method: "PATCH",
-        credentials: "include",
-        body: fileData,
-      });
-
-      if (mediaResponse.ok) {
-        toast.success("Image de couverture ajoutée !");
-      } else {
-        toast.error(
-          "Échec de l'ajout d'image de couverture. Veuillez réessayer."
-        );
-      }
-    } catch (error) {
-      console.error("Erreur lors de l'upload du média.", error);
-      toast.error("Erreur lors de l'upload du média. Veuillez réessayer.");
     }
   }
 
@@ -170,7 +128,7 @@ export function CreateVolume() {
         <h2>Ajouter un volume à l&apos;ouvrage {workInfo.works_name}</h2>
       )}
       <section className={styles.formCard}>
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
+        <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="number">Numéro du volume</label>
             <input
@@ -269,31 +227,6 @@ export function CreateVolume() {
             </button>
           </div>
         </form>
-        <hr className={styles.separator} />
-        <p>Ajouter une image de couverture</p>
-        <div className={styles.uploadContainer}>
-          <label htmlFor="media" className={styles.btn}>
-            Choisir un fichier
-          </label>
-          <input
-            ref={refMedia}
-            type="file"
-            id="media"
-            name="media"
-            accept="image/*"
-            onChange={handleChange}
-            className={styles.hiddenInput}
-          />
-          {preview && (
-            <div className={styles.mediaPreview}>
-              <img
-                src={preview}
-                alt="Aperçu du media"
-                className={styles.preview}
-              />
-            </div>
-          )}
-        </div>
       </section>
     </main>
   );

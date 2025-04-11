@@ -1,5 +1,5 @@
 import Shelf from "../models/shelfs.model.js";
-import Volume from "../models/shelfs.model.js";
+import Volume from "../models/volumes.model.js";
 import pool from "../config/db.js";
 import { getPage } from "../utils/getPage.js";
 
@@ -52,7 +52,6 @@ const addAllVolumesToShelf = async (req, res, next) => {
   const { users_id, works_id } = req.body;
   const connection = await pool.getConnection();
   await connection.beginTransaction();
-
   try {
     const volumesIds = await Volume.findAllByWorkId(works_id);
     if (volumesIds.length === 0)
@@ -72,6 +71,7 @@ const addAllVolumesToShelf = async (req, res, next) => {
         "Tous les volumes de l'ouvrage ont été ajoutés à la bibliothèque personnelle.",
     });
   } catch (error) {
+    console.error("Erreur serveur:", error);
     await connection.rollback();
     next(error);
   } finally {

@@ -24,6 +24,7 @@ const ButtonAddToShelf = ({ item, type }) => {
         body: JSON.stringify(bodyData),
         credentials: "include",
       });
+      console.log("Données envoyées:", bodyData);
 
       if (response.ok) {
         console.log("Ajouté à la bibliothèque personnelle");

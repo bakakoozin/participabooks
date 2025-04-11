@@ -16,7 +16,11 @@ const getAll = async (req, res, next) => {
   const page = getPage(req);
 
   try {
-    const {datas,count} = await Work.findAll(formattedSearch, req?.user?.id || "", page);
+    const { datas, count } = await Work.findAll(
+      formattedSearch,
+      req?.user?.id || "",
+      page
+    );
 
     res.json({ datas, totalPages: count });
   } catch (error) {
@@ -45,7 +49,7 @@ const getVolumeDetails = async (req, res, next) => {
       res.status(404).json({
         message: "Aucun volume trouvé.",
       });
-    res.status(200).json({ volume });
+    res.json({ datas: volume });
   } catch (error) {
     next(error);
   }
@@ -181,7 +185,6 @@ const uploadMedia = async (req, res, next) => {
     req,
     res,
     async () => {
-      console.log("Fichiers reçus : ", req.files);
       const volumesId = req.body?.volumesId?.[0];
       if (!req.files || !req.files.media) {
         return res.status(400).json({ message: "Fichier média manquant." });

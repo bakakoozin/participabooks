@@ -8,7 +8,6 @@ class Volume {
     SELECT id FROM volumes WHERE works_id = ?
   `;
     const [rows] = await pool.query(FIND_ALL_VOLUMES, [works_id]);
-    console.log("Volumes SQL trouvés:", rows);
     return rows.map((row) => row.id);
   }
 

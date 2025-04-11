@@ -18,6 +18,8 @@ static async findByVolumeId(volumes_id) {
 
   //============================== UPDATE =======================================//
   static async updateMedia({ volumes_id, url }) {
+    console.log("Update Media - volumes_id:", volumes_id);
+console.log("Update Media - url:", url);
     const UPDATE_MEDIA = `UPDATE medias SET url = ? WHERE volumes_id = ?`;
     return await pool.execute(UPDATE_MEDIA, [url, volumes_id]);
   }
