@@ -1,7 +1,15 @@
 import { useMemo } from "react";
 import PropTypes from "prop-types";
-
 import { useSearchParams } from "react-router";
+
+import styles from "../assets/style/scss/Pagination.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAnglesLeft,
+  faAnglesRight,
+  faAngleLeft,
+  faAngleRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function Pagination({ totalPages }) {
   const [searchParams, setSearchParams] = useSearchParams({ page: 1 });
@@ -21,31 +29,36 @@ export function Pagination({ totalPages }) {
   if (totalPages <= 1) return null;
 
   return (
-    <nav>
-      <ul className="pagination">
-        <li className="page-item disabled">
+    <nav className={styles.paginationNav}>
+      <ul className={styles.pagination}>
+        <li className={styles.pageItem}>
           <button
-            className="page-link"
+            className={styles.pageLink}
             disabled={page === 1}
             onClick={() => handlePageChange(1)}
           >
-            Premier
+            <FontAwesomeIcon icon={faAnglesLeft} />
           </button>
+        </li>
+        <li className={styles.pageItem}>
           <button
-            className="page-link"
-            disabled={page - 1 <= 0}
+            className={styles.pageLink}
+            disabled={page === 1}
             onClick={() => handlePageChange(page - 1)}
           >
+            <FontAwesomeIcon icon={faAngleLeft} />
             Précédent
           </button>
         </li>
         {pages.map((pageNumber) => (
           <li
             key={pageNumber}
-            className={`page-item ${page === pageNumber ? "active" : ""}`}
+            className={`${styles.pageItem} ${
+              page === pageNumber ? styles.active : ""
+            }`}
           >
             <button
-              className="page-link"
+              className={styles.pageLink}
               disabled={page === pageNumber}
               onClick={() => handlePageChange(pageNumber)}
             >
@@ -53,20 +66,23 @@ export function Pagination({ totalPages }) {
             </button>
           </li>
         ))}
-        <li className="page-item">
+        <li className={styles.pageItem}>
           <button
-            className="page-link"
+            className={styles.pageLink}
             disabled={page >= totalPages}
             onClick={() => handlePageChange(page + 1)}
           >
             Suivant
+            <FontAwesomeIcon icon={faAngleRight} />
           </button>
+        </li>
+        <li className={styles.pageItem}>
           <button
-            className="page-link"
+            className={styles.pageLink}
             disabled={page >= totalPages}
             onClick={() => handlePageChange(totalPages)}
           >
-            Dernier
+            <FontAwesomeIcon icon={faAnglesRight} />
           </button>
         </li>
       </ul>

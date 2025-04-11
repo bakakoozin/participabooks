@@ -21,10 +21,9 @@ export function Home() {
     initData: { datas: [], totalPages: 0 },
   });
   const sliderRef = useRef(null);
-console.log(data);
+
   return (
     <main className={styles.mainContainer}>
-      <Pagination totalPages={data.totalPages}/>
       <h1>Bibliothèque</h1>
       <form className={styles.searchBar}>
         <input
@@ -34,6 +33,8 @@ console.log(data);
           onChange={(e) => setSearch(e.target.value)}
         />
       </form>
+      
+      <Pagination totalPages={data.totalPages}/>
 
       <section className="slider-container">
         <button

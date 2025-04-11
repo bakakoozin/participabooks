@@ -11,6 +11,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Pagination } from "../../components/Pagination";
 
 
 function Shelf() {
@@ -30,6 +31,8 @@ function Shelf() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </form>
+
+      <Pagination totalPages={data.totalPages}/>
 
       <section className="slider-container">
         <button

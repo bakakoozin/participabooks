@@ -1,11 +1,13 @@
 import Shelf from "../models/shelfs.model.js";
 import Volume from "../models/shelfs.model.js";
 import pool from "../config/db.js";
+import { getPage } from "../utils/getPage.js";
 
 //============================== GET =======================================//
 
 const getAllUserWorks = async (req, res, next) => {
   const formattedSearch = req.query.q?.trim() || "";
+  const page = getPage(req);
 
   try {
     const [datas] = await Shelf.findAll(req.user.id, formattedSearch);

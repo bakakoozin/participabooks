@@ -7,7 +7,6 @@ import Work from "../models/works.model.js";
 import Media from "../models/medias.model.js";
 import Author from "../models/authors.model.js";
 import handleUpload from "../config/formidable.js";
-import { get } from "http";
 import { getPage } from "../utils/getPage.js";
 
 //============================== GET =======================================//
