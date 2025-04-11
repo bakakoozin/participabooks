@@ -3,7 +3,9 @@ import pool from "../config/db.js";
 class Shelf {
   //============================== SELECT =======================================//
 
-  static async findAll(users_id, search = "") {
+  static async findAll(search = "", user_id, page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+  
     const FIND_ALL_WORKS = `
       SELECT 
         works.id AS works_id, 
@@ -12,24 +14,56 @@ class Shelf {
         works.type AS works_type,
         works.format AS works_format,
         COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name,
-        COALESCE(AVG(reviews.score), 0) AS works_score,
-        (SELECT medias.url 
+        (
+          SELECT medias.url 
           FROM volumes
           LEFT JOIN medias ON medias.volumes_id = volumes.id
           WHERE volumes.works_id = works.id
           ORDER BY volumes.number ASC
-          LIMIT 1) AS cover_url
+          LIMIT 1
+        ) AS cover_url
       FROM works
       LEFT JOIN volumes ON volumes.works_id = works.id
       LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
       LEFT JOIN authors ON authors.id = volumes_authors.authors_id
-      LEFT JOIN reviews ON reviews.volumes_id = volumes.id AND reviews.users_id = ?
       LEFT JOIN shelfs ON shelfs.volumes_id = volumes.id
       WHERE shelfs.users_id = ?
-      AND (works.name LIKE CONCAT(?) OR volumes.title LIKE CONCAT(?))
-      GROUP BY works.id, works.name`;
-    return await pool.query(FIND_ALL_WORKS, [users_id, users_id, `%${search}%`, `%${search}%`]);
+      AND (
+        works.name LIKE CONCAT('%', ?, '%')
+        OR volumes.title LIKE CONCAT('%', ?, '%')
+      )
+      GROUP BY 
+        works.id,
+        works.name,
+        works.edition,
+        works.type,
+        works.format
+      LIMIT ${limit} OFFSET ${offset}
+    `;
+  
+    const COUNT_QUERY = `
+      SELECT COUNT(DISTINCT works.id) AS total
+      FROM works
+      LEFT JOIN volumes ON volumes.works_id = works.id
+      LEFT JOIN shelfs ON shelfs.volumes_id = volumes.id
+      WHERE shelfs.users_id = ?
+      AND (
+        works.name LIKE CONCAT('%', ?, '%')
+        OR volumes.title LIKE CONCAT('%', ?, '%')
+      )
+    `;
+  
+    const params = [user_id, search, search];
+  
+    const [datas] = await pool.query(FIND_ALL_WORKS, params);
+    const [countResult] = await pool.query(COUNT_QUERY, params);
+  
+    return {
+      datas: datas,
+      count: countResult[0].total,
+    };
   }
+  
 
   static async findOne({ users_id, works_id }) {
     const FIND_ONE_WORK = `SELECT 

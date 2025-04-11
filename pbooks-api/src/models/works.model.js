@@ -7,61 +7,61 @@ class Work {
     const offset = (page - 1) * limit;
   
     const SELECT_FIELDS = `
-      w.id AS works_id, 
-      w.name AS works_name,
-      w.edition AS works_edition,
-      w.type AS works_type,
-      w.format AS works_format,
-      COALESCE(GROUP_CONCAT(DISTINCT a.name SEPARATOR ','), 'Inconnu') AS authors_name,
+      works.id AS works_id, 
+      works.name AS works_name,
+      works.edition AS works_edition,
+      works.type AS works_type,
+      works.format AS works_format,
+      COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name,
       (
-        SELECT DISTINCT m.url
-        FROM volumes v2
-        LEFT JOIN medias m ON m.volumes_id = v2.id
-        WHERE v2.works_id = w.id
-        ORDER BY v2.number ASC
+        SELECT DISTINCT medias.url
+        FROM volumes
+        LEFT JOIN medias ON medias.volumes_id = volumes.id
+        WHERE volumes.works_id = works.id
+        ORDER BY volumes.number ASC
         LIMIT 1
       ) AS cover_url,
       JSON_ARRAYAGG(JSON_OBJECT(
-        'vol_id', v.id,
-        'vol_status', v.status,
-        'user_id', v.users_id,
-        'role', u.role
+        'vol_id', volumes.id,
+        'vol_status', volumes.status,
+        'user_id', volumes.users_id,
+        'role', users.role
       )) AS volumes
     `;
   
     const MAIN_QUERY = `
       SELECT ${SELECT_FIELDS}
-      FROM works w
-      LEFT JOIN volumes v ON v.works_id = w.id
-      LEFT JOIN users u ON u.id = v.users_id
-      LEFT JOIN volumes_authors va ON va.volumes_id = v.id
-      LEFT JOIN authors a ON a.id = va.authors_id
+      FROM works
+      LEFT JOIN volumes ON volumes.works_id = works.id
+      LEFT JOIN users ON users.id = volumes.users_id
+      LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
+      LEFT JOIN authors ON authors.id = volumes_authors.authors_id
       WHERE (
-        v.status = 'validé'
-        OR u.role IN ('moderator', 'admin')
-        OR u.id = ?
+        volumes.status = 'validé'
+        OR users.role IN ('moderator', 'admin')
+        OR users.id = ?
       )
       AND (
-        w.name LIKE CONCAT('%', ?, '%')
-        OR v.title LIKE CONCAT('%', ?, '%')
+        works.name LIKE CONCAT('%', ?, '%')
+        OR volumes.title LIKE CONCAT('%', ?, '%')
       )
-      GROUP BY w.id
+      GROUP BY works.id
       LIMIT ${limit} OFFSET ${offset}
     `;
   
     const COUNT_QUERY = `
-      SELECT COUNT(DISTINCT w.id) AS total
-      FROM works w
-      LEFT JOIN volumes v ON v.works_id = w.id
-      LEFT JOIN users u ON u.id = v.users_id
+      SELECT COUNT(DISTINCT works.id) AS total
+      FROM works
+      LEFT JOIN volumes ON volumes.works_id = works.id
+      LEFT JOIN users ON users.id = volumes.users_id
       WHERE (
-        v.status = 'validé'
-        OR u.role IN ('moderator', 'admin')
-        OR u.id = ?
+        volumes.status = 'validé'
+        OR users.role IN ('moderator', 'admin')
+        OR users.id = ?
       )
       AND (
-        w.name LIKE CONCAT('%', ?, '%')
-        OR v.title LIKE CONCAT('%', ?, '%')
+        works.name LIKE CONCAT('%', ?, '%')
+        OR volumes.title LIKE CONCAT('%', ?, '%')
       )
     `;
   
@@ -69,12 +69,13 @@ class Work {
   
     const datas = await pool.query(MAIN_QUERY, params);
     const count = await pool.query(COUNT_QUERY, params);
-  console.log("count", count[0][0].total);
+  
     return {
       datas: datas[0],
       count: count[0][0].total,
     };
   }
+  
   
 
   static async findOne(id) {

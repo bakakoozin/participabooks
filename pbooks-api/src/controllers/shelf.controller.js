@@ -10,14 +10,9 @@ const getAllUserWorks = async (req, res, next) => {
   const page = getPage(req);
 
   try {
-    const [datas] = await Shelf.findAll(req.user.id, formattedSearch);
+    const {datas, count} = await Shelf.findAll(formattedSearch, req?.user?.id || "", page);
 
-    if (!datas.length)
-      res.status(400).json({ message: "Aucun ouvrage trouvé." });
-
-    res.json({
-      datas,
-    });
+    res.json({ datas, totalPages: count });
   } catch (error) {
     next(error);
   }
