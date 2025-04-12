@@ -4,13 +4,18 @@ import fs from "fs";
 
 import User from "../models/users.model.js";
 import handleUpload from "../config/formidable.js";
+import { getPage } from "../utils/getPage.js";
 
 //============================== GET =======================================//
 
 const getAll = async (req, res, next) => {
+  const page = getPage(req);
+  const search = req.query.q?.trim() || "";
+
   try {
-    const [users] = await User.findAll();
-    res.json({ datas: users });
+    const { datas, count } = await User.findAll(search, page);
+    const totalPages = Math.ceil(count / 10);
+    res.json({ datas, totalPages });
   } catch (error) {
     next(error);
   }
@@ -36,17 +41,21 @@ const getBySearch = async (req, res) => {
   const { q } = req.query;
 
   if (!q) {
-    return res.status(400).json({ message: "Paramètre de recherche manquant." });
+    return res
+      .status(400)
+      .json({ message: "Paramètre de recherche manquant." });
   }
 
   try {
     const formatted = `%${q}%`;
     const [datas] = await User.findBySearch(formatted);
-    
+
     return res.status(200).json({ datas });
   } catch (err) {
     console.error("Erreur dans getBySearch :", err);
-    return res.status(500).json({ message: "Erreur serveur lors de la recherche." });
+    return res
+      .status(500)
+      .json({ message: "Erreur serveur lors de la recherche." });
   }
 };
 
@@ -116,7 +125,7 @@ const uploadAvatar = async (req, res, next) => {
         .toLowerCase();
       const validExtensions = [".jpg", ".jpeg", ".png", ".webp"];
       if (!validExtensions.includes(fileExt)) {
-        fs.unlink(avatarFile.path, () => { });
+        fs.unlink(avatarFile.path, () => {});
         return res
           .status(400)
           .json({ message: "Format de fichier non autorisé." });
@@ -137,7 +146,7 @@ const uploadAvatar = async (req, res, next) => {
         if (oldAvatar && oldAvatar !== "default-avatar.png") {
           fs.unlink(
             path.join(process.cwd(), "public/uploads/avatars", oldAvatar),
-            () => { }
+            () => {}
           );
         }
 

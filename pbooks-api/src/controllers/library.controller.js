@@ -189,11 +189,9 @@ const uploadMedia = async (req, res, next) => {
       if (!req.files || !req.files.media) {
         return res.status(400).json({ message: "Fichier média manquant." });
       }
-      console.log(req.query);
       const mediaFile = Array.isArray(req.files.media)
         ? req.files.media[0]
         : req.files.media;
-      console.log("Fichier média : ", mediaFile);
       if (!mediaFile) {
         return res.status(400).json({ message: "Fichier média introuvable." });
       }

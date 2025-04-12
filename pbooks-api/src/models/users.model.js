@@ -3,10 +3,33 @@ import pool from "../config/db.js";
 class User {
   //============================== SELECT =======================================//
 
-  static async findAll() {
-    const SELECT_ALL = `SELECT id, email, pseudo, created_at, role, status, avatar
-FROM users`;
-    return await pool.query(SELECT_ALL);
+  static async findAll(search = "", page = 1, limit = 25) {
+    const offset = (page - 1) * limit;
+
+    const MAIN_QUERY = `
+      SELECT id, email, pseudo, created_at, role, status, avatar
+      FROM users
+      WHERE email LIKE CONCAT('%', ?, '%') OR pseudo LIKE CONCAT('%', ?, '%')
+      ORDER BY created_at DESC
+      LIMIT ? OFFSET ?
+    `;
+
+    const COUNT_QUERY = `
+      SELECT COUNT(*) AS total
+      FROM users
+      WHERE email LIKE CONCAT('%', ?, '%') OR pseudo LIKE CONCAT('%', ?, '%')
+    `;
+
+    const mainParams = [search, search, limit, offset];
+    const countParams = [search, search];
+
+    const users = await pool.query(MAIN_QUERY, mainParams);
+    const count = await pool.query(COUNT_QUERY, countParams);
+
+    return {
+      datas: users[0],
+      count: count[0][0].total,
+    };
   }
 
   static async findOne(id) {
@@ -24,7 +47,13 @@ FROM users WHERE id = ?`;
       OR role LIKE ?
       OR status LIKE ?
   `;
-    return await pool.query(SEARCH_USER, [search, search, search, search, search]);
+    return await pool.query(SEARCH_USER, [
+      search,
+      search,
+      search,
+      search,
+      search,
+    ]);
   }
 
   //============================== UPDATE =======================================//

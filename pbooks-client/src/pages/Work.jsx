@@ -10,6 +10,7 @@ import { ButtonEditVolume } from "../components/UI/ButtonEditVolume";
 import { ButtonRemove } from "../components/UI/ButtonRemove";
 import { ReadMore } from "../components/ReadMore";
 import styles from "../assets/style/scss/Work.module.scss";
+import { ButtonReturn } from "../components/UI/ButtonReturn";
 
 function Work() {
   const { id } = useParams();
@@ -42,10 +43,15 @@ function Work() {
       {workInfo && (
         <section className={styles.workInfos}>
           <h2>{workInfo.works_name}</h2>
-          <p>
-            {workInfo.works_type} au format {workInfo.works_format}
-          </p>
-          <p>Éditions {workInfo.works_edition}</p>
+          <article className={styles.workArticle}>
+            <aside>
+              <p>
+                {workInfo.works_type} au format {workInfo.works_format}
+              </p>
+              <p>Éditions {workInfo.works_edition}</p>
+            </aside>
+            <ButtonReturn />
+          </article>
         </section>
       )}
 
@@ -61,9 +67,9 @@ function Work() {
             </h3>
             <article className={styles.authorsList}>
               {volume.authors_name &&
-                volume.authors_name.split(",").map((author, index) => (
-                  <p key={index}>{author.trim()}</p>
-                ))}
+                volume.authors_name
+                  .split(",")
+                  .map((author, index) => <p key={index}>{author.trim()}</p>)}
             </article>
           </header>
 

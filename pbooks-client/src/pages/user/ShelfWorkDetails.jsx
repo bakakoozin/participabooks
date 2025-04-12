@@ -7,6 +7,7 @@ import { useFetch } from "../../hooks/useFetch";
 import { ReadMore } from "../../components/ReadMore";
 import styles from "../../assets/style/scss/ShelfWorkDetails.module.scss";
 import { API_URL } from "../../utils/constants";
+import { ButtonReturn } from "../../components/UI/ButtonReturn";
 
 function ShelfWorkDetails() {
   const { id } = useParams();
@@ -32,7 +33,6 @@ function ShelfWorkDetails() {
       );
 
       if (response.ok) {
-        // met à jour localement le statut dans volumes
         setVolumes((prev) =>
           prev.map((volume) =>
             volume.vol_id === volumeId
@@ -65,10 +65,15 @@ function ShelfWorkDetails() {
       {workInfo && (
         <section className={styles.workInfos}>
           <h2>{workInfo.works_name}</h2>
-          <p>
-            {workInfo.works_type} au format {workInfo.works_format}
-          </p>
-          <p>Éditions {workInfo.works_edition}</p>
+          <article className={styles.workArticle}>
+            <aside>
+              <p>
+                {workInfo.works_type} au format {workInfo.works_format}
+              </p>
+              <p>Éditions {workInfo.works_edition}</p>
+            </aside>
+            <ButtonReturn />
+          </article>
         </section>
       )}
       {volumes.map((volume) => (

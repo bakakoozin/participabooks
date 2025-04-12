@@ -10,7 +10,11 @@ const getAllUserWorks = async (req, res, next) => {
   const page = getPage(req);
 
   try {
-    const {datas, count} = await Shelf.findAll(formattedSearch, req?.user?.id || "", page);
+    const { datas, count } = await Shelf.findAll(
+      formattedSearch,
+      req?.user?.id || "",
+      page
+    );
 
     res.json({ datas, totalPages: count });
   } catch (error) {

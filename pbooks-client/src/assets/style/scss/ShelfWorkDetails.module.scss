@@ -23,8 +23,16 @@
     box-shadow: $card-shadow;
     margin-bottom: 2rem;
 
-    p {
-      padding-top: 1rem;
+    .workArticle {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+
+      p {
+        padding-top: 1rem;
+      }
     }
   }
 

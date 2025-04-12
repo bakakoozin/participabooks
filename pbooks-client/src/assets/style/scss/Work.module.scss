@@ -1,7 +1,6 @@
 @import "variables";
 
 .mainContainer {
-
   h1,
   h2 {
     text-align: center;
@@ -23,8 +22,16 @@
     border-radius: $border-radius;
     box-shadow: $card-shadow;
 
-    p {
-      padding-top: 1rem;
+    .workArticle {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+
+      p {
+        padding-top: 1rem;
+      }
     }
   }
 
@@ -61,19 +68,19 @@
     }
 
     .volumeCardFooter {
-        padding: 0 2rem;
+      padding: 0 2rem;
 
-        .isbn {
-          font-size: $font-sm;
-          font-family: $font-family-alt;
-        }
+      .isbn {
+        font-size: $font-sm;
+        font-family: $font-family-alt;
+      }
 
-        .summary {
-            padding-top: 1rem;
-            p {
-                text-align: justify;
-            }
+      .summary {
+        padding-top: 1rem;
+        p {
+          text-align: justify;
         }
+      }
     }
   }
 

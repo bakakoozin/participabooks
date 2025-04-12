@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import PropTypes from "prop-types";
-import { useSearchParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 import styles from "../assets/style/scss/Pagination.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,7 +43,7 @@ export function Pagination({ totalPages }) {
         <li className={styles.pageItem}>
           <button
             className={styles.pageLink}
-            disabled={page === 1}
+            disabled={page <= 0}
             onClick={() => handlePageChange(page - 1)}
           >
             <FontAwesomeIcon icon={faAngleLeft} />

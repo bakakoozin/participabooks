@@ -74,7 +74,7 @@ const logout = (req, res, next) => {
 };
 
 const getSession = async (req, res, next) => {
-  res.json({user: req.user});
-}
+  res.json({ user: req.user });
+};
 
 export { register, login, logout, getSession };
