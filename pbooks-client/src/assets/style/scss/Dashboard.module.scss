@@ -1,6 +1,8 @@
+@import "mixins";
 @import "variables";
 
 .mainContainer {
+    padding-top: var(--header-height);
 
     h2 {
         text-align: center;
@@ -75,3 +77,18 @@
     cursor: pointer;
     transition: background-color 0.3s;
 }
+
+@include respond-to(tablet) {
+    .mainContainer {
+      padding-top: 9rem;
+      margin: auto;
+      width: 80%;
+    }
+  }
+  
+  @include respond-to(desktop) {
+    .mainContainer {
+      margin: auto;
+      width: 60%;
+    }
+  }

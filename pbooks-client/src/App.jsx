@@ -43,7 +43,7 @@ function App() {
     }
 
   return (
-    <div className="App">
+    <main className="App">
       <Header />
       {isMenuOpen && (
         <div
@@ -51,12 +51,12 @@ function App() {
           onClick={() => dispatch(toggleMenu())}
         ></div>
       )}
-      <main className="container" id={handlePathname()}>
+      <section className="container" id={handlePathname()}>
         <AppRoutes />
-      </main>
+      </section>
       <Footer />
       <ToastContainer />
-    </div>
+    </main>
   );
 }
 

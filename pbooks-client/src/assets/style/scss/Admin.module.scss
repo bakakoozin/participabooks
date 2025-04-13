@@ -1,7 +1,8 @@
+@import "mixins";
 @import "variables";
 
 .mainContainer {
-    padding: 2rem;
+  padding-top: var(--header-height);
   }
   
   .userTable {
@@ -42,3 +43,16 @@
     }
   }
   
+  @include respond-to(tablet) {
+    .mainContainer {
+      padding-top: 9rem;
+      margin: auto;
+    }
+  }
+  
+  @include respond-to(desktop) {
+    .mainContainer {
+      margin: auto;
+      width: 60%;
+    }
+  }

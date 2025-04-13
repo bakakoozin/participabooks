@@ -1,18 +1,13 @@
+@import "mixins";
 @import "variables";
 
 .mainContainer {
+
+  padding-top: var(--header-height);
+
   h1,
   h2 {
     text-align: center;
-  }
-
-  h1 {
-    background-color: $dark-color;
-    color: $secondary-text-color;
-    padding: 1rem;
-    border-radius: $border-radius;
-    box-shadow: $card-shadow;
-    margin-bottom: 2rem;
   }
 
   .workInfos {
@@ -89,5 +84,52 @@
     flex-direction: column;
     gap: $gap-lg;
     padding: 2rem 0;
+  }
+}
+
+@include respond-to(tablet) {
+  .mainContainer {
+    
+    padding-top: 9rem;
+
+    .searchBar {
+      input {
+        width: 40vw;
+        font-size: $font-lg;
+      }
+    }
+
+    .workFooter {
+      flex-direction: row;
+      .buttons {
+        flex-direction: row;
+      }
+    }
+  }
+}
+
+@include respond-to(desktop) {
+  h1 {
+    font-size: 2.5rem;
+    padding: 2rem;
+  }
+
+  .searchBar {
+    padding-top: $gap-lg;
+    input {
+      width: 30vw;
+      font-size: $font-lg;
+    }
+  }
+
+  .workFooter {
+    justify-content: space-between;
+
+    .buttons {
+      gap: $gap-lg;
+      .btnAlert {
+        font-size: 1.1rem;
+      }
+    }
   }
 }

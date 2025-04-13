@@ -43,7 +43,6 @@ function Work() {
 
   return (
     <main className={styles.mainContainer}>
-      <h1>Bibliothèque</h1>
 
       {workInfo && (
         <section className={styles.workInfos}>

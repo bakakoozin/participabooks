@@ -22,7 +22,6 @@ export function Home() {
   });
   const [updatedData, setUpdatedData] = useState(data?.datas || []);
   const sliderRef = useRef(null);
-
   const handleRemoveWork = (removedWorkId) => {
     setUpdatedData((prevData) =>
       prevData.filter((work) => work.works_id !== removedWorkId)
@@ -47,17 +46,17 @@ export function Home() {
 
       {/* <Pagination totalPages={data.totalPages} /> */}
 
-      <section className="slider-container">
+      <section className={styles.sliderContainer}>
         <button
-          className="nav-button left"
+          className={`${styles.navButton} ${styles.left}`}
           onClick={() => scrollSlider(sliderRef, "left")}
         >
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
 
-        <article className="slider" ref={sliderRef}>
+        <article className={styles.slider} ref={sliderRef}>
           {updatedData?.map((work) => (
-            <section key={work.works_id} className="work-card">
+            <section key={work.works_id} className={styles.workCard}>
               <header>
                 <h2>{work.works_name}</h2>
                 <div className={styles.workInfos}>
@@ -110,7 +109,7 @@ export function Home() {
           )}
         </div>
         <button
-          className="nav-button right"
+          className={`${styles.navButton} ${styles.right}`}
           onClick={() => scrollSlider(sliderRef, "right")}
         >
           <FontAwesomeIcon icon={faChevronRight} />

@@ -34,7 +34,8 @@ a {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 7rem 1.5rem;
+  padding: 0 1.5rem;
+  padding-bottom: 4rem;
   background-color: $secondary-text-color;
   color: $dark-color;
 }
@@ -43,4 +44,16 @@ button {
   font-family: $font-family;
   font-size: $font-size;
   font-weight: $font-weight;
+}
+
+:root {
+  --header-height: 8rem;
+
+  @include respond-to(tablet) {
+    --header-height: 6rem;
+  }
+
+  @include respond-to(desktop) {
+    --header-height: 7rem;
+  }
 }

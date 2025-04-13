@@ -34,7 +34,7 @@ export function ButtonSelectStatus({ item, onStatusUpdate }) {
 
   return (
     <button onClick={toggleStatus} className={styles.btnAlert}>
-      {item.vol_status === "validé" ? "Mettre en attente de validation" : "Valider"}
+      {item.vol_status === "validé" ? "Passer en attente de validation" : "Valider"}
     </button>
   );
 }

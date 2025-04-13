@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -6,6 +7,7 @@ import styles from "../../assets/style/scss/Button.module.scss";
 import { useCanEditVolume } from "../../hooks/useCanEditVolume";
 
 const ButtonRemove = ({ item, type, onRemove }) => {
+  const [showModal, setShowModal] = useState(false);
   const { isLogged, infos } = useSelector((state) => state.auth);
   const { canEditVolume } = useCanEditVolume();
 
@@ -28,10 +30,11 @@ const ButtonRemove = ({ item, type, onRemove }) => {
     if (!isCreator && !isPrivileged) return null;
   }
 
-  async function handleRemove() {
+  async function handleConfirmRemove() {
     const url = `${API_URL}/works/${isWork ? "work" : "volume"}/${
       isWork ? item.works_id : item.vol_id
     }`;
+
     const bodyData = isWork
       ? { works_id: item.works_id, users_id: infos.id }
       : { volumes_id: item.vol_id, users_id: infos.id };
@@ -47,9 +50,8 @@ const ButtonRemove = ({ item, type, onRemove }) => {
       });
 
       if (response.ok) {
-        if (onRemove) {
-          onRemove(item.vol_id || item.works_id);
-        }
+        onRemove?.(item.vol_id || item.works_id);
+        setShowModal(false);
       } else {
         console.error("Erreur lors de la suppression.");
       }
@@ -59,9 +61,30 @@ const ButtonRemove = ({ item, type, onRemove }) => {
   }
 
   return (
-    <button onClick={handleRemove} className={styles.btnAlert}>
-      Supprimer
-    </button>
+    <>
+      <button onClick={() => setShowModal(true)} className={styles.btnAlert}>
+        Supprimer
+      </button>
+
+      {showModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <p>Êtes-vous sûr de vouloir supprimer cet élément ?</p>
+            <div className={styles.modalActions}>
+              <button onClick={handleConfirmRemove} className={styles.btnAlert}>
+                Oui, supprimer
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className={styles.btnCancel}
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
