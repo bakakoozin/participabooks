@@ -91,7 +91,7 @@ const updateStatusOnShelf = async (req, res, next) => {
     const volumes_id = req.params.id;
     const users_id = req.user.id;
 
-    const [response] = await Volume.updateStatus({
+    const [response] = await Shelf.updateStatus({
       status,
       volumes_id,
       users_id,

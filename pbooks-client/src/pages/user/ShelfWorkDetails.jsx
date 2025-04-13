@@ -17,8 +17,7 @@ function ShelfWorkDetails() {
 
   const [volumes, setVolumes] = useState([]);
 
-  const handleStatusToggle = async (volumeId, currentStatus) => {
-    const newStatus = currentStatus === "lu" ? "à lire" : "lu";
+  const handleStatusToggle = async (volumeId, newStatus) => {
     try {
       const response = await fetch(
         `${API_URL}/user/shelf/volume/${volumeId}/status`,
@@ -48,9 +47,21 @@ function ShelfWorkDetails() {
     }
   };
 
+  const handleRemove = (id) => {
+    setVolumes((prevVolumes) =>
+      prevVolumes.filter(
+        (volume) => volume.vol_id !== id && volume.works_id !== id
+      )
+    );
+  };
+
   useEffect(() => {
     if (data.datas.length > 0) {
-      setVolumes(data.datas);
+      const mapped = data.datas.map((volume) => ({
+        ...volume,
+        status: volume.vol_status_user ?? null,
+      }));
+      setVolumes(mapped);
     }
   }, [data]);
 
@@ -76,25 +87,43 @@ function ShelfWorkDetails() {
           </article>
         </section>
       )}
+
       {volumes.map((volume) => (
         <section key={volume.vol_id} className={styles.volumeCard}>
           <header className={styles.volumeCardHeader}>
-            <h3>
-              {volume.vol_num}. {volume.vol_title}
-            </h3>
-            <label className={styles.statusCheckbox}>
-              <input
-                type="checkbox"
-                checked={volume.status === "lu"}
-                onChange={() =>
-                  handleStatusToggle(volume.vol_id, volume.status)
-                }
-                aria-label={`Marquer comme ${
-                  volume.status === "lu" ? "à lire" : "lu"
-                }`}
-              />
-              {volume.status === "lu" ? "Lu" : "À lire"}
-            </label>
+            <section>
+              <h3>
+                {volume.vol_num}. {volume.vol_title}
+              </h3>
+
+              <div className={styles.statusRadios}>
+                <label
+                  className={volume.status === "lu" ? styles.selected : ""}
+                >
+                  <input
+                    type="radio"
+                    name={`status-${volume.vol_id}`}
+                    value="lu"
+                    checked={volume.status === "lu"}
+                    onChange={() => handleStatusToggle(volume.vol_id, "lu")}
+                  />
+                  Lu
+                </label>
+
+                <label
+                  className={volume.status === "à lire" ? styles.selected : ""}
+                >
+                  <input
+                    type="radio"
+                    name={`status-${volume.vol_id}`}
+                    value="à lire"
+                    checked={volume.status === "à lire"}
+                    onChange={() => handleStatusToggle(volume.vol_id, "à lire")}
+                  />
+                  À lire
+                </label>
+              </div>
+            </section>
             <article className={styles.authorsList}>
               {volume.authors_name &&
                 volume.authors_name
@@ -112,7 +141,11 @@ function ShelfWorkDetails() {
               <ReadMore text={volume.vol_summary} maxLength={200} />
             </article>
             <div className={styles.btnContainer}>
-              <ButtonRemoveFromShelf item={volume} type="volume" />
+              <ButtonRemoveFromShelf
+                item={volume}
+                type="volume"
+                onRemove={handleRemove}
+              />
             </div>
           </footer>
         </section>

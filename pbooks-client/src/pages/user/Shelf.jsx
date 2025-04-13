@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { scrollSlider } from "../../utils/slider";
@@ -13,12 +13,22 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Pagination } from "../../components/Pagination";
 
-
 function Shelf() {
   const { data, isFetching, search, setSearch } = useFetch("/user/shelf", {
     initData: [],
   });
+  const [updatedData, setUpdatedData] = useState(data?.datas || []);
   const sliderRef = useRef(null);
+
+  const handleRemoveWork = (removedWorkId) => {
+    setUpdatedData((prevData) =>
+      prevData.filter((work) => work.works_id !== removedWorkId)
+    );
+  };
+
+  useEffect(() => {
+    setUpdatedData(data?.datas || []);
+  }, [data]);
 
   return (
     <main className={styles.mainContainer}>
@@ -32,7 +42,7 @@ function Shelf() {
         />
       </form>
 
-      <Pagination totalPages={data.totalPages}/>
+      <Pagination totalPages={data.totalPages} />
 
       <section className="slider-container">
         <button
@@ -43,7 +53,7 @@ function Shelf() {
         </button>
 
         <article className="slider" ref={sliderRef}>
-          {data?.datas?.map((work) => (
+          {updatedData?.map((work) => (
             <section key={work.works_id} className="work-card">
               <header>
                 <h2>{work.works_name}</h2>
@@ -68,7 +78,11 @@ function Shelf() {
                 </aside>
                 <aside className={styles.buttons}>
                   <p>{work.works_edition}</p>
-                  <ButtonRemoveFromShelf item={work} type="work" />
+                  <ButtonRemoveFromShelf
+                    item={work}
+                    type="work"
+                    onRemove={() => handleRemoveWork(work.works_id)}
+                  />
                 </aside>
               </footer>
             </section>
@@ -86,7 +100,6 @@ function Shelf() {
         >
           <FontAwesomeIcon icon={faChevronRight} />
         </button>
-
       </section>
     </main>
   );

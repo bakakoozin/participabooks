@@ -42,6 +42,26 @@
     justify-content: space-between;
     padding: 0.5rem 2rem 1rem 2rem;
 
+    .statusRadios {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      accent-color: $orange-color;
+      gap: $gap-lg;
+      margin-top: 1rem;
+
+      input[type="radio"] {
+        margin-right: 0.5rem;
+      }
+
+      .selected {
+        color: $orange-color;
+        font-weight: $font-weight-bold;
+        text-transform: uppercase;
+      }
+    }
+
     .authorsList {
       font-size: $font-sm;
     }

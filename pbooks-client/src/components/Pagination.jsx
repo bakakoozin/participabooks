@@ -15,8 +15,7 @@ export function Pagination({ totalPages }) {
   const [searchParams, setSearchParams] = useSearchParams({ page: 1 });
   const page = parseInt(searchParams.get("page")) || 1;
   const pages = useMemo(() => {
-    const pagesArray = Array.from({ length: totalPages - 1 }, (_, i) => i + 1);
-    return pagesArray;
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
   }, [totalPages]);
 
   const handlePageChange = (newPage) => {

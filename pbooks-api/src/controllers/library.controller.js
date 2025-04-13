@@ -14,12 +14,14 @@ import { getPage } from "../utils/getPage.js";
 const getAll = async (req, res, next) => {
   const formattedSearch = req.query.q?.trim() || "";
   const page = getPage(req);
+  const limit = parseInt(req.query.limit, 10) || 10;
 
   try {
     const { datas, count } = await Work.findAll(
       formattedSearch,
       req?.user?.id || "",
-      page
+      page,
+      limit
     );
 
     res.json({ datas, totalPages: count });
