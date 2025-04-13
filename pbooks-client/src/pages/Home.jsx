@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { scrollSlider } from "../utils/slider";
@@ -13,14 +13,25 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Pagination } from "../components/Pagination";
+// import { Pagination } from "../components/Pagination";
 
 export function Home() {
   const { infos } = useSelector((state) => state.auth);
   const { data, isFetching, search, setSearch } = useFetch("/works/", {
     initData: { datas: [], totalPages: 0 },
   });
+  const [updatedData, setUpdatedData] = useState(data?.datas || []);
   const sliderRef = useRef(null);
+
+  const handleRemoveWork = (removedWorkId) => {
+    setUpdatedData((prevData) =>
+      prevData.filter((work) => work.works_id !== removedWorkId)
+    );
+  };
+
+  useEffect(() => {
+    setUpdatedData(data?.datas || []);
+  }, [data]);
 
   return (
     <main className={styles.mainContainer}>
@@ -33,8 +44,8 @@ export function Home() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </form>
-      
-      <Pagination totalPages={data.totalPages}/>
+
+      {/* <Pagination totalPages={data.totalPages} /> */}
 
       <section className="slider-container">
         <button
@@ -45,7 +56,7 @@ export function Home() {
         </button>
 
         <article className="slider" ref={sliderRef}>
-          {data?.datas?.map((work) => (
+          {updatedData?.map((work) => (
             <section key={work.works_id} className="work-card">
               <header>
                 <h2>{work.works_name}</h2>
@@ -75,11 +86,18 @@ export function Home() {
                     (work.volumes[0].user_id === infos?.id ||
                       infos?.role === "admin" ||
                       infos?.role === "moderator") && (
-                      <Link to={`/works/${work.works_id}/edit`} className={styles.btnAlert}>
+                      <Link
+                        to={`/works/${work.works_id}/edit`}
+                        className={styles.btnAlert}
+                      >
                         Editer
                       </Link>
                     )}
-                  <ButtonRemove item={work} type="work" />
+                  <ButtonRemove
+                    item={work}
+                    type="work"
+                    onRemove={() => handleRemoveWork(work.works_id)}
+                  />
                 </aside>
               </footer>
             </section>

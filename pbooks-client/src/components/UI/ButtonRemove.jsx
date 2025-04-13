@@ -5,7 +5,7 @@ import { API_URL } from "../../utils/constants";
 import styles from "../../assets/style/scss/Button.module.scss";
 import { useCanEditVolume } from "../../hooks/useCanEditVolume";
 
-const ButtonRemove = ({ item, type }) => {
+const ButtonRemove = ({ item, type, onRemove }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
   const { canEditVolume } = useCanEditVolume();
 
@@ -15,7 +15,8 @@ const ButtonRemove = ({ item, type }) => {
 
   if (isWork) {
     const allVolumesEnAttente =
-      item.volumes && item.volumes.every((vol) => vol.vol_status === "en attente");
+      item.volumes &&
+      item.volumes.every((vol) => vol.vol_status === "en attente");
 
     if (!allVolumesEnAttente) return null;
   } else {
@@ -27,8 +28,10 @@ const ButtonRemove = ({ item, type }) => {
     if (!isCreator && !isPrivileged) return null;
   }
 
-  const handleRemove = async () => {
-    const url = `${API_URL}/works/${isWork ? "work" : "volume"}/${isWork ? item.works_id : item.vol_id}`;
+  async function handleRemove() {
+    const url = `${API_URL}/works/${isWork ? "work" : "volume"}/${
+      isWork ? item.works_id : item.vol_id
+    }`;
     const bodyData = isWork
       ? { works_id: item.works_id, users_id: infos.id }
       : { volumes_id: item.vol_id, users_id: infos.id };
@@ -43,13 +46,17 @@ const ButtonRemove = ({ item, type }) => {
         credentials: "include",
       });
 
-      if (!response.ok) {
+      if (response.ok) {
+        if (onRemove) {
+          onRemove(item.vol_id || item.works_id);
+        }
+      } else {
         console.error("Erreur lors de la suppression.");
       }
     } catch (error) {
       console.error("Erreur lors de la suppression:", error);
     }
-  };
+  }
 
   return (
     <button onClick={handleRemove} className={styles.btnAlert}>
@@ -61,6 +68,7 @@ const ButtonRemove = ({ item, type }) => {
 ButtonRemove.propTypes = {
   item: PropTypes.object.isRequired,
   type: PropTypes.oneOf(["work", "volume"]).isRequired,
+  onRemove: PropTypes.func,
 };
 
 export { ButtonRemove };

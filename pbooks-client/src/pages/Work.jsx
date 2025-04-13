@@ -19,13 +19,6 @@ function Work() {
   });
 
   const [volumes, setVolumes] = useState([]);
-
-  useEffect(() => {
-    if (data.datas.length > 0) {
-      setVolumes(data.datas);
-    }
-  }, [data]);
-
   const workInfo = volumes.length > 0 ? volumes[0] : {};
 
   const handleStatusUpdate = (volId, newStatus) => {
@@ -35,6 +28,18 @@ function Work() {
       )
     );
   };
+
+  const handleRemove = (id) => {
+    setVolumes((prevVolumes) =>
+      prevVolumes.filter((volume) => volume.vol_id !== id)
+    );
+  };
+
+  useEffect(() => {
+    if (data.datas.length > 0) {
+      setVolumes(data.datas);
+    }
+  }, [data]);
 
   return (
     <main className={styles.mainContainer}>
@@ -88,7 +93,11 @@ function Work() {
             <div className={styles.btnContainer}>
               <ButtonAddToShelf item={volume} type="volume" />
               <ButtonEditVolume item={volume} type="volume" />
-              <ButtonRemove item={volume} type="volume" />
+              <ButtonRemove
+                item={volume}
+                type="volume"
+                onRemove={handleRemove}
+              />
               <ButtonSelectStatus
                 item={volume}
                 onStatusUpdate={(newStatus) =>

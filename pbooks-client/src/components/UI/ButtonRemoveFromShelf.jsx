@@ -27,8 +27,6 @@ const ButtonRemoveFromShelf = ({ item, type, onRemove }) => {
       });
 
       if (response.ok) {
-        console.log("Supprimé de la bibliothèque personnelle");
-
         if (onRemove) {
           onRemove(item.vol_id || item.works_id);
         }
