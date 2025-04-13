@@ -61,7 +61,7 @@
       flex: 0 0 95%; // Chaque article prend 95% de la largeur du conteneur
       background: $card-bg;
       padding: 1.5rem;
-      border-radius: 8px;
+      border-radius: $card-radius;
       box-shadow: $card-shadow;
       color: $dark-color;
       text-align: center;
@@ -72,8 +72,9 @@
       }
 
       &:hover {
-        transform: scale(1.05);
-      }
+  // Exemple alternatif : une ombre ou un léger fondu
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
     }
 
     .navButton {

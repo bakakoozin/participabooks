@@ -49,22 +49,25 @@ export function Pagination({ totalPages }) {
             Précédent
           </button>
         </li>
-        {pages.map((pageNumber) => (
-          <li
-            key={pageNumber}
-            className={`${styles.pageItem} ${
-              page === pageNumber ? styles.active : ""
-            }`}
-          >
-            <button
-              className={styles.pageLink}
-              disabled={page === pageNumber}
-              onClick={() => handlePageChange(pageNumber)}
+        <select
+          className={styles.pageLink}
+          name=""
+          id=""
+          value={page}
+          onChange={(e) => handlePageChange(parseInt(e.target.value))}
+        >
+          {pages.map((pageNumber) => (
+            <option
+              value={pageNumber}
+              key={pageNumber}
+              className={`${styles.pageItem} ${
+                page === pageNumber ? styles.active : ""
+              }`}
             >
               {pageNumber}
-            </button>
-          </li>
-        ))}
+            </option>
+          ))}
+        </select>
         <li className={styles.pageItem}>
           <button
             className={styles.pageLink}

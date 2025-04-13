@@ -144,7 +144,6 @@ export function AdminDashboard() {
   return (
     <main className={styles.mainContainer}>
       <h2>Gestion des Utilisateurs</h2>
-      <p>Total pages : {totalPages}</p>
       <Pagination totalPages={totalPages} />
 
       <div className={styles.searchControls}>

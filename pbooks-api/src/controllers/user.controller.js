@@ -11,10 +11,11 @@ import { getPage } from "../utils/getPage.js";
 const getAll = async (req, res, next) => {
   const page = getPage(req);
   const search = req.query.q?.trim() || "";
+  const limit = 25;
 
   try {
-    const { datas, count } = await User.findAll(search, page);
-    const totalPages = Math.ceil(count / 10);
+    const { datas, count } = await User.findAll(search, page, limit);
+    const totalPages = Math.ceil(count / limit);
     res.json({ datas, totalPages });
   } catch (error) {
     next(error);

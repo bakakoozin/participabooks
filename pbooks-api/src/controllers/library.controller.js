@@ -24,7 +24,7 @@ const getAll = async (req, res, next) => {
       limit
     );
 
-    res.json({ datas, totalPages: count });
+    res.json({ datas, totalPages: Math.ceil(count/limit) });
   } catch (error) {
     next(error);
   }

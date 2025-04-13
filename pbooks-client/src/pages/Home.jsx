@@ -13,7 +13,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { Pagination } from "../components/Pagination";
+import { Pagination } from "../components/Pagination";
 
 export function Home() {
   const { infos } = useSelector((state) => state.auth);
@@ -44,7 +44,7 @@ export function Home() {
         />
       </form>
 
-      {/* <Pagination totalPages={data.totalPages} /> */}
+      <Pagination totalPages={data.totalPages} />
 
       <section className={styles.sliderContainer}>
         <button
