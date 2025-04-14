@@ -6,11 +6,11 @@
 
   h2 {
     text-align: center;
-    background-color: $dark-color;
-    color: $secondary-text-color;
+    background-color: var(--brown-color);
+    color: var(--secondary-text-color);
     padding: 1rem;
     border-radius: $border-radius;
-    box-shadow: $card-shadow;
+    box-shadow: var(--card-shadow);
     margin-bottom: 2rem;
   }
 
@@ -18,11 +18,11 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    background-color: $green-color;
-    color: $dark-color;
+    background-color: var(--green-color);
+    color: var(--brown-color);
     padding: 1rem 2rem;
     border-radius: $border-radius;
-    box-shadow: $card-shadow;
+    box-shadow: var(--card-shadow);
 
     article {
       padding: 1rem 0;
@@ -34,24 +34,24 @@
       margin: 1rem 0;
       border-radius: $border-radius;
       border: none;
-      box-shadow: $form-shadow;
+      box-shadow: var(--form-shadow);
       font-size: $font-size;
-      color: $dark-color;
-      background-color: $secondary-text-color;
+      color: var(--brown-color);
+      background-color: var(--secondary-text-color);
 
       &:focus {
         outline: none;
-        box-shadow: $form-shadow-focus;
+        box-shadow: var(--form-shadow-focus);
       }
     }
 
     .btn {
       padding: 1rem 2rem;
-      background-color: $button-bg;
-      color: $secondary-text-color;
+      background-color: var(--button-bg);
+      color: var(--secondary-text-color);
       border: none;
       border-radius: $border-radius;
-      box-shadow: $button-shadow;
+      box-shadow: var(--button-shadow);
       cursor: pointer;
       transition: background-color 0.3s;
     }
@@ -61,11 +61,11 @@
     }
 
     .authAlert {
-      color: $red-color;
+      color: var(--red-color);
     }
 
     strong {
-      color: $light-color;
+      color: var(--light-color);
     }
   }
 }

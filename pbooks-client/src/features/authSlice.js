@@ -17,6 +17,7 @@ const userSlice = createSlice({
       state.infos.avatar = action.payload.avatar;
       state.infos.email = action.payload.email;
       state.infos.role = action.payload.role;
+      state.infos.theme = action.payload.theme;
       state.infos.id = action.payload.id;
     },
     logout() {

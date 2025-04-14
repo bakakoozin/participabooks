@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 html {
@@ -12,7 +13,7 @@ html {
 
 body {
   font-family: $font-family;
-  background-color: $secondary-text-color;
+  background-color: var(--bg-color);
   font-size: $font-size;
   font-weight: $font-weight;
 }
@@ -21,7 +22,7 @@ h1,
 h2,
 h3 {
   font-family: $font-family-alt;
-  color: $dark-color;
+  color: var(--brown-color);
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -36,8 +37,8 @@ a {
   margin: 0 auto;
   padding: 0 1.5rem;
   padding-bottom: 4rem;
-  background-color: $secondary-text-color;
-  color: $dark-color;
+  background-color: var(--bg-color);
+  color: var(--brown-color);
 }
 
 button {
@@ -56,4 +57,8 @@ button {
   @include respond-to(desktop) {
     --header-height: 7rem;
   }
+}
+
+@include respond-to(tablet) {
+
 }

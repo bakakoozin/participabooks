@@ -31,9 +31,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: $layout-bg;
-  box-shadow: 0 4px 2px $layout-bg;
-  color: $secondary-text-color;
+  background-color: var(--green-color);
+  box-shadow: 0 4px 2px var(--green-color);
+  color: var(--secondary-text-color);
   font-size: 1.8rem;
 
   @include respond-to(tablet) {
@@ -62,9 +62,9 @@
 
     button {
       border: none;
-      background-color: $red-color;
+      background-color: var(--red-color);
       text-transform: uppercase;
-      color: $secondary-text-color;
+      color: var(--secondary-text-color);
       font-size: 2.5rem;
       font-weight: $font-weight-bold;
       cursor: pointer;
@@ -73,15 +73,15 @@
     }
 
     a {
-      color: $secondary_text-color;
-      background-color: $green-color;
+      color: $high-light-color;
+      background-color: var(--green-color);
       padding: 1rem 0.5rem;
       width: 100%;
 
       &:hover,
       &.active {
-        color: $green-color;
-        background-color: $orange-color;
+        color: var(--green-color);
+        background-color: var(--orange-color);
       }
     }
 
@@ -90,10 +90,10 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: $dark-color-transparent;
+      background-color: $brown-color-transparent;
       border-radius: 0 0 8px 0;
       z-index: 1000;
-      box-shadow: $card-shadow;
+      box-shadow: var(--card-shadow);
       transform: scale(1);
       opacity: 1;
       pointer-events: auto;
@@ -106,7 +106,7 @@
         padding: 0;
         font-size: 3rem;
         cursor: pointer;
-        color: $green-color;
+        color: var(--green-color);
         background-color: transparent;
       }
     }
@@ -121,7 +121,7 @@
     padding-left: 1rem;
     font-size: 3rem;
     cursor: pointer;
-    color: $dark-color;
+    color: var(--brown-color);
   }
 
   .userInfos {
@@ -168,7 +168,7 @@
   height: 40px;
   text-align: center;
   padding: 10px;
-  background-color: $layout-bg;
-  box-shadow: 0 -4px 2px $layout-bg;
+  background-color: var(--green-color);
+  box-shadow: 0 -4px 2px var(--green-color);
   color: #fff;
 }

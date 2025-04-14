@@ -2,9 +2,6 @@ import { hash, genSalt, compare } from "bcrypt";
 
 import createToken from "../utils/token.js";
 import Auth from "../models/auth.model.js";
-import jwt from "jsonwebtoken";
-
-const SECRET = process.env.JWT_SECRET;
 
 const register = async (req, res, next) => {
   const { email, pseudo, password } = req.body;

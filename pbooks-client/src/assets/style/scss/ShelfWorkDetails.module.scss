@@ -11,11 +11,11 @@
   }
 
   .workInfos {
-    background-color: $green-color;
-    color: $dark-color;
+    background-color: var(--green-color);
+    color: var(--brown-color);
     padding: 1rem 2rem;
     border-radius: $border-radius;
-    box-shadow: $card-shadow;
+    box-shadow: var(--card-shadow);
     margin-bottom: 2rem;
 
     .workArticle {
@@ -42,7 +42,7 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      accent-color: $light-color;
+      accent-color: var(--light-color);
       gap: $gap-lg;
       margin-top: 1rem;
 
@@ -51,7 +51,7 @@
       }
 
       .selected {
-        color: $dark-color;
+        color: var(--brown-color);
         font-weight: $font-weight-bold;
         text-transform: uppercase;
       }
@@ -69,9 +69,9 @@
     justify-content: center;
     height: 100%;
     padding: 1rem;
-    background-color: $green-color;
+    background-color: var(--green-color);
     border-radius: 8px;
-    box-shadow: $card-shadow;
+    box-shadow: var(--card-shadow);
     margin-bottom: 2rem;
 
     figure {

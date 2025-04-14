@@ -96,11 +96,20 @@ export function Home() {
                 <footer className={styles.workFooter}>
                   <aside className={styles.authorsList}>
                     {work.authors_name &&
-                      work.authors_name
-                        .split(",")
-                        .map((author, index) => (
-                          <p key={index}>{author.trim()}</p>
-                        ))}
+                      (() => {
+                        const authors = work.authors_name
+                          .split(",")
+                          .map((a) => a.trim());
+                        const displayed = authors.slice(0, 3);
+                        return (
+                          <>
+                            {displayed.map((author, index) => (
+                              <p key={index}>{author}</p>
+                            ))}
+                            {authors.length > 3 && <p>...</p>}
+                          </>
+                        );
+                      })()}
                   </aside>
                   <aside className={styles.buttons}>
                     <p>Editions {work.works_edition}</p>

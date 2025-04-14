@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { logout, login } from "../../features/authSlice";
 import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
@@ -41,6 +41,13 @@ function Dashboard() {
 
   function toggleTheme() {
     const newTheme = theme === "clair" ? "sombre" : "clair";
+
+    if (newTheme === "sombre") {
+      document.documentElement.classList.add("dark-mode");
+    } else {
+      document.documentElement.classList.remove("dark-mode");
+    }
+ 
     handleThemeChange(newTheme);
   }
 
@@ -61,6 +68,14 @@ function Dashboard() {
       toast.error("Erreur lors de la suppression du compte.");
     }
   }
+
+  useEffect(() => {
+    if (theme === "sombre") {
+      document.documentElement.classList.add("dark-mode");
+    } else {
+      document.documentElement.classList.remove("dark-mode");
+    }
+  }, [theme]);
 
   return (
     <main className={styles.mainContainer}>

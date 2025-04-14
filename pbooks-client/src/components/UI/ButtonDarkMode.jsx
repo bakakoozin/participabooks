@@ -1,11 +1,16 @@
 import PropTypes from "prop-types";
 
+import styles from "../../assets/style/scss/Button.module.scss";
+
+
 export function ThemeToggle({ theme, toggleTheme }) {
     return (
-      <div className="theme-toggle">
+      <div className={styles.themeToggle}>
         <span>Mode sombre :</span>
-        <div className={`toggle-switch ${theme === "sombre" ? "dark" : "light"}`} onClick={toggleTheme}>
-          <div className="toggle-slider" />
+        <div className={`${styles.toggleSwitch} ${
+          theme === "sombre" ? styles.dark : styles.light
+        }`} onClick={toggleTheme}>
+          <div className={styles.toggleSlider} />
         </div>
       </div>
     );

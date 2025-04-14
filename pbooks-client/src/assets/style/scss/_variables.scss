@@ -1,26 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
-$light-color: #BF705E;
-$secondary-text-color: #f4f4f4;
-$green-color: #BDBF73;
-$red-color: #F24C3D;
-$bg-color: #f8f9fa;
-$dark-color: #593F42;
-$orange-color: #F29966;
-$dark-color-transparent: rgba(89, 63, 66, 0.95);
-$button-bg: $light-color;
-$layout-bg: $green-color;
+// Variables SCSS (utiles pour les calculs)
+$light-color: #bf705e;
+$high-light-color: #f4f4f4;
+$green-color: #bdbf73;
+$red-color: #f24c3d;
+$bg-color: #f4f4f4;
+
+$brown-color: #593f42;
+$orange-color: #f29966;
+$brown-color-transparent: rgba(89, 63, 66, 0.95);
 $button-hover-bg: rgba(0, 0, 0, 0.8);
-$card-bg: $green-color;
 $card-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
 $button-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-$form-shadow: inset 1px 1px 7px rgba(0, 0, 0, 0.5);
-$search-shadow: inset 1px 1px 7px $green-color;
-$form-shadow-focus: inset 1px 1px 7px $orange-color;
-$avatar-shadow: 1px 1px 10px $dark-color;
 
-$font-family: 'Candara';
-$font-family-alt: 'Atkinson Hyperlegible', sans-serif;
+$dark-light-color: #8b4a3c;
+$dark-secondary-text-color: #e0e0e0;
+$dark-green-color: #6d6f3e;
+$dark-red-color: #c0392b;
+$dark-bg-color: #2c2c2c;
+$dark-brown-color: #1e1e1e;
+$dark-orange-color: #d87c4a;
+$dark-brown-color-transparent: rgba(30, 30, 30, 0.95);
+$dark-button-hover-bg: rgba(255, 255, 255, 0.2);
+$dark-card-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
+$dark-button-shadow: 1px 1px 3px rgba(255, 255, 255, 0.2);
+
+$font-family: "Candara";
+$font-family-alt: "Atkinson Hyperlegible", sans-serif;
 $button-font-family: $font-family;
 $font-weight: 400;
 $font-weight-bold: 600;
@@ -32,7 +39,46 @@ $font-lg: $font-size * 1.5;
 $font-sm: 1.4rem;
 
 $gap: 0.5rem;
-$gap-lg: $gap*2;
-$gap-md: $gap*1.5;
-$gap-sm: $gap*0.5;
-$gap-xl: $gap*4;
+$gap-lg: $gap * 2;
+$gap-md: $gap * 1.5;
+$gap-sm: $gap * 0.5;
+$gap-xl: $gap * 4;
+
+// Variables CSS dynamiques
+:root {
+  --light-color: #bf705e;
+  --orange-color: #f29966;
+  --bg-color: $high-light-color;
+  --green-color: #bdbf73;
+  --button-bg: #bf705e;
+  --brown-color: #593f42;
+  --red-color: #f24c3d;
+  --dark-text-color: #593f42;
+  --secondary-text-color: #f4f4f4;
+  --button-hover-bg: rgba(0, 0, 0, 0.8);
+  --card-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  --button-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  --form-shadow: inset 1px 1px 7px rgba(0, 0, 0, 0.5);
+  --search-shadow: inset 1px 1px 7px #bdbf73;
+  --form-shadow-focus: inset 1px 1px 7px #f29966;
+  --avatar-shadow: 1px 1px 10px #593f42;
+}
+
+[data-theme="sombre"] {
+  --light-color: #6c362a;
+  --orange-color: #c76d3c;
+  --bg-color: #2c2c2c;
+  --green-color: #6d6f3e;
+  --button-bg: #8b4a3c;
+  --red-color: #7f2318;
+  --brown-color: #1e1e1e;
+  --dark-text-color: #e0e0e0;
+  --secondary-text-color: #a6a6a6;
+  --button-hover-bg: rgba(255, 255, 255, 0.2);
+  --card-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
+  --button-shadow: 1px 1px 3px rgba(255, 255, 255, 0.2);
+  --form-shadow: inset 1px 1px 7px rgba(255, 255, 255, 0.2);
+  --search-shadow: inset 1px 1px 7px #6d6f3e;
+  --form-shadow-focus: inset 1px 1px 7px #d87c4a;
+  --avatar-shadow: 1px 1px 10px #1e1e1e;
+}

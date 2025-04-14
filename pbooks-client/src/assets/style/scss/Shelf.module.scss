@@ -6,11 +6,11 @@
 
   h1 {
     text-align: center;
-    background-color: $dark-color;
-    color: $secondary-text-color;
+    background-color: var(--brown-color);
+    color: var(--secondary-text-color);
     padding: 1rem;
     border-radius: $border-radius;
-    box-shadow: $card-shadow;
+    box-shadow: var(--card-shadow);
   }
 
   .searchBar {
@@ -24,15 +24,15 @@
       padding: $gap-sm;
       border-radius: $border-radius;
       border: none;
-      box-shadow: $search-shadow;
+      box-shadow: var(--search-shadow);
       font-size: $font-lg;
-      color: $dark-color;
+      color: var(--brown-color);
       text-align: center;
-      background-color: $secondary-text-color;
+      background-color: var(--secondary-text-color);
 
       &:focus {
         outline: none;
-        box-shadow: $form-shadow-focus;
+        box-shadow: var(--form-shadow-focus);
       }
     }
   }
@@ -59,11 +59,11 @@
 
     .workCard {
       flex: 0 0 95%;
-      background: $card-bg;
+      background: var(--green-color);
       padding: 1.5rem;
       border-radius: 8px;
-      box-shadow: $card-shadow;
-      color: $dark-color;
+      box-shadow: var(--card-shadow);
+      color: var(--brown-color);
       text-align: center;
       transition: transform 0.3s ease-in-out;
 
@@ -84,7 +84,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: $button-bg;
+      background: var(--button-bg);
       color: white;
       border: none;
       width: $nav-button-size + 10;
@@ -104,7 +104,7 @@
       }
 
       &:hover {
-        background: $button-hover-bg;
+        background: var(--button-hover-bg);
       }
     }
   }

@@ -19,28 +19,28 @@ function App() {
   const { isMenuOpen } = useSelector((state) => state.menu);
   useSession();
 
-  useEffect(() => {
-		if (!isLogged) { // si l'utilisateur n'est pas connecté pour redux, on fait le fetch sur notre serveur API
-			async function checkToken() {
-				const response = await fetch(`${API_URL}/auth/session`, {
-					method: "GET",
-					credentials: "include",
-				});
-				const resJSON = await response.json();
-				if (response.ok) {
-					dispatch(login(resJSON.user));
-				}
-			}
-			checkToken();
-		}
-	}, []);
+  // fonction qui permets d'affecter un "id" dynamique au <main> en fonction de la page affichée
+  function handlePathname() {
+    return location.pathname === "/"
+      ? "home"
+      : location.pathname.slice(1, location.pathname.length);
+  }
 
-    // fonction qui permets d'affecter un "id" dynamique au <main> en fonction de la page affichée
-    function handlePathname() {
-      return location.pathname === "/"
-        ? "home"
-        : location.pathname.slice(1, location.pathname.length);
+  useEffect(() => {
+    if (!isLogged) {
+      async function checkToken() {
+        const response = await fetch(`${API_URL}/auth/session`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const resJSON = await response.json();
+        if (response.ok) {
+          dispatch(login(resJSON.user));
+        }
+      }
+      checkToken();
     }
+  }, [isLogged, dispatch]);
 
   return (
     <main className="App">

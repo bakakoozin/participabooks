@@ -6,11 +6,11 @@
 
   h1 {
     text-align: center;
-    background-color: $dark-color;
-    color: $secondary-text-color;
+    background-color: var(--brown-color);
+    color: var(--secondary-text-color);
     padding: 1rem;
     border-radius: $border-radius;
-    box-shadow: $card-shadow;
+    box-shadow: var(--card-shadow);
   }
 
   .searchBar {
@@ -24,15 +24,15 @@
       padding: $gap-sm;
       border-radius: $border-radius;
       border: none;
-      box-shadow: $search-shadow;
+      box-shadow: var(--search-shadow);
       font-size: $font-lg;
-      color: $dark-color;
+      color: var(--brown-color);
       text-align: center;
-      background-color: $secondary-text-color;
+      background-color: var(--secondary-text-color);
 
       &:focus {
         outline: none;
-        box-shadow: $form-shadow-focus;
+        box-shadow: var(--form-shadow-focus);
       }
     }
   }
@@ -58,17 +58,17 @@
     }
 
     .workCard {
-      flex: 0 0 95%; // Chaque article prend 95% de la largeur du conteneur
-      background: $card-bg;
+      flex: 0 0 100%; // Chaque article prend 95% de la largeur du conteneur
+      background: var(--green-color);
       padding: 1.5rem;
       border-radius: $card-radius;
-      box-shadow: $card-shadow;
-      color: $dark-color;
+      box-shadow: var(--card-shadow);
+      color: var(--brown-color);
       text-align: center;
       transition: transform 0.3s ease-in-out;
 
       img {
-        width: 80vw;
+        width: 95%;
       }
 
       &:hover {
@@ -84,7 +84,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: $button-bg;
+      background: var(--button-bg);
       color: white;
       border: none;
       width: $nav-button-size + 10;
@@ -104,7 +104,7 @@
       }
 
       &:hover {
-        background: $button-hover-bg;
+        background: var(--button-hover-bg);
       }
     }
   }
@@ -142,11 +142,11 @@
         justify-content: center;
         align-items: center;
         padding: 0.8rem 2rem;
-        background-color: $red-color;
-        color: $secondary-text-color;
+        background-color: var(--red-color);
+        color: var(--secondary-text-color);
         border: none;
         border-radius: $border-radius;
-        box-shadow: $button-shadow;
+        box-shadow: var(--button-shadow);
         cursor: pointer;
         transition: background-color 0.3s;
       }
@@ -154,10 +154,10 @@
       .btnEdit {
         padding: 1rem 2rem;
         background-color: $orange-color;
-        color: $dark-color;
+        color: var(--brown-color);
         border: none;
         border-radius: $border-radius;
-        box-shadow: $button-shadow;
+        box-shadow: var(--button-shadow);
         cursor: pointer;
         transition: background-color 0.3s;
       }
@@ -169,17 +169,29 @@
   .mainContainer {
     padding-top: 9rem;
 
-    .searchBar {
-      input {
-        width: 40vw;
-        font-size: $font-lg;
+    .workFooter {
+      .buttons {
+        flex-direction: column;
       }
     }
-
-    .workFooter {
-      flex-direction: row;
-      .buttons {
-        flex-direction: row;
+    .sliderContainer {
+  
+      .slider {
+        gap: 1rem;
+        padding: 0 1.2rem 2rem 1.2rem;
+      }
+  
+      .workCard {
+        flex: 0 0 50%;
+        max-width: 50%;
+  
+        img {
+          width: 95%;
+        }
+  
+        &:hover {
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
       }
     }
   }
