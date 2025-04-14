@@ -49,16 +49,16 @@
       padding: 0 1.2rem 2rem 1.2rem;
       overflow-x: auto;
       scroll-behavior: smooth;
-      scrollbar-width: none; // Masquer la scrollbar pour Firefox
+      scrollbar-width: none;
       -ms-overflow-style: none;
 
       &::-webkit-scrollbar {
-        display: none; // Masquer la scrollbar pour Chrome/Safari
+        display: none;
       }
     }
 
     .workCard {
-      flex: 0 0 95%; // Chaque article prend 95% de la largeur du conteneur
+      flex: 0 0 95%;
       background: $card-bg;
       padding: 1.5rem;
       border-radius: 8px;
@@ -72,7 +72,7 @@
       }
 
       &:hover {
-        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
     }
 

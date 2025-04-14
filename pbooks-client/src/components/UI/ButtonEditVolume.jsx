@@ -16,7 +16,7 @@ const ButtonEditVolume = ({ item }) => {
     navigate(`/editVol/${item.vol_id}`);
   };
 
-  return <button onClick={handleEditVolume} className={styles.btnAlert}>Éditer</button>;
+  return <button onClick={handleEditVolume} className={styles.btnEdit}>Éditer</button>;
 };
 
 ButtonEditVolume.propTypes = {

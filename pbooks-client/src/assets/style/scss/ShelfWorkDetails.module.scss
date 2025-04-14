@@ -42,7 +42,7 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      accent-color: $orange-color;
+      accent-color: $light-color;
       gap: $gap-lg;
       margin-top: 1rem;
 
@@ -51,7 +51,7 @@
       }
 
       .selected {
-        color: $orange-color;
+        color: $dark-color;
         font-weight: $font-weight-bold;
         text-transform: uppercase;
       }

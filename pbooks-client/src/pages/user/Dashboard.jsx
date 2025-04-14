@@ -11,9 +11,10 @@ import styles from "../../assets/style/scss/Dashboard.module.scss";
 function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
   const { infos } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(infos.theme);
-  
+
   async function handleThemeChange(newTheme) {
     document.documentElement.setAttribute("data-theme", newTheme);
     try {
@@ -43,21 +44,21 @@ function Dashboard() {
     handleThemeChange(newTheme);
   }
 
-  async function handleDeleteAccount() {
-    if (confirm("Etes-vous sûr de vouloir supprimer votre compte ?")) {
-      try {
-        const response = await fetch(`${API_URL}/user/profile`, {
-          method: "DELETE",
-          credentials: "include",
-        });
-        if (response.ok) {
-          dispatch(logout());
-          toast.success("Compte supprimé avec succès.");
-          navigate("/");
-        }
-      } catch (error) {
-        console.error("Erreur lors de la suppression du compte.", error);
+  async function handleConfirmRemove() {
+    try {
+      const response = await fetch(`${API_URL}/user/profile`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (response.ok) {
+        setShowModal(false);
+        dispatch(logout());
+        toast.success("Compte supprimé avec succès.");
+        navigate("/");
       }
+    } catch (error) {
+      console.error("Erreur lors de la suppression du compte.", error);
+      toast.error("Erreur lors de la suppression du compte.");
     }
   }
 
@@ -83,9 +84,33 @@ function Dashboard() {
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </article>
           <div>
-            <button className={styles.btnDelete} onClick={handleDeleteAccount}>
+            <button
+              className={styles.btnDelete}
+              onClick={() => setShowModal(true)}
+            >
               Supprimer mon compte
             </button>
+            {showModal && (
+              <div className={styles.modalOverlay}>
+                <div className={styles.modal}>
+                  <p>Êtes-vous sûr de vouloir supprimer cet élément ?</p>
+                  <div className={styles.modalActions}>
+                    <button
+                      onClick={handleConfirmRemove}
+                      className={styles.btnAlert}
+                    >
+                      Oui, supprimer
+                    </button>
+                    <button
+                      onClick={() => setShowModal(false)}
+                      className={styles.btnCancel}
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </section>
       )}

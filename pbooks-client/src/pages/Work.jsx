@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 import { ButtonCreateVolume } from "../components/UI/ButtonCreateVolume";
 import { ButtonAddToShelf } from "../components/UI/ButtonAddToShelf";
@@ -19,6 +20,7 @@ function Work() {
   });
 
   const [volumes, setVolumes] = useState([]);
+  const { infos } = useSelector((state) => state.auth);
   const workInfo = volumes.length > 0 ? volumes[0] : {};
 
   const handleStatusUpdate = (volId, newStatus) => {
@@ -35,6 +37,13 @@ function Work() {
     );
   };
 
+  const canSeeVolume = (volume) => {
+    if (volume.vol_status === "validé") {
+      return true;
+    }
+    return volume.user_id === infos.id || infos.isAdmin || infos.isModerator;
+  };
+
   useEffect(() => {
     if (data.datas.length > 0) {
       setVolumes(data.datas);
@@ -43,7 +52,6 @@ function Work() {
 
   return (
     <main className={styles.mainContainer}>
-
       {workInfo && (
         <section className={styles.workInfos}>
           <h2>{workInfo.works_name}</h2>
@@ -63,50 +71,56 @@ function Work() {
         <ButtonCreateVolume item={workInfo} type="work" />
       </div>
 
-      {volumes.map((volume) => (
-        <section key={volume.vol_id} className={styles.volumeCard}>
-          <header className={styles.volumeCardHeader}>
-            <h3>
-              {volume.vol_num}. {volume.vol_title}
-            </h3>
-            <article className={styles.authorsList}>
-              {volume.authors_name &&
-                volume.authors_name
-                  .split(",")
-                  .map((author, index) => <p key={index}>{author.trim()}</p>)}
-            </article>
-          </header>
+      {volumes.map((volume) => {
+        if (!canSeeVolume(volume)) {
+          return null;
+        }
 
-          <figure>
-            <Img src={volume.url_media} alt={volume.vol_title} />
-          </figure>
+        return (
+          <section key={volume.vol_id} className={styles.volumeCard}>
+            <header className={styles.volumeCardHeader}>
+              <h3>
+                {volume.vol_num}. {volume.vol_title}
+              </h3>
+              <article className={styles.authorsList}>
+                {volume.authors_name &&
+                  volume.authors_name
+                    .split(",")
+                    .map((author, index) => <p key={index}>{author.trim()}</p>)}
+              </article>
+            </header>
 
-          <footer className={styles.volumeCardFooter}>
-            <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
+            <figure>
+              <Img src={volume.url_media} alt={volume.vol_title} />
+            </figure>
 
-            <article className={styles.summary}>
-              <h3>Résumé</h3>
-              <ReadMore text={volume.vol_summary} maxLength={200} />
-            </article>
+            <footer className={styles.volumeCardFooter}>
+              <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
 
-            <div className={styles.btnContainer}>
-              <ButtonAddToShelf item={volume} type="volume" />
-              <ButtonEditVolume item={volume} type="volume" />
-              <ButtonRemove
-                item={volume}
-                type="volume"
-                onRemove={handleRemove}
-              />
-              <ButtonSelectStatus
-                item={volume}
-                onStatusUpdate={(newStatus) =>
-                  handleStatusUpdate(volume.vol_id, newStatus)
-                }
-              />
-            </div>
-          </footer>
-        </section>
-      ))}
+              <article className={styles.summary}>
+                <h3>Résumé</h3>
+                <ReadMore text={volume.vol_summary} maxLength={200} />
+              </article>
+
+              <div className={styles.btnContainer}>
+                <ButtonAddToShelf item={volume} type="volume" />
+                <ButtonEditVolume item={volume} type="volume" />
+                <ButtonRemove
+                  item={volume}
+                  type="volume"
+                  onRemove={handleRemove}
+                />
+                <ButtonSelectStatus
+                  item={volume}
+                  onStatusUpdate={(newStatus) =>
+                    handleStatusUpdate(volume.vol_id, newStatus)
+                  }
+                />
+              </div>
+            </footer>
+          </section>
+        );
+      })}
     </main>
   );
 }

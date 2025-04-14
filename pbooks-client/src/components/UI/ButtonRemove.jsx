@@ -11,24 +11,29 @@ const ButtonRemove = ({ item, type, onRemove }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
   const { canEditVolume } = useCanEditVolume();
 
-  if (!isLogged) return null;
-
   const isWork = type === "work";
 
-  if (isWork) {
-    const allVolumesEnAttente =
-      item.volumes &&
-      item.volumes.every((vol) => vol.vol_status === "en attente");
+  if (!isLogged) return null;
 
-    if (!allVolumesEnAttente) return null;
-  } else {
-    if (item.vol_status !== "en attente") return null;
+if (isWork) {
+  const allVolumesEnAttente =
+    item.volumes &&
+    item.volumes.every((vol) => vol.vol_status === "en attente");
 
-    const isCreator = infos?.id === item.user_id;
-    const isPrivileged = canEditVolume(item);
+  if (!allVolumesEnAttente) return null;
 
-    if (!isCreator && !isPrivileged) return null;
-  }
+  const isCreator = item.users_id === infos?.id;
+  const isPrivileged = canEditVolume(item);
+
+  if (!isCreator && !isPrivileged) return null;
+} else {
+  if (item.vol_status !== "en attente") return null;
+
+  const isCreator = infos?.id === item.user_id;
+  const isPrivileged = canEditVolume(item);
+
+  if (!isCreator && !isPrivileged) return null;
+}
 
   async function handleConfirmRemove() {
     const url = `${API_URL}/works/${isWork ? "work" : "volume"}/${
@@ -59,6 +64,8 @@ const ButtonRemove = ({ item, type, onRemove }) => {
       console.error("Erreur lors de la suppression:", error);
     }
   }
+
+  if (!isLogged) return null;
 
   return (
     <>

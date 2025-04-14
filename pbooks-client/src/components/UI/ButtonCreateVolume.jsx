@@ -25,7 +25,7 @@ const ButtonCreateVolume = ({ item }) => {
   };
 
   return (
-    <button onClick={handleCreateVolume} className={styles.btnAlert}>
+    <button onClick={handleCreateVolume} className={styles.btnEdit}>
       Ajouter un volume
     </button>
   );

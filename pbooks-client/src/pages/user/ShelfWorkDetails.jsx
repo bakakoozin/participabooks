@@ -71,7 +71,6 @@ function ShelfWorkDetails() {
 
   return (
     <main className={styles.mainContainer}>
-
       {workInfo && (
         <section className={styles.workInfos}>
           <h2>{workInfo.works_name}</h2>

@@ -28,6 +28,27 @@ export function Home() {
     );
   };
 
+  const canSeeWork = (work) => {
+    const isLogged = !!infos;
+    const isAdmin = infos?.isAdmin || infos?.role === "admin";
+    const isMod = infos?.isModerator || infos?.role === "moderator";
+
+    if (!work.volumes || work.volumes.length === 0) return false;
+
+    // 1. Si un volume est validé → visible pour tous
+    const hasValidVolume = work.volumes.some(
+      (volume) => volume.vol_status === "validé"
+    );
+    if (hasValidVolume) return true;
+
+    // 2. Sinon, check droits spéciaux
+    if (!isLogged) return false;
+
+    return work.volumes.some(
+      (volume) => volume.user_id === infos.id || isAdmin || isMod
+    );
+  };
+
   useEffect(() => {
     setUpdatedData(data?.datas || []);
   }, [data]);
@@ -55,52 +76,56 @@ export function Home() {
         </button>
 
         <article className={styles.slider} ref={sliderRef}>
-          {updatedData?.map((work) => (
-            <section key={work.works_id} className={styles.workCard}>
-              <header>
-                <h2>{work.works_name}</h2>
-                <div className={styles.workInfos}>
-                  <p>{work.works_type}</p>
-                  <p>Format {work.works_format}</p>
-                </div>
-              </header>
-              <figure>
-                <Link to={`/works/${work.works_id}`}>
-                  <Img src={work.cover_url} alt={work.works_name} />
-                </Link>
-              </figure>
-              <footer className={styles.workFooter}>
-                <aside className={styles.authorsList}>
-                  {work.authors_name &&
-                    work.authors_name
-                      .split(",")
-                      .map((author, index) => (
-                        <p key={index}>{author.trim()}</p>
-                      ))}
-                </aside>
-                <aside className={styles.buttons}>
-                  <p>Editions {work.works_edition}</p>
-                  <ButtonAddToShelf item={work} type="work" />
-                  {work.volumes[0].vol_status === "en attente" &&
-                    (work.volumes[0].user_id === infos?.id ||
-                      infos?.role === "admin" ||
-                      infos?.role === "moderator") && (
-                      <Link
-                        to={`/works/${work.works_id}/edit`}
-                        className={styles.btnAlert}
-                      >
-                        Editer
-                      </Link>
-                    )}
-                  <ButtonRemove
-                    item={work}
-                    type="work"
-                    onRemove={() => handleRemoveWork(work.works_id)}
-                  />
-                </aside>
-              </footer>
-            </section>
-          ))}
+          {updatedData?.map((work) => {
+            if (!canSeeWork(work)) return null;
+
+            return (
+              <section key={work.works_id} className={styles.workCard}>
+                <header>
+                  <h2>{work.works_name}</h2>
+                  <div className={styles.workInfos}>
+                    <p>{work.works_type}</p>
+                    <p>Format {work.works_format}</p>
+                  </div>
+                </header>
+                <figure>
+                  <Link to={`/works/${work.works_id}`}>
+                    <Img src={work.cover_url} alt={work.works_name} />
+                  </Link>
+                </figure>
+                <footer className={styles.workFooter}>
+                  <aside className={styles.authorsList}>
+                    {work.authors_name &&
+                      work.authors_name
+                        .split(",")
+                        .map((author, index) => (
+                          <p key={index}>{author.trim()}</p>
+                        ))}
+                  </aside>
+                  <aside className={styles.buttons}>
+                    <p>Editions {work.works_edition}</p>
+                    <ButtonAddToShelf item={work} type="work" />
+                    {work.volumes[0].vol_status === "en attente" &&
+                      (work.volumes[0].user_id === infos?.id ||
+                        infos?.role === "admin" ||
+                        infos?.role === "moderator") && (
+                        <Link
+                          to={`/works/${work.works_id}/edit`}
+                          className={styles.btnEdit}
+                        >
+                          Editer
+                        </Link>
+                      )}
+                    <ButtonRemove
+                      item={work}
+                      type="work"
+                      onRemove={() => handleRemoveWork(work.works_id)}
+                    />
+                  </aside>
+                </footer>
+              </section>
+            );
+          })}
         </article>
         <div>
           {isFetching && <p>Chargement...</p>}

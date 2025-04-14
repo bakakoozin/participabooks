@@ -22,6 +22,17 @@
   transition: background-color 0.3s;
 }
 
+.btnEdit {
+  padding: 1rem 2rem;
+  background-color: $orange-color;
+  color: $dark-color;
+  border: none;
+  border-radius: $border-radius;
+  box-shadow: $button-shadow;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
 .btnContainer {
   display: flex;
   justify-content: flex-end;
@@ -40,9 +51,12 @@
   }
 }
 
+
+//BOUTON RETOUR
+
 .returnBtn {
   padding: 1rem 2rem;
-  background-color: $orange-color;
+  background-color: $light-color;
   color: $secondary-text-color;
   height: 4rem;
   border: none;
@@ -51,6 +65,9 @@
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
+
+// MODALE SUPPRESSION
 
 .modalOverlay {
   position: fixed;
