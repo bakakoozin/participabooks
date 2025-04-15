@@ -52,7 +52,7 @@ export function FormAvatar() {
         const resJSON = await response.json();
         toast.error(
           resJSON.message ||
-          "Échec de la mise à jour de l'avatar. Veuillez réessayer."
+            "Échec de la mise à jour de l'avatar. Veuillez réessayer."
         );
       }
     } catch (error) {
@@ -67,7 +67,11 @@ export function FormAvatar() {
     <article>
       <h3>Avatar</h3>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="avatar" className={styles.btn}>Choisir un fichier</label>
+        <div className={styles.btnContainer}>
+          <label htmlFor="avatar" className={styles.btn}>
+            Choisir un fichier
+          </label>
+        </div>
         <input
           type="file"
           name="avatar"
@@ -77,14 +81,20 @@ export function FormAvatar() {
         />
         {preview && (
           <div className={styles.previewContainer}>
-            <img src={preview} alt="Aperçu de l'avatar" className={styles.preview} />
+            <img
+              src={preview}
+              alt="Aperçu de l'avatar"
+              className={styles.preview}
+            />
           </div>
         )}
-         {avatarFile && (
-          <button className={styles.btn} type="submit">
-            Envoyer
-          </button>
-        )}
+        <div className={styles.btnContainer}>
+          {avatarFile && (
+            <button className={styles.btn} type="submit">
+              Envoyer
+            </button>
+          )}
+        </div>
       </form>
     </article>
   );

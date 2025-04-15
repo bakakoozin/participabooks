@@ -3,6 +3,7 @@
 
 .mainContainer {
   padding-top: var(--header-height);
+  transition: background-color 0.3s;
 
   h2,
   h3 {
@@ -149,11 +150,19 @@
     border-radius: $border-radius;
     box-shadow: $button-shadow;
     cursor: pointer;
-    transition: background-color 0.3s;
+    
+    &:hover {
+      background-color: var(--button-hover-bg);
+      color: var(--active-menu-text);
+    }
   }
 
   .btn.cancelBtn {
     background-color: var(--brown-color);
+
+    &:hover {
+      background-color: var(--layout-border-color);
+    }
   }
 
   .btnAuthor {
@@ -164,7 +173,6 @@
     border-radius: $border-radius;
     box-shadow: $button-shadow;
     cursor: pointer;
-    transition: background-color 0.3s;
   }
 
   .btnClose {
@@ -177,7 +185,6 @@
     border-radius: $border-radius;
     box-shadow: $button-shadow;
     cursor: pointer;
-    transition: background-color 0.3s;
   }
 
   .validateContainer {
@@ -198,6 +205,7 @@
 
 @include respond-to(desktop) {
   .mainContainer {
+    padding-top: 10rem;
     margin: auto;
     width: 60%;
   }

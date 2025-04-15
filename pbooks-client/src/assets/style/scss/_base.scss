@@ -56,10 +56,6 @@ button {
   }
 
   @include respond-to(desktop) {
-    --header-height: 7rem;
-  }
-
-  @include respond-to(tablet) {
-    --footer-height: 5rem;
+    --header-height: 8rem;
   }
 }

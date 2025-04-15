@@ -199,26 +199,29 @@
 }
 
 @include respond-to(desktop) {
-  h1 {
-    font-size: 2.5rem;
-    padding: 2rem;
-  }
-
-  .searchBar {
-    padding-top: $gap-lg;
-    input {
-      width: 30vw;
-      font-size: $font-lg;
+  .mainContainer {
+    padding-top: 10rem;
+    h1 {
+      font-size: 2.5rem;
+      padding: 2rem;
     }
-  }
 
-  .workFooter {
-    justify-content: space-between;
+    .searchBar {
+      padding-top: $gap-xl;
+      input {
+        width: 30vw;
+        font-size: $font-lg;
+      }
+    }
 
-    .buttons {
-      gap: $gap-lg;
-      .btnAlert {
-        font-size: 1.1rem;
+    .workFooter {
+      justify-content: space-between;
+
+      .buttons {
+        gap: $gap-lg;
+        .btnAlert {
+          font-size: 1.1rem;
+        }
       }
     }
   }

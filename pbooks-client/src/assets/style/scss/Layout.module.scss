@@ -35,30 +35,30 @@
   border-bottom: solid 1px var(--layout-border-color);
   box-shadow: 0 4px 5px var(--layout-border-color);
   color: var(--secondary-text-color);
-  font-size: 1.8rem;
+  font-family: $font-family-alt;
 
- .navLinks {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 70vw;
-  height: 80vh;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 3rem;
-  background-color: $brown-color-transparent;
-  text-transform: uppercase;
-  font-size: 2.5rem;
-  font-weight: $font-weight-bold;
-  transform: scale(0);
-  transform-origin: top left;
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  z-index: 1000;
-  box-shadow: var(--card-shadow);
+  .navLinks {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70vw;
+    height: 80vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    background-color: $brown-color-transparent;
+    text-transform: uppercase;
+    font-size: 2.5rem;
+    font-weight: $font-weight-bold;
+    transform: scale(0);
+    transform-origin: top left;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    z-index: 1000;
+    box-shadow: var(--card-shadow);
 
     button {
       border: none;
@@ -84,8 +84,8 @@
 
       &:hover,
       &.active {
+        background-color: var(--button-hover-bg);
         color: var(--active-menu-text);
-        background-color: $dark-green-color;
       }
     }
 
@@ -99,7 +99,7 @@
       padding: 6rem 1rem 2rem;
       max-height: 65vh;
       overflow-y: auto;
-    
+
       background-color: $brown-color-transparent;
       border-radius: 0 0 8px 0;
       z-index: 1000;
@@ -107,7 +107,7 @@
       transform: scale(1);
       opacity: 1;
       pointer-events: auto;
-    
+
       .closeMenu {
         position: fixed;
         left: 1rem;
@@ -121,7 +121,6 @@
         box-shadow: none;
         z-index: 1100;
       }
-    
     }
     .adminLink {
       background-color: $orange-color;
@@ -170,10 +169,12 @@
   color: #fff;
 }
 
+//MODE TABLETTE @media (max-width: 768px)
+
 @include respond-to(tablet) {
   .header {
     height: 7rem;
-    
+
     .logo {
       order: 2;
     }
@@ -203,9 +204,9 @@
       font-size: 1.8rem;
     }
 
-.navLinks a {
-  background-color: var(--brown-color);
-}
+    .navLinks a {
+      background-color: var(--brown-color);
+    }
 
     .navLinks a,
     .navLinks button {
@@ -224,8 +225,34 @@
   }
 }
 
+//MODE DESKTOP @media (min-width: 1024px)
+
 @include respond-to(desktop) {
   .header {
-    height: 8rem;
+    height: 9rem;
+
+    .navLinks a,
+    .navLinks button {
+      padding: 1rem;
+      max-width: none;
+      width: 9vw;
+      font-size: $font-size;
+    }
+
+    .userInfos {
+      font-size: 4.5rem;
+
+      img {
+        width: 50px;
+        height: 50px;
+      }
+
+      p {
+        font-size: $font-lg;
+      }
+    }
+  }
+  .logo {
+    width: 10vw;
   }
 }

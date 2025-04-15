@@ -90,9 +90,11 @@ function Dashboard() {
             <p>
               <strong>Email :</strong> {infos.email}
             </p>
+            <div className={styles.btnContainer}>
             <Link to={"/update-infos"} className={styles.btn}>
               Mettre à jour mes informations
             </Link>
+            </div>
           </article>
           <FormAvatar />
           <article>
@@ -108,7 +110,7 @@ function Dashboard() {
             {showModal && (
               <div className={styles.modalOverlay}>
                 <div className={styles.modal}>
-                  <p>Êtes-vous sûr de vouloir supprimer cet élément ?</p>
+                  <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
                   <div className={styles.modalActions}>
                     <button
                       onClick={handleConfirmRemove}
