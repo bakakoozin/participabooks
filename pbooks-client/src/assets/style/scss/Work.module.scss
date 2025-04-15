@@ -2,10 +2,9 @@
 @import "variables";
 
 .mainContainer {
-
   padding-top: var(--header-height);
+  padding-bottom: var(--footer-height);;
 
-  h1,
   h2 {
     text-align: center;
   }
@@ -36,6 +35,26 @@
     justify-content: space-between;
     padding: 0.5rem 2rem 1rem 2rem;
 
+    .statusRadios {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      accent-color: var(--light-color);
+      gap: $gap-lg;
+      margin-top: 1rem;
+
+      input[type="radio"] {
+        margin-right: 0.5rem;
+      }
+
+      .selected {
+        color: var(--brown-color);
+        font-weight: $font-weight-bold;
+        text-transform: uppercase;
+      }
+    }
+
     .authorsList {
       font-size: $font-sm;
     }
@@ -46,7 +65,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100%;
     padding: 1rem;
     background-color: var(--green-color);
     border-radius: 8px;
@@ -58,7 +76,7 @@
       justify-content: center;
 
       img {
-        width: 80vw;
+        width: 95%;
       }
     }
 
@@ -89,21 +107,14 @@
 
 @include respond-to(tablet) {
   .mainContainer {
-    
     padding-top: 9rem;
+    padding-bottom: 2rem;
 
-    .searchBar {
-      input {
-        width: 40vw;
-        font-size: $font-lg;
-      }
-    }
-
-    .workFooter {
-      flex-direction: row;
-      .buttons {
-        flex-direction: row;
-      }
+    .cardContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(40vw, 1fr));
+      gap: $gap-lg;
+      justify-items: center;
     }
   }
 }
@@ -112,14 +123,6 @@
   h1 {
     font-size: 2.5rem;
     padding: 2rem;
-  }
-
-  .searchBar {
-    padding-top: $gap-lg;
-    input {
-      width: 30vw;
-      font-size: $font-lg;
-    }
   }
 
   .workFooter {

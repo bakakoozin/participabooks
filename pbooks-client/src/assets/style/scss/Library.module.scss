@@ -58,17 +58,17 @@
     }
 
     .workCard {
-      flex: 0 0 95%;
+      flex: 0 0 100%;
       background: var(--green-color);
       padding: 1.5rem;
-      border-radius: 8px;
+      border-radius: $card-radius;
       box-shadow: var(--card-shadow);
       color: var(--brown-color);
       text-align: center;
       transition: transform 0.3s ease-in-out;
 
       img {
-        width: 80vw;
+        width: 95%;
       }
 
       &:hover {
@@ -96,11 +96,11 @@
       transition: background 0.3s ease;
 
       &.left {
-        left: 10px;
+        left: 1rem;
       }
 
       &.right {
-        right: 10px;
+        right: 1rem;
       }
 
       &:hover {
@@ -135,51 +135,90 @@
       display: flex;
       flex-direction: column;
       gap: $gap-lg;
+      font-weight: 400;
+
+      .btnAlert {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.8rem 2rem;
+        background-color: var(--red-color);
+        color: var(--secondary-text-color);
+        border: none;
+        border-radius: $border-radius;
+        box-shadow: var(--button-shadow);
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .btnEdit {
+        padding: 1rem 2rem;
+        background-color: $orange-color;
+        color: var(--brown-color);
+        border: none;
+        border-radius: $border-radius;
+        box-shadow: var(--button-shadow);
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
     }
   }
 }
 
 @include respond-to(tablet) {
   .mainContainer {
-    padding-top: 9rem;
+    padding-top: 8rem;
 
     .searchBar {
       input {
         width: 40vw;
-        font-size: $font-lg;
       }
     }
 
     .workFooter {
-      flex-direction: row;
       .buttons {
-        flex-direction: row;
+        flex-direction: column;
+      }
+    }
+    .sliderContainer {
+      .slider {
+        gap: 1rem;
+        padding: 0 1.2rem 2rem 1.2rem;
+      }
+
+      .workCard {
+        flex: 0 0 50%;
+        max-width: 50%;
+
+        img {
+          width: 95%;
+        }
       }
     }
   }
+}
 
-  @include respond-to(desktop) {
-    h1 {
-      font-size: 2.5rem;
-      padding: 2rem;
+@include respond-to(desktop) {
+  h1 {
+    font-size: 2.5rem;
+    padding: 2rem;
+  }
+
+  .searchBar {
+    padding-top: $gap-lg;
+    input {
+      width: 30vw;
+      font-size: $font-lg;
     }
+  }
 
-    .searchBar {
-      padding-top: $gap-lg;
-      input {
-        width: 30vw;
-        font-size: $font-lg;
-      }
-    }
+  .workFooter {
+    justify-content: space-between;
 
-    .workFooter {
-      justify-content: space-between;
-
-      .buttons {
-        gap: $gap-lg;
-        .btnAlert {
-          font-size: 1.1rem;
-        }
+    .buttons {
+      gap: $gap-lg;
+      .btnAlert {
+        font-size: 1.1rem;
       }
     }
   }

@@ -70,57 +70,58 @@ function Work() {
       <div className={styles.btnContainer}>
         <ButtonCreateVolume item={workInfo} type="work" />
       </div>
+      <section className={styles.cardContainer}>
+        {volumes.map((volume) => {
+          if (!canSeeVolume(volume)) {
+            return null;
+          }
+          return (
+            <section key={volume.vol_id} className={styles.volumeCard}>
+              <header className={styles.volumeCardHeader}>
+                <h3>
+                  {volume.vol_num}. {volume.vol_title}
+                </h3>
+                <article className={styles.authorsList}>
+                  {volume.authors_name &&
+                    volume.authors_name
+                      .split(",")
+                      .map((author, index) => (
+                        <p key={index}>{author.trim()}</p>
+                      ))}
+                </article>
+              </header>
+              <figure>
+                <Img src={volume.url_media} alt={volume.vol_title} />
+              </figure>
 
-      {volumes.map((volume) => {
-        if (!canSeeVolume(volume)) {
-          return null;
-        }
+              <footer className={styles.volumeCardFooter}>
+                <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
 
-        return (
-          <section key={volume.vol_id} className={styles.volumeCard}>
-            <header className={styles.volumeCardHeader}>
-              <h3>
-                {volume.vol_num}. {volume.vol_title}
-              </h3>
-              <article className={styles.authorsList}>
-                {volume.authors_name &&
-                  volume.authors_name
-                    .split(",")
-                    .map((author, index) => <p key={index}>{author.trim()}</p>)}
-              </article>
-            </header>
+                <article className={styles.summary}>
+                  <h3>Résumé</h3>
+                  <ReadMore text={volume.vol_summary} maxLength={200} />
+                </article>
 
-            <figure>
-              <Img src={volume.url_media} alt={volume.vol_title} />
-            </figure>
-
-            <footer className={styles.volumeCardFooter}>
-              <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
-
-              <article className={styles.summary}>
-                <h3>Résumé</h3>
-                <ReadMore text={volume.vol_summary} maxLength={200} />
-              </article>
-
-              <div className={styles.btnContainer}>
-                <ButtonAddToShelf item={volume} type="volume" />
-                <ButtonEditVolume item={volume} type="volume" />
-                <ButtonRemove
-                  item={volume}
-                  type="volume"
-                  onRemove={handleRemove}
-                />
-                <ButtonSelectStatus
-                  item={volume}
-                  onStatusUpdate={(newStatus) =>
-                    handleStatusUpdate(volume.vol_id, newStatus)
-                  }
-                />
-              </div>
-            </footer>
-          </section>
-        );
-      })}
+                <div className={styles.btnContainer}>
+                  <ButtonAddToShelf item={volume} type="volume" />
+                  <ButtonEditVolume item={volume} type="volume" />
+                  <ButtonRemove
+                    item={volume}
+                    type="volume"
+                    onRemove={handleRemove}
+                  />
+                  <ButtonSelectStatus
+                    item={volume}
+                    onStatusUpdate={(newStatus) =>
+                      handleStatusUpdate(volume.vol_id, newStatus)
+                    }
+                  />
+                </div>
+              </footer>
+            </section>
+          );
+        })}
+      </section>
     </main>
   );
 }

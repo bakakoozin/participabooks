@@ -7,13 +7,14 @@ import { ButtonAddToShelf } from "../components/UI/ButtonAddToShelf";
 import { ButtonRemove } from "../components/UI/ButtonRemove";
 import { Img } from "../components/Img";
 import { useSelector } from "react-redux";
-import styles from "../assets/style/scss/Home.module.scss";
+import styles from "../assets/style/scss/Library.module.scss";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Pagination } from "../components/Pagination";
+import { AuthorsList } from "../components/AuthorsList";
 
 export function Home() {
   const { infos } = useSelector((state) => state.auth);
@@ -35,15 +36,12 @@ export function Home() {
 
     if (!work.volumes || work.volumes.length === 0) return false;
 
-    // 1. Si un volume est validé → visible pour tous
     const hasValidVolume = work.volumes.some(
       (volume) => volume.vol_status === "validé"
     );
     if (hasValidVolume) return true;
 
-    // 2. Sinon, check droits spéciaux
     if (!isLogged) return false;
-
     return work.volumes.some(
       (volume) => volume.user_id === infos.id || isAdmin || isMod
     );
@@ -95,21 +93,7 @@ export function Home() {
                 </figure>
                 <footer className={styles.workFooter}>
                   <aside className={styles.authorsList}>
-                    {work.authors_name &&
-                      (() => {
-                        const authors = work.authors_name
-                          .split(",")
-                          .map((a) => a.trim());
-                        const displayed = authors.slice(0, 3);
-                        return (
-                          <>
-                            {displayed.map((author, index) => (
-                              <p key={index}>{author}</p>
-                            ))}
-                            {authors.length > 3 && <p>...</p>}
-                          </>
-                        );
-                      })()}
+                    <AuthorsList workAuthors={work.authors_name} />
                   </aside>
                   <aside className={styles.buttons}>
                     <p>Editions {work.works_edition}</p>

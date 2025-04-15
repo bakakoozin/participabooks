@@ -5,13 +5,14 @@ import { scrollSlider } from "../../utils/slider";
 import { useFetch } from "../../hooks/useFetch";
 import { ButtonRemoveFromShelf } from "../../components/UI/ButtonRemoveFromShelf";
 import { Img } from "../../components/Img";
-import styles from "../../assets/style/scss/Shelf.module.scss";
+import styles from "../../assets/style/scss/Library.module.scss";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Pagination } from "../../components/Pagination";
+import { AuthorsList } from "../../components/AuthorsList";
 
 function Shelf() {
   const { data, isFetching, search, setSearch } = useFetch("/user/shelf", {
@@ -69,12 +70,7 @@ function Shelf() {
               </figure>
               <footer className={styles.workFooter}>
                 <aside className={styles.authorsList}>
-                  {work.authors_name &&
-                    work.authors_name
-                      .split(",")
-                      .map((author, index) => (
-                        <p key={index}>{author.trim()}</p>
-                      ))}
+                  <AuthorsList workAuthors={work.authors_name} />
                 </aside>
                 <aside className={styles.buttons}>
                   <p>{work.works_edition}</p>
