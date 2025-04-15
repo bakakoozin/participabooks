@@ -26,70 +26,79 @@ export function Header() {
     });
     if (response.ok) {
       dispatch(logout());
-      dispatch(toggleMenu());
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        dispatch(toggleMenu());
+      }
       navigate("/");
     }
   }
 
   function handleClick() {
-    dispatch(toggleMenu());
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      dispatch(toggleMenu());
+    }
   }
 
   return (
-      <header className={styles.header}>
-        {/* le state menu permets de gérer dynamiquement l'affichage du menu ouverture/fermeture */}
-        {/* attention cependant, le responsive mobile est bon, il faudrait changer les gestionnaire d'événements "handleClick" pour qu'ils ne fonctionnent que lorsqu'on a besoin d'un menu burger...  */}
-        <nav
-          className={`${styles.navLinks} ${isMenuOpen ? styles.active : ""}`}
-        >
+    <header className={styles.header}>
+      <nav className={`${styles.navLinks} ${isMenuOpen ? styles.active : ""}`}>
+        {isMenuOpen && (
           <button onClick={handleClick} className={styles.closeMenu}>
             <FontAwesomeIcon icon={faXmark} />
           </button>
-          <NavLink to="/" end onClick={handleClick}>
-            Bibliothèque
+        )}
+        <NavLink to="/" end onClick={handleClick}>
+          Bibliothèque
+        </NavLink>
+        {!isLogged ? (
+          <NavLink to="auth/login" end onClick={handleClick}>
+            Se connecter
           </NavLink>
-          {!isLogged ? (
-            <NavLink to="auth/login" end onClick={handleClick}>
-              Se connecter
+        ) : (
+          <>
+            <NavLink to="shelf" end onClick={handleClick}>
+              Ma bibliothèque
             </NavLink>
-          ) : (
-            <>
-              <NavLink to="shelf" end onClick={handleClick}>
-                Ma bibliothèque
+            <NavLink to="creator" end onClick={handleClick}>
+              Créer
+            </NavLink>
+            <NavLink to="dashboard" end onClick={handleClick}>
+              Mon Profil
+            </NavLink>
+            {infos.role === "admin" && (
+              <NavLink
+                to="admin"
+                end
+                onClick={handleClick}
+                className={styles.adminLink}
+              >
+                Admin
               </NavLink>
-              <NavLink to="creator" end onClick={handleClick}>
-                Créer
-              </NavLink>
-              <NavLink to="dashboard" end onClick={handleClick}>
-                Mon Profil
-              </NavLink>
-              {infos.role === "admin" && (
-                <NavLink to="admin" end onClick={handleClick} className={styles.adminLink}>
-                  Admin
-                </NavLink>
-              )}
-              <button onClick={handleLogout}>Se déconnecter</button>
-            </>
-          )}
-        </nav>
-        <div className={styles.burgerMenu} onClick={handleClick}>
-          <FontAwesomeIcon icon={faBars} />
-        </div>
-        <Link to="/">
-          <img
-            className={styles.logo}
-            src="/logo_pbooks_light.png"
-            alt="Logo de participabooks"
-          />
-        </Link>
-        <div className={styles.userInfos}>
-          <p>{isLogged ? infos.pseudo : "non connecté"}</p>
-          {!isLogged || infos.avatar === null ? (
-            <FontAwesomeIcon icon={faCircleUser} />
-          ) : (
-            <img src={`${URL_MEDIAS}avatars/${infos.avatar}`} alt={pseudo} />
-          )}
-        </div>
-      </header>
+            )}
+            <button onClick={handleLogout}>Se déconnecter</button>
+          </>
+        )}
+      </nav>
+      <div className={styles.burgerMenu} onClick={handleClick}>
+        <FontAwesomeIcon icon={faBars} />
+      </div>
+      <Link to="/">
+        <img
+          className={styles.logo}
+          src="/logo_pbooks_light.png"
+          alt="Logo de participabooks"
+        />
+      </Link>
+      <div className={styles.userInfos}>
+        <p>{isLogged ? infos.pseudo : "non connecté"}</p>
+        {!isLogged || infos.avatar === null ? (
+          <FontAwesomeIcon icon={faCircleUser} />
+        ) : (
+          <img src={`${URL_MEDIAS}avatars/${infos.avatar}`} alt={pseudo} />
+        )}
+      </div>
+    </header>
   );
 }

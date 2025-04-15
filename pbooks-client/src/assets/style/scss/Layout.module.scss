@@ -32,33 +32,33 @@
   justify-content: space-between;
   align-items: center;
   background-color: var(--green-color);
-  box-shadow: 0 4px 2px var(--green-color);
+  border-bottom: solid 1px var(--layout-border-color);
+  box-shadow: 0 4px 5px var(--layout-border-color);
   color: var(--secondary-text-color);
   font-size: 1.8rem;
 
-  @include respond-to(tablet) {
-    height: 7rem;
-  }
-
-  @include respond-to(desktop) {
-    height: 7rem;
-  }
-
-  .navLinks {
-    position: fixed;
-    top: 0;
-    left: 0;
-    transform-origin: top left;
-    transform: scale(0);
-    opacity: 0;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    width: 70vw;
-    height: 80vh;
-    pointer-events: none;
-    gap: 3rem;
-    text-transform: uppercase;
-    font-size: 2.5rem;
-    font-weight: $font-weight-bold;
+ .navLinks {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 70vw;
+  height: 80vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  background-color: $brown-color-transparent;
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  font-weight: $font-weight-bold;
+  transform: scale(0);
+  transform-origin: top left;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  z-index: 1000;
+  box-shadow: var(--card-shadow);
 
     button {
       border: none;
@@ -69,27 +69,37 @@
       font-weight: $font-weight-bold;
       cursor: pointer;
       padding: 0.75rem 0.25rem;
+      box-shadow: $button-shadow;
+      border-radius: $border-radius;
       width: 100%;
     }
 
     a {
       color: $high-light-color;
       background-color: var(--green-color);
+      box-shadow: $button-shadow;
+      border-radius: $border-radius;
       padding: 1rem 0.5rem;
       width: 100%;
 
       &:hover,
       &.active {
-        color: var(--green-color);
-        background-color: var(--orange-color);
+        color: var(--active-menu-text);
+        background-color: $dark-green-color;
       }
     }
 
     &.active {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-auto-rows: min-content;
+      justify-items: center;
+      align-items: start;
+      row-gap: 2rem;
+      padding: 6rem 1rem 2rem;
+      max-height: 65vh;
+      overflow-y: auto;
+    
       background-color: $brown-color-transparent;
       border-radius: 0 0 8px 0;
       z-index: 1000;
@@ -97,18 +107,21 @@
       transform: scale(1);
       opacity: 1;
       pointer-events: auto;
-
+    
       .closeMenu {
         position: fixed;
         left: 1rem;
-        top: 0.5rem;
+        top: 1rem;
         width: auto;
         padding: 0;
         font-size: 3rem;
         cursor: pointer;
         color: var(--green-color);
         background-color: transparent;
+        box-shadow: none;
+        z-index: 1100;
       }
+    
     }
     .adminLink {
       background-color: $orange-color;
@@ -143,23 +156,6 @@
   }
 }
 
-@media (min-width: 768px) {
-  .header {
-    .burger-menu {
-      display: none;
-    }
-
-    .nav-links {
-      display: flex;
-      flex-direction: row;
-      position: static;
-      width: auto;
-      height: auto;
-      background-color: transparent;
-    }
-  }
-}
-
 .footer {
   position: fixed;
   bottom: 0;
@@ -169,6 +165,67 @@
   text-align: center;
   padding: 10px;
   background-color: var(--green-color);
-  box-shadow: 0 -4px 2px var(--green-color);
+  border-top: solid px var(--layout-border-color);
+  box-shadow: 0 -4px 4px var(--layout-border-color);
   color: #fff;
+}
+
+@include respond-to(tablet) {
+  .header {
+    height: 7rem;
+    
+    .logo {
+      order: 2;
+    }
+
+    .userInfos {
+      order: 3;
+    }
+
+    .burgerMenu {
+      display: none;
+    }
+
+    .navLinks {
+      order: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      position: static;
+      width: auto;
+      height: auto;
+      transform: none;
+      opacity: 1;
+      pointer-events: auto;
+      background-color: transparent;
+      box-shadow: none;
+      gap: 1rem;
+      font-size: 1.8rem;
+    }
+
+.navLinks a {
+  background-color: var(--brown-color);
+}
+
+    .navLinks a,
+    .navLinks button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-size: 1rem;
+      max-width: 8rem;
+      height: 6rem;
+    }
+
+    .navLinks .closeMenu {
+      display: none;
+    }
+  }
+}
+
+@include respond-to(desktop) {
+  .header {
+    height: 8rem;
+  }
 }
