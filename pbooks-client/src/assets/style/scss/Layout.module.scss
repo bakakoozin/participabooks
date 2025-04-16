@@ -128,7 +128,8 @@
       }
     }
     .adminLink {
-      background-color: $orange-color;
+      background-color: var(--orange-color);
+      color: var(--admin-text-color);
       text-align: center;
     }
   }
