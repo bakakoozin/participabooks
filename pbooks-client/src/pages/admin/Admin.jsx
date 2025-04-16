@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { API_URL } from "../../utils/constants";
-import styles from "../../assets/style/scss/Admin.module.scss";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
+import { API_URL } from "../../utils/constants";
 import { Pagination } from "../../components/Pagination";
+import { useTitle } from "../../hooks/useTitle";
+
+import styles from "../../assets/style/scss/Admin.module.scss";
 
 export function AdminDashboard() {
-  const [users, setUsers] = useState([]);
+const [users, setUsers] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -135,6 +137,7 @@ export function AdminDashboard() {
     }
   };
 
+  useTitle("Admin");
   useEffect(() => {
     fetchUsers();
   }, [page]);

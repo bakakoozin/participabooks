@@ -7,6 +7,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { API_URL } from "../../utils/constants";
 import { useFetch } from "../../hooks/useFetch";
 import styles from "../../assets/style/scss/Form.module.scss";
+import { useTitle } from "../../hooks/useTitle";
 
 export function CreateVolume() {
   const { workId } = useParams();
@@ -105,6 +106,7 @@ export function CreateVolume() {
 
   const workInfo = data.datas.length > 0 ? data.datas[0] : {};
 
+  useTitle("Création d'un volume");
   useEffect(() => {
     if (data.datas.length > 0) {
       const workInfo = data.datas[0];

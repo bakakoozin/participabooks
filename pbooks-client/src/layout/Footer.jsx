@@ -1,6 +1,6 @@
 import styles from "../assets/style/scss/Layout.module.scss";
 
-function Footer() {
+export function Footer() {
     return (
         <footer className={styles.footer}>
             {/* navigation secondaire */}
@@ -10,5 +10,3 @@ function Footer() {
         </footer>
     );
 }
-
-export default Footer;

@@ -7,6 +7,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import { API_URL } from "../../utils/constants";
 import styles from "../../assets/style/scss/Form.module.scss";
+import { useTitle } from "../../hooks/useTitle";
 
 export function EditVolume() {
   const { volumeId } = useParams();
@@ -127,6 +128,7 @@ export function EditVolume() {
     }
   }
 
+  useTitle(`Editition du volume ${formData.number} ${formData.title}`);
   useEffect(() => {
     const fetchData = async () => {
       try {

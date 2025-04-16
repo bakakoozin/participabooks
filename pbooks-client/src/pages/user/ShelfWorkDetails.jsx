@@ -1,15 +1,18 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import { ButtonRemoveFromShelf } from "../../components/UI/ButtonRemoveFromShelf";
-import { Img } from "../../components/Img";
 import { useFetch } from "../../hooks/useFetch";
-import { ReadMore } from "../../components/ReadMore";
-import styles from "../../assets/style/scss/Work.module.scss";
+import { useTitle } from "../../hooks/useTitle";
 import { API_URL } from "../../utils/constants";
-import { ButtonReturn } from "../../components/UI/ButtonReturn";
 
-function ShelfWorkDetails() {
+import { ButtonRemoveFromShelf } from "../../components/UI/ButtonRemoveFromShelf";
+import { ButtonReturn } from "../../components/UI/ButtonReturn";
+import { ReadMore } from "../../components/ReadMore";
+import { Img } from "../../components/Img";
+
+import styles from "../../assets/style/scss/Work.module.scss";
+
+export function ShelfWorkDetails() {
   const { id } = useParams();
   const { data } = useFetch(`/user/shelf/work/${id}`, {
     initData: { datas: [] },
@@ -55,6 +58,7 @@ function ShelfWorkDetails() {
     );
   };
 
+  useTitle(`${data.datas[0]?.works_name} détails`);
   useEffect(() => {
     if (data.datas.length > 0) {
       const mapped = data.datas.map((volume) => ({
@@ -155,5 +159,3 @@ function ShelfWorkDetails() {
     </main>
   );
 }
-
-export default ShelfWorkDetails;

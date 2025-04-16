@@ -1,20 +1,22 @@
 import { Route, Routes } from "react-router-dom";
-import { Home } from "../pages/Home";
-import Work from "../pages/Work";
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
-import Dashboard from "../pages/user/Dashboard";
-import ProtectedRoute from "./ProtectedRoutes";
-import UpdateUserForm from "../pages/user/UpdateUserForm";
-import Shelf from "../pages/user/Shelf";
-import ShelfWorkDetails from "../pages/user/ShelfWorkDetails";
-import { CreateWork } from "../pages/user/Create";
-import{ EditVolume } from "../pages/user/EditVolume";
-import { CreateVolume } from "../pages/user/CreateVolume";
-import { EditWork } from "../pages/user/EditWork";
-import { AdminDashboard } from "../pages/admin/Admin";
 
-function AppRoutes() {
+import { ShelfWorkDetails } from "../pages/user/ShelfWorkDetails";
+import { UpdateUserForm } from "../pages/user/UpdateUserForm";
+import { CreateVolume } from "../pages/user/CreateVolume";
+import { AdminDashboard } from "../pages/admin/Admin";
+import { EditVolume } from "../pages/user/EditVolume";
+import { Dashboard } from "../pages/user/Dashboard";
+import { ProtectedRoute } from "./ProtectedRoutes";
+import { CreateWork } from "../pages/user/Create";
+import { EditWork } from "../pages/user/EditWork";
+import { Register } from "../pages/auth/Register";
+import { NotFound } from "../pages/Not-Found";
+import { Shelf } from "../pages/user/Shelf";
+import { Login } from "../pages/auth/Login";
+import { Home } from "../pages/Home";
+import { Work } from "../pages/Work";
+
+export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -101,16 +103,9 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="*"
-        element={
-          <main style={{ padding: "1rem" }}>
-            <p>404 - Page not found</p>
-          </main>
-        }
-      />
+      <Route path="/admin/*" element={<NotFound />} />
+      <Route path="/not-found" element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
-
-export default AppRoutes;

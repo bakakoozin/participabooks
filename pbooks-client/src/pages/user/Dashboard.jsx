@@ -1,14 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { logout, login } from "../../features/authSlice";
-import { API_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
-import { FormAvatar } from "../../components/FormAvatar";
+
+import { logout, login } from "../../features/authSlice";
+import { useTitle } from "../../hooks/useTitle";
+import { API_URL } from "../../utils/constants";
+
 import { ThemeToggle } from "../../components/UI/ButtonDarkMode";
+import { FormAvatar } from "../../components/FormAvatar";
+
 import styles from "../../assets/style/scss/Dashboard.module.scss";
 
-function Dashboard() {
+export function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -47,7 +51,7 @@ function Dashboard() {
     } else {
       document.documentElement.classList.remove("dark-mode");
     }
- 
+
     handleThemeChange(newTheme);
   }
 
@@ -69,6 +73,7 @@ function Dashboard() {
     }
   }
 
+  useTitle("Mon profil");
   useEffect(() => {
     if (theme === "sombre") {
       document.documentElement.classList.add("dark-mode");
@@ -91,9 +96,9 @@ function Dashboard() {
               <strong>Email :</strong> {infos.email}
             </p>
             <div className={styles.btnContainer}>
-            <Link to={"/update-infos"} className={styles.btn}>
-              Mettre à jour mes informations
-            </Link>
+              <Link to={"/update-infos"} className={styles.btn}>
+                Mettre à jour mes informations
+              </Link>
             </div>
           </article>
           <FormAvatar />
@@ -134,5 +139,3 @@ function Dashboard() {
     </main>
   );
 }
-
-export default Dashboard;

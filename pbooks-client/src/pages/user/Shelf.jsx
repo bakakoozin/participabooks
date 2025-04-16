@@ -1,20 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { scrollSlider } from "../../utils/slider";
+import { useTitle } from "../../hooks/useTitle";
 import { useFetch } from "../../hooks/useFetch";
+
 import { ButtonRemoveFromShelf } from "../../components/UI/ButtonRemoveFromShelf";
+import { AuthorsList } from "../../components/AuthorsList";
+import { Pagination } from "../../components/Pagination";
+import { scrollSlider } from "../../utils/slider";
 import { Img } from "../../components/Img";
-import styles from "../../assets/style/scss/Library.module.scss";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Pagination } from "../../components/Pagination";
-import { AuthorsList } from "../../components/AuthorsList";
+import styles from "../../assets/style/scss/Library.module.scss";
 
-function Shelf() {
+export function Shelf() {
   const { data, isFetching, search, setSearch } = useFetch("/user/shelf", {
     initData: { datas: [], totalPages: 0 },
   });
@@ -26,6 +29,7 @@ function Shelf() {
     );
   };
 
+  useTitle("Ma bibliothèque");
   useEffect(() => {
     setUpdatedData(data?.datas || []);
   }, [data]);
@@ -99,5 +103,3 @@ function Shelf() {
     </main>
   );
 }
-
-export default Shelf;

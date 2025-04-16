@@ -1,15 +1,16 @@
-import { useLocation } from "react-router-dom";
-
-import { Header } from "./layout/Header";
-import Footer from "./layout/Footer";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import AppRoutes from "./routes/AppRoutes";
 import { ToastContainer } from "react-toastify";
+
+import { AppRoutes } from "./routes/AppRoutes";
+import { Header } from "./layout/Header";
+import { Footer } from "./layout/Footer";
 import { login } from "./features/authSlice";
 import { API_URL } from "./utils/constants";
 import { useSession } from "./hooks/useSession";
 import { toggleMenu } from "./features/menuSlice";
+
 import styles from "./assets/style/scss/Layout.module.scss";
 
 function App() {

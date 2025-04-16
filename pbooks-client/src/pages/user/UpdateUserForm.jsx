@@ -1,16 +1,19 @@
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { login } from "../../features/authSlice";
-import { API_URL } from "../../utils/constants";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useState } from "react";
+
+import { login } from "../../features/authSlice";
+import { useTitle } from "../../hooks/useTitle";
+import { API_URL } from "../../utils/constants";
+
 import styles from "../../assets/style/scss/Form.module.scss";
 
 const pseudoRegex = /^[a-zA-Z0-9_]{3,}$/; // Au moins 3 caractères, lettres, chiffres et underscores
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Format d'email basique
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // Au moins 8 caractères, une lettre et un chiffre
 
-function UpdateUserForm() {
+export function UpdateUserForm() {
   const { infos } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,6 +97,8 @@ function UpdateUserForm() {
     }
   }
 
+  useTitle("Mise à jour de mes informations");
+
   return (
     <main className={styles.mainContainer}>
       <section className={styles.formCard}>
@@ -175,5 +180,3 @@ function UpdateUserForm() {
     </main>
   );
 }
-
-export default UpdateUserForm;

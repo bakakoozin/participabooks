@@ -1,16 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+
+import { API_URL, URL_MEDIAS } from "../utils/constants";
+import { toggleMenu } from "../features/menuSlice";
+import { logout } from "../features/authSlice";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faXmark,
   faCircleUser,
 } from "@fortawesome/free-solid-svg-icons";
-
-import { toggleMenu } from "../features/menuSlice";
-import { logout } from "../features/authSlice";
-import { API_URL, URL_MEDIAS } from "../utils/constants";
 import styles from "../assets/style/scss/Layout.module.scss";
+
 
 export function Header() {
   const dispatch = useDispatch();

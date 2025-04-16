@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
-function ProtectedRoute({ children }) {
+export function ProtectedRoute({ children }) {
 	const { isLogged, isSessionChecked } = useSelector((state) => state.auth);
 	const navigate = useNavigate();
 	if (!isSessionChecked) {
@@ -20,5 +20,3 @@ function ProtectedRoute({ children }) {
 ProtectedRoute.propTypes = {
 	children: PropTypes.node.isRequired,
 };
-
-export default ProtectedRoute;

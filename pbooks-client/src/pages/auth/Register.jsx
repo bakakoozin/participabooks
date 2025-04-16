@@ -1,15 +1,17 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 import { API_URL } from "../../utils/constants";
-import { toast } from "react-toastify";
+import { useTitle } from "../../hooks/useTitle";
+
 import styles from "../../assets/style/scss/Auth.module.scss";
 
 const pseudoRegex = /^[a-zA-Z0-9_]{3,}$/; // Au moins 3 caractères, lettres, chiffres et underscores
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Format d'email basique
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // Au moins 8 caractères, une lettre et un chiffre
 
-function Register() {
+export function Register() {
   const [pseudo, setPseudo] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -66,6 +68,8 @@ function Register() {
       console.error(error);
     }
   }
+
+  useTitle("Inscription");
 
   return (
     <main id="register" className={styles.mainContainer}>
@@ -130,5 +134,3 @@ function Register() {
     </main>
   );
 }
-
-export default Register;

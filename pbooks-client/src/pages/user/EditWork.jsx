@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useFetch } from "../../hooks/useFetch";
 import { API_URL } from "../../utils/constants";
 import styles from "../../assets/style/scss/Form.module.scss";
+import { useTitle } from "../../hooks/useTitle";
 
 export function EditWork() {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ export function EditWork() {
     }
   }
 
+  useTitle(`Editer l'ouvrage ${formData.works_name}`);
   useEffect(() => {
     if (data?.datas.length) {
       setFormData(data.datas[0]);

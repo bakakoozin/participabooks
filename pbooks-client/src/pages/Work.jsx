@@ -1,19 +1,22 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
+import { useFetch } from "../hooks/useFetch";
+import { useTitle } from "../hooks/useTitle";
+
+import { ButtonSelectStatus } from "../components/UI/ButtonSelectStatus";
 import { ButtonCreateVolume } from "../components/UI/ButtonCreateVolume";
 import { ButtonAddToShelf } from "../components/UI/ButtonAddToShelf";
-import { ButtonSelectStatus } from "../components/UI/ButtonSelectStatus";
-import { Img } from "../components/Img";
-import { useFetch } from "../hooks/useFetch";
 import { ButtonEditVolume } from "../components/UI/ButtonEditVolume";
 import { ButtonRemove } from "../components/UI/ButtonRemove";
-import { ReadMore } from "../components/ReadMore";
-import styles from "../assets/style/scss/Work.module.scss";
 import { ButtonReturn } from "../components/UI/ButtonReturn";
+import { ReadMore } from "../components/ReadMore";
+import { Img } from "../components/Img";
 
-function Work() {
+import styles from "../assets/style/scss/Work.module.scss";
+
+export function Work() {
   const { id } = useParams();
   const { data } = useFetch(`/works/${id}`, {
     initData: { datas: [] },
@@ -44,6 +47,7 @@ function Work() {
     return volume.user_id === infos.id || infos.isAdmin || infos.isModerator;
   };
 
+  useTitle(`${workInfo.works_name} détails`);
   useEffect(() => {
     if (data.datas.length > 0) {
       setVolumes(data.datas);
@@ -128,5 +132,3 @@ function Work() {
     </main>
   );
 }
-
-export default Work;

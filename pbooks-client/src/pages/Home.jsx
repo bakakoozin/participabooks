@@ -1,20 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { scrollSlider } from "../utils/slider";
 import { useFetch } from "../hooks/useFetch";
 import { ButtonAddToShelf } from "../components/UI/ButtonAddToShelf";
 import { ButtonRemove } from "../components/UI/ButtonRemove";
+import { Pagination } from "../components/Pagination";
 import { Img } from "../components/Img";
-import { useSelector } from "react-redux";
+import { AuthorsList } from "../components/AuthorsList";
+import { useTitle } from "../hooks/useTitle";
+
 import styles from "../assets/style/scss/Library.module.scss";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Pagination } from "../components/Pagination";
-import { AuthorsList } from "../components/AuthorsList";
 
 export function Home() {
   const { infos } = useSelector((state) => state.auth);
@@ -47,6 +49,8 @@ export function Home() {
     );
   };
 
+  useTitle("Bibliothèque");
+
   useEffect(() => {
     setUpdatedData(data?.datas || []);
   }, [data]);
@@ -55,32 +59,30 @@ export function Home() {
     <main className={styles.mainContainer}>
       <h1>Bibliothèque</h1>
       <header className={styles.headerLibrary}>
-      <button
+        <button
           className={`${styles.navButton} ${styles.left}`}
           onClick={() => scrollSlider(sliderRef, "left")}
         >
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
-      <form className={styles.searchBar}>
-        <input
-          type="text"
-          placeholder="Rechercher..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </form>
-      <button
+        <form className={styles.searchBar}>
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </form>
+        <button
           className={`${styles.navButton} ${styles.right}`}
           onClick={() => scrollSlider(sliderRef, "right")}
         >
           <FontAwesomeIcon icon={faChevronRight} />
         </button>
-        </header>
+      </header>
       <Pagination totalPages={data.totalPages} />
 
       <section className={styles.sliderContainer}>
-        
-
         <article className={styles.slider} ref={sliderRef}>
           {updatedData?.map((work) => {
             if (!canSeeWork(work)) return null;

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 import { API_URL } from "../../utils/constants";
 import styles from "../../assets/style/scss/Form.module.scss";
+import { useTitle } from "../../hooks/useTitle";
 
 export function CreateWork() {
   const navigate = useNavigate();
@@ -69,6 +70,8 @@ export function CreateWork() {
       console.error("Erreur lors de la création.", error);
     }
   }
+
+  useTitle("Création d'un ouvrage");
 
   return (
     <main className={styles.mainContainer}>

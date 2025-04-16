@@ -1,12 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
-import { API_URL } from "../../utils/constants";
-import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
+import { useRef, useState } from "react";
+import { toast } from "react-toastify";
+
 import { login } from "../../features/authSlice";
+import { useTitle } from "../../hooks/useTitle";
+import { API_URL } from "../../utils/constants";
+
 import styles from "../../assets/style/scss/Auth.module.scss";
 
-function Login() {
+export function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -47,6 +50,8 @@ function Login() {
     }
   }
 
+  useTitle("Connexion");
+
   return (
     <main id="login" className={styles.mainContainer}>
       <h2>Se connecter</h2>
@@ -86,5 +91,3 @@ function Login() {
     </main>
   );
 }
-
-export default Login;
