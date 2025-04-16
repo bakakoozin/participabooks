@@ -12,11 +12,12 @@ import {
   faCircleUser,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "../assets/style/scss/Layout.module.scss";
-
+import { useState } from "react";
 
 export function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [logoSrc, setLogoSrc] = useState("/logo_pbooks_light.png");
   const { infos } = useSelector((state) => state.auth);
   const { isLogged, pseudo } = useSelector((state) => state.auth);
   const { isMenuOpen } = useSelector((state) => state.menu);
@@ -36,11 +37,31 @@ export function Header() {
     }
   }
 
+  const defaultLogo = "/logo_pbooks_light.png";
+  const hoverLogo = "/logo_pbooks_dark.png";
+  const clickedLogo = "/logo_pbooks_dark.png";
+
   function handleClick() {
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
       dispatch(toggleMenu());
     }
+  }
+
+  function handleMouseEnter() {
+    setLogoSrc(hoverLogo);
+  }
+
+  function handleMouseLeave() {
+    setLogoSrc(defaultLogo);
+  }
+
+  function handleClickLogo() {
+    setLogoSrc(clickedLogo);
+
+    setTimeout(() => {
+      setLogoSrc(defaultLogo);
+    }, 300);
   }
 
   return (
@@ -89,8 +110,11 @@ export function Header() {
       <Link to="/">
         <img
           className={styles.logo}
-          src="/logo_pbooks_light.png"
+          src={logoSrc}
           alt="Logo de participabooks"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onClick={handleClickLogo}
         />
       </Link>
       <div className={styles.userInfos}>

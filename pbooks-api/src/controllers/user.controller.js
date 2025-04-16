@@ -198,7 +198,8 @@ const updateByAdmin = async (req, res, next) => {
 };
 
 const updateTheme = async (req, res, next) => {
-  const { id, theme } = req.body;
+  const { theme } = req.body;
+  const id = req.user.id;
   if (!theme) {
     return res.status(400).json({ message: "Thème manquant." });
   }

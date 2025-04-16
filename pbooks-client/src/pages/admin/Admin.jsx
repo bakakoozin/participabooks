@@ -9,7 +9,7 @@ import { useTitle } from "../../hooks/useTitle";
 import styles from "../../assets/style/scss/Admin.module.scss";
 
 export function AdminDashboard() {
-const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -143,6 +143,12 @@ const [users, setUsers] = useState([]);
   }, [page]);
 
   if (loading) return <p>Chargement...</p>;
+
+  if (infos?.role !== "admin") {
+    return (
+      <p>{"Accès refusé. Vous n'avez pas les droits d'administrateur."}</p>
+    );
+  }
 
   return (
     <main className={styles.mainContainer}>

@@ -5,14 +5,12 @@ const SECRET = process.env.JWT_SECRET;
 
 export default (req, res, next) => {
   const token = req.cookies.jwt;
-
   if (!token) {
     return res.status(401).json({
       success: false,
       error: "Accès refusé: token manquant.",
     });
   }
-
   try {
     jwt.verify(token, SECRET, async (err, decoded) => {
       if (err) {
@@ -26,6 +24,11 @@ export default (req, res, next) => {
       req.user = response[0];
       if (!req.user)
         throw new Error({ message: "Utilisateur non trouvé.", status: 404 });
+      if (req.user.status !== "actif")
+        throw new Error({
+          message: "Utilisateur bloqué.",
+          status: 403,
+        });
       next();
     });
   } catch (error) {

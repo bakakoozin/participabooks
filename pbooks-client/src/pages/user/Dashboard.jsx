@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { toast } from "react-toastify";
 
-import { logout, login } from "../../features/authSlice";
+import { logout } from "../../features/authSlice";
 import { useTitle } from "../../hooks/useTitle";
 import { API_URL } from "../../utils/constants";
 
@@ -17,43 +17,6 @@ export function Dashboard() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const { infos } = useSelector((state) => state.auth);
-  const [theme, setTheme] = useState(infos.theme);
-
-  async function handleThemeChange(newTheme) {
-    document.documentElement.setAttribute("data-theme", newTheme);
-    try {
-      const response = await fetch(`${API_URL}/user/profile/theme`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ theme: newTheme, id: infos.id }),
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const resJSON = await response.json();
-        dispatch(login({ ...infos, theme: resJSON.Theme }));
-        setTheme(resJSON.theme);
-      } else {
-        console.error("Échec de la mise à jour du thème. Veuillez réessayer.");
-      }
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour du thème.", error);
-    }
-  }
-
-  function toggleTheme() {
-    const newTheme = theme === "clair" ? "sombre" : "clair";
-
-    if (newTheme === "sombre") {
-      document.documentElement.classList.add("dark-mode");
-    } else {
-      document.documentElement.classList.remove("dark-mode");
-    }
-
-    handleThemeChange(newTheme);
-  }
 
   async function handleConfirmRemove() {
     try {
@@ -74,13 +37,6 @@ export function Dashboard() {
   }
 
   useTitle("Mon profil");
-  useEffect(() => {
-    if (theme === "sombre") {
-      document.documentElement.classList.add("dark-mode");
-    } else {
-      document.documentElement.classList.remove("dark-mode");
-    }
-  }, [theme]);
 
   return (
     <main className={styles.mainContainer}>
@@ -103,7 +59,7 @@ export function Dashboard() {
           </article>
           <FormAvatar />
           <article>
-            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+            {infos.theme && <ThemeToggle defaultTheme={infos.theme} />}
           </article>
           <div>
             <button

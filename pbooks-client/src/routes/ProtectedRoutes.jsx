@@ -1,22 +1,20 @@
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 export function ProtectedRoute({ children }) {
-	const { isLogged, isSessionChecked } = useSelector((state) => state.auth);
-	const navigate = useNavigate();
-	if (!isSessionChecked) {
-		return <p>Chargement...</p>;
-	}
+  const { isLogged, isSessionLogin } = useSelector((state) => state.auth);
+  if (isSessionLogin) {
+    return <p>Chargement...</p>;
+  }
 
-	if (!isLogged) {
-		navigate("/auth/login");
-		return null;
-	}
+  if (!isLogged) {
+    return <Navigate to="/auth/login" />;
+  }
 
-	return children;
+  return children;
 }
 
 ProtectedRoute.propTypes = {
-	children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired,
 };

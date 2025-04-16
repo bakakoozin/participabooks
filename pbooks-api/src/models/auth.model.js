@@ -7,7 +7,7 @@ class Auth {
     const SELECT_USER = `
       SELECT id, email, pseudo, password, role, avatar, theme, status
       FROM users
-      WHERE email = ?
+      WHERE email = ? AND status = 'actif'
     `;
     return await pool.query(SELECT_USER, [email]);
   }
