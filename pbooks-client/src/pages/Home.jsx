@@ -54,6 +54,13 @@ export function Home() {
   return (
     <main className={styles.mainContainer}>
       <h1>Bibliothèque</h1>
+      <header className={styles.headerLibrary}>
+      <button
+          className={`${styles.navButton} ${styles.left}`}
+          onClick={() => scrollSlider(sliderRef, "left")}
+        >
+          <FontAwesomeIcon icon={faChevronLeft} />
+        </button>
       <form className={styles.searchBar}>
         <input
           type="text"
@@ -62,16 +69,17 @@ export function Home() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </form>
-
+      <button
+          className={`${styles.navButton} ${styles.right}`}
+          onClick={() => scrollSlider(sliderRef, "right")}
+        >
+          <FontAwesomeIcon icon={faChevronRight} />
+        </button>
+        </header>
       <Pagination totalPages={data.totalPages} />
 
       <section className={styles.sliderContainer}>
-        <button
-          className={`${styles.navButton} ${styles.left}`}
-          onClick={() => scrollSlider(sliderRef, "left")}
-        >
-          <FontAwesomeIcon icon={faChevronLeft} />
-        </button>
+        
 
         <article className={styles.slider} ref={sliderRef}>
           {updatedData?.map((work) => {
@@ -126,12 +134,6 @@ export function Home() {
             <p>Aucun ouvrage trouvé.</p>
           )}
         </div>
-        <button
-          className={`${styles.navButton} ${styles.right}`}
-          onClick={() => scrollSlider(sliderRef, "right")}
-        >
-          <FontAwesomeIcon icon={faChevronRight} />
-        </button>
       </section>
     </main>
   );

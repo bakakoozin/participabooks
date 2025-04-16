@@ -162,6 +162,7 @@
 
     &:hover {
       background-color: var(--layout-border-color);
+      color: $green-color;
     }
   }
 
@@ -173,6 +174,11 @@
     border-radius: $border-radius;
     box-shadow: $button-shadow;
     cursor: pointer;
+
+    &:hover {
+      background-color: var(--button-hover-bg);
+      color: var(--active-menu-text);
+    }
   }
 
   .btnClose {
@@ -185,6 +191,11 @@
     border-radius: $border-radius;
     box-shadow: $button-shadow;
     cursor: pointer;
+
+    &:hover {
+      background-color: var(--button-hover-bg);
+      color: var(--active-menu-text);
+    }
   }
 
   .validateContainer {
@@ -198,6 +209,7 @@
 @include respond-to(tablet) {
   .mainContainer {
     padding-top: 9rem;
+    padding-bottom: 2rem;
     margin: auto;
     width: 80%;
   }
@@ -206,7 +218,22 @@
 @include respond-to(desktop) {
   .mainContainer {
     padding-top: 10rem;
-    margin: auto;
-    width: 60%;
+    width: 50%;
   }
+
+  .formCard {
+    .inputContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 50%;
+      margin: auto;
+    }
+
+    fieldset {
+      text-align: center;
+    }
+  }
+
 }

@@ -70,54 +70,63 @@ function Register() {
   return (
     <main id="register" className={styles.mainContainer}>
       <h2>Création du compte</h2>
-      <section className={styles.authForm}> 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          id="pseudo"
-          value={pseudo}
-          onChange={handleChangePseudo}
-          placeholder="Entrer votre pseudo"
-          required
-          />
-        {!isPseudoValid && pseudo && (
-          <p className={styles.authAlert}>
-            Le pseudo doit contenir au moins 3 caractères, lettres, chiffres et
-            underscores.
+      <section className={styles.authForm}>
+        <div className={styles.authDesktop}>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              id="pseudo"
+              value={pseudo}
+              onChange={handleChangePseudo}
+              placeholder="Entrer votre pseudo"
+              required
+            />
+            {!isPseudoValid && pseudo && (
+              <p className={styles.authAlert}>
+                Le pseudo doit contenir au moins 3 caractères, lettres, chiffres
+                et underscores.
+              </p>
+            )}
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={handleChangeEmail}
+              placeholder="Entrer votre email"
+              required
+            />
+            {!isEmailValid && email && (
+              <p className={styles.authAlert}>
+                Veuillez entrer un email valide.
+              </p>
+            )}
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={handleChangePassword}
+              placeholder="Choisir un mot de passe"
+              required
+            />
+            {!isPasswordValid && password && (
+              <p className={styles.authAlert}>
+                Le mot de passe doit contenir au moins 8 caractères, une lettre
+                et un chiffre.
+              </p>
+            )}
+            <button className={styles.btn} type="submit">
+              Créer compte
+            </button>
+            {message && <p className={styles.authAlert}>{message}</p>}
+          </form>
+          <p>
+            Déjà inscrit ?{" "}
+            <strong>
+              <Link to="/auth/login">Se connecter</Link>
+            </strong>
           </p>
-        )}
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={handleChangeEmail}
-          placeholder="Entrer votre email"
-          required
-          />
-        {!isEmailValid && email && (
-          <p className={styles.authAlert}>Veuillez entrer un email valide.</p>
-        )}
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={handleChangePassword}
-          placeholder="Choisir un mot de passe"
-          required
-          />
-        {!isPasswordValid && password && (
-          <p className={styles.authAlert}>
-            Le mot de passe doit contenir au moins 8 caractères, une lettre et
-            un chiffre.
-          </p>
-        )}
-        <button className={styles.btn} type="submit">Créer compte</button>
-        {message && <p className={styles.authAlert}>{message}</p>}
-      </form>
-      <p>
-        Déjà inscrit ? <strong><Link to="/auth/login">Se connecter</Link></strong>
-      </p>
-        </section>
+        </div>
+      </section>
     </main>
   );
 }

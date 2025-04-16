@@ -129,7 +129,7 @@ export function CreateVolume() {
       )}
       <section className={styles.formCard}>
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="number">Numéro du volume</label>
             <input
               type="number"
@@ -139,7 +139,7 @@ export function CreateVolume() {
               onChange={handleChange}
             />
           </div>
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="title">Titre du volume</label>
             <input
               type="text"
@@ -149,7 +149,7 @@ export function CreateVolume() {
               onChange={handleChange}
             />
           </div>
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="isbn">ISBN</label>
             <input
               type="number"

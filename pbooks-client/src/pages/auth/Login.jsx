@@ -38,7 +38,7 @@ function Login() {
         const resJson = await response.json();
         dispatch(login(resJson.user));
         navigate("/");
-      } catch (error){
+      } catch (error) {
         console.error("Erreur lors de la connexion:", error);
         toast.error("Adresse email ou mot de passe invalide.");
       }
@@ -51,30 +51,38 @@ function Login() {
     <main id="login" className={styles.mainContainer}>
       <h2>Se connecter</h2>
       <section className={styles.authForm}>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          id="email"
-          ref={emailRef}
-          placeholder="Email"
-          required
-          />
-        <input
-          type="password"
-          id="password"
-          ref={passwordRef}
-          placeholder="Mot de passe"
-          required
-          />
+        <div className={styles.authDesktop}>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="email"
+              id="email"
+              ref={emailRef}
+              placeholder="Email"
+              required
+            />
+            <input
+              type="password"
+              id="password"
+              ref={passwordRef}
+              placeholder="Mot de passe"
+              required
+            />
 
-        {message && <p className="auth-alert">{message}</p>}
+            {message && <p className="auth-alert">{message}</p>}
 
-        <button className={styles.btn} type="submit">Se connecter</button>
-      </form>
-      <p>
-        Pas encore inscrit ? <strong><Link to={"/auth/register"}>Créer un compte</Link></strong>
-      </p>
-          </section>
+            <button className={styles.btn} type="submit">
+              Se connecter
+            </button>
+          </form>
+
+          <p>
+            Pas encore inscrit ?{" "}
+            <strong>
+              <Link to={"/auth/register"}>Créer un compte</Link>
+            </strong>
+          </p>
+        </div>
+      </section>
     </main>
   );
 }

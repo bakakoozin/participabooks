@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
 import { API_URL } from "../../utils/constants";
 import styles from "../../assets/style/scss/Button.module.scss";
@@ -27,7 +28,7 @@ const ButtonAddToShelf = ({ item, type }) => {
       console.log("Données envoyées:", bodyData);
 
       if (response.ok) {
-        console.log("Ajouté à la bibliothèque personnelle");
+        toast.success("Ajouté à ma bibliothèque");
       } else {
         console.error("Erreur lors de l'ajout à la bibliothèque personnelle");
       }

@@ -3,7 +3,7 @@
 
 .mainContainer {
   padding-top: var(--header-height);
-  padding-bottom: var(--footer-height);;
+  padding-bottom: var(--footer-height);
 
   h2 {
     text-align: center;
@@ -120,19 +120,22 @@
 }
 
 @include respond-to(desktop) {
-  h1 {
-    font-size: 2.5rem;
-    padding: 2rem;
-  }
+  .mainContainer {
+    padding-top: 10rem;
 
-  .workFooter {
-    justify-content: space-between;
+    .cardContainer {
+      grid-template-columns: repeat(auto-fit, minmax(20vw, 1fr));
 
-    .buttons {
-      gap: $gap-lg;
-      .btnAlert {
-        font-size: 1.1rem;
+      &.singleCard {
+        width: 40%;
+        margin: 0 auto;
+        grid-template-columns: 1fr;
       }
+    }
+
+    .btnContainer {
+      flex-direction: row;
+      justify-content: space-between;
     }
   }
 }

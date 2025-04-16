@@ -30,6 +30,18 @@
     border-radius: 8px;
     box-shadow: var(--card-shadow);
     margin: 2rem 0;
+
+    .btnContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      display: block;
+      margin: 1rem 0;
+    }
   }
 
   .btn {
@@ -165,27 +177,6 @@
     article {
       padding: 2rem;
       gap: $gap-xl;
-    }
-
-    .btnContainer {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn {
-      padding: 1rem 2rem;
-      display: block;
-      margin: 1rem 0;
-    }
-
-    .previewContainer {
-      .preview {
-        margin: 2rem;
-        width: 200px;
-        height: 200px;
-        border-radius: 100px;
-      }
     }
   }
 }

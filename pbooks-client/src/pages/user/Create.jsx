@@ -75,7 +75,7 @@ export function CreateWork() {
       <h2>Créer un nouvel ouvrage</h2>
       <section className={styles.formCard}>
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="name">Titre de l&apos;ouvrage</label>
             <input
               type="text"
@@ -85,7 +85,7 @@ export function CreateWork() {
               onChange={handleChange}
             />
           </div>
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="edition">Editions</label>
             <input
               type="text"

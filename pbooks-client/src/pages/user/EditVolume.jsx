@@ -188,7 +188,7 @@ export function EditVolume() {
       )}
       <section className={styles.formCard}>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="number">Numéro du volume</label>
             <input
               type="number"
@@ -199,7 +199,7 @@ export function EditVolume() {
               placeholder={"Numéro du volume"}
             />
           </div>
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="title">Titre du volume</label>
             <input
               type="text"
@@ -210,7 +210,7 @@ export function EditVolume() {
               placeholder={"Titre du volume"}
             />
           </div>
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="isbn">ISBN</label>
             <input
               type="number"

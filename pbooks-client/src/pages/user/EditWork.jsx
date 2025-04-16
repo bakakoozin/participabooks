@@ -90,7 +90,7 @@ export function EditWork() {
       <h2>Editer l&apos;ouvrage</h2>
       <section className={styles.formCard}>
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="name">Titre de l&apos;ouvrage</label>
             <input
               type="text"
@@ -101,7 +101,7 @@ export function EditWork() {
               placeholder={"Nom de l'ouvrage"}
             />
           </div>
-          <div>
+          <div className={styles.inputContainer}>
             <label htmlFor="edition">Editions</label>
             <input
               type="text"

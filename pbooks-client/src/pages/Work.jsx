@@ -66,11 +66,14 @@ function Work() {
           </article>
         </section>
       )}
-
       <div className={styles.btnContainer}>
         <ButtonCreateVolume item={workInfo} type="work" />
       </div>
-      <section className={styles.cardContainer}>
+      <section
+        className={`${styles.cardContainer} ${
+          volumes.length === 1 ? styles.singleCard : ""
+        }`}
+      >
         {volumes.map((volume) => {
           if (!canSeeVolume(volume)) {
             return null;

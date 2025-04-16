@@ -1,3 +1,4 @@
+@import "mixins";
 @import "variables";
 
 .btn {
@@ -9,6 +10,11 @@
   box-shadow: var(--button-shadow);
   cursor: pointer;
   transition: background-color 0.3s;
+
+  &:hover {
+    background-color: var(--button-hover-bg);
+    color: var(--active-menu-text);
+  }
 }
 
 .btnAlert {
@@ -20,6 +26,11 @@
   box-shadow: var(--button-shadow);
   cursor: pointer;
   transition: background-color 0.3s;
+
+  &:hover {
+    background-color: var(--button-hover-bg);
+    color: var(--active-menu-text);
+  }
 }
 
 .btnEdit {
@@ -32,6 +43,11 @@
   box-shadow: var(--button-shadow);
   cursor: pointer;
   transition: background-color 0.3s;
+
+  &:hover {
+    background-color: var(--button-hover-bg);
+    color: var(--active-menu-text);
+  }
 }
 
 .btnContainer {
@@ -49,6 +65,11 @@
     box-shadow: var(--button-shadow);
     cursor: pointer;
     transition: background-color 0.3s;
+
+    &:hover {
+      background-color: var(--button-hover-bg);
+      color: var(--active-menu-text);
+    }
   }
 }
 
@@ -105,6 +126,11 @@
   border: none;
   border-radius: $card-radius;
   cursor: pointer;
+
+  &:hover {
+    background-color: var(--layout-border-color);
+    color: $green-color;
+  }
 }
 
 // THEME TOGGLE
@@ -145,5 +171,14 @@
 
   .dark .toggleSlider {
     transform: translateX(26px);
+  }
+}
+
+@include respond-to(desktop) {
+  .btn,
+  .btnAlert,
+  .btnEdit {
+    font-size: 1.3rem;
+    padding: 0.5rem 1rem;
   }
 }

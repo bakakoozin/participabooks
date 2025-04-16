@@ -72,10 +72,15 @@
       box-shadow: $button-shadow;
       border-radius: $border-radius;
       width: 100%;
+
+      &:hover {
+        background-color: var(--button-hover-bg);
+        color: var(--active-menu-text);
+      }
     }
 
     a {
-      color: $high-light-color;
+      color: var(--secondary-text-color);
       background-color: var(--green-color);
       box-shadow: $button-shadow;
       border-radius: $border-radius;
@@ -235,8 +240,8 @@
     .navLinks button {
       padding: 1rem;
       max-width: none;
-      width: 9vw;
-      font-size: $font-size;
+      width: 10vw;
+      font-size: 1.3rem;
     }
 
     .userInfos {

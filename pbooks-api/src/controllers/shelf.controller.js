@@ -8,6 +8,7 @@ import { getPage } from "../utils/getPage.js";
 const getAllUserWorks = async (req, res, next) => {
   const formattedSearch = req.query.q?.trim() || "";
   const page = getPage(req);
+  const limit = parseInt(req.query.limit, 10) || 10;
 
   try {
     const { datas, count } = await Shelf.findAll(
@@ -16,7 +17,7 @@ const getAllUserWorks = async (req, res, next) => {
       page
     );
 
-    res.json({ datas, totalPages: count });
+    res.json({ datas, totalPages: Math.ceil(count/limit) });
   } catch (error) {
     next(error);
   }

@@ -25,6 +25,10 @@
     border-radius: $border-radius;
     box-shadow: var(--card-shadow);
 
+    .authDesktop {
+      width: 90%;
+    }
+
     article {
       padding: 1rem 0;
     }
@@ -89,6 +93,7 @@
 
 @include respond-to(desktop) {
   .mainContainer {
+    padding-top: 11rem;
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -99,7 +104,16 @@
       align-items: center;
       height: 50vh;
       gap: $gap-xl;
-      
+
+      .authDesktop {
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid var(--light-color);
+        border-radius: $card-radius;
+      }
+
       form {
         display: flex;
         flex-direction: column;

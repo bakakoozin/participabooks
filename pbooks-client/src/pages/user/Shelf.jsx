@@ -16,11 +16,10 @@ import { AuthorsList } from "../../components/AuthorsList";
 
 function Shelf() {
   const { data, isFetching, search, setSearch } = useFetch("/user/shelf", {
-    initData: [],
+    initData: { datas: [], totalPages: 0 },
   });
   const [updatedData, setUpdatedData] = useState(data?.datas || []);
   const sliderRef = useRef(null);
-
   const handleRemoveWork = (removedWorkId) => {
     setUpdatedData((prevData) =>
       prevData.filter((work) => work.works_id !== removedWorkId)
@@ -34,25 +33,31 @@ function Shelf() {
   return (
     <main className={styles.mainContainer}>
       <h1>Ma bibliothèque</h1>
-      <form className={styles.searchBar}>
-        <input
-          type="text"
-          placeholder="Rechercher..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </form>
-
-      <Pagination totalPages={data.totalPages} />
-
-      <section className={styles.sliderContainer}>
+      <header className={styles.headerLibrary}>
         <button
           className={`${styles.navButton} ${styles.left}`}
           onClick={() => scrollSlider(sliderRef, "left")}
         >
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
+        <form className={styles.searchBar}>
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </form>
+        <button
+          className={`${styles.navButton} ${styles.right}`}
+          onClick={() => scrollSlider(sliderRef, "right")}
+        >
+          <FontAwesomeIcon icon={faChevronRight} />
+        </button>
+      </header>
+      <Pagination totalPages={data.totalPages} />
 
+      <section className={styles.sliderContainer}>
         <article className={styles.slider} ref={sliderRef}>
           {updatedData?.map((work) => (
             <section key={work.works_id} className={styles.workCard}>
@@ -90,12 +95,6 @@ function Shelf() {
             <p>Aucun ouvrage trouvé.</p>
           )}
         </div>
-        <button
-          className={`${styles.navButton} ${styles.right}`}
-          onClick={() => scrollSlider(sliderRef, "right")}
-        >
-          <FontAwesomeIcon icon={faChevronRight} />
-        </button>
       </section>
     </main>
   );
