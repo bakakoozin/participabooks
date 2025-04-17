@@ -1,9 +1,17 @@
 import { Router } from "express";
 
-import { register, login, logout, getSession } from "../controllers/auth.controller.js";
-import { validate } from "../middlewares/validators/validate.js";
-import { registerSchema, loginSchema } from "../middlewares/validators/auth.schema.js";
 import verifyTokenNoBlock from "../middlewares/verifyTokenNoBlock.js";
+import { validate } from "../middlewares/validators/validate.js";
+import {
+  register,
+  login,
+  logout,
+  getSession,
+} from "../controllers/auth.controller.js";
+import {
+  registerSchema,
+  loginSchema,
+} from "../middlewares/validators/auth.schema.js";
 
 const router = Router();
 

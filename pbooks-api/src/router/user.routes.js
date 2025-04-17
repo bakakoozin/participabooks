@@ -1,13 +1,6 @@
 import { Router } from "express";
 
 import {
-  getInfos,
-  update,
-  remove,
-  uploadAvatar,
-  updateTheme,
-} from "../controllers/user.controller.js";
-import {
   getAllUserWorks,
   getOneUserWork,
   addVolumeToShelf,
@@ -16,6 +9,13 @@ import {
   removeVolumeFromShelf,
   removeWorkFromShelf,
 } from "../controllers/shelf.controller.js";
+import {
+  getInfos,
+  update,
+  remove,
+  uploadAvatar,
+  updateTheme,
+} from "../controllers/user.controller.js";
 
 const router = Router();
 
@@ -30,8 +30,8 @@ router.patch("/profile/theme", updateTheme);
 //SHELF
 router.get("/shelf", getAllUserWorks);
 router.post("/shelf/volume", addVolumeToShelf);
-router.patch("/shelf/volume/:id/status", updateStatusOnShelf);
 router.delete("/shelf/volume/:id", removeVolumeFromShelf);
+router.patch("/shelf/volume/:id/status", updateStatusOnShelf);
 router.post("/shelf/work", addAllVolumesToShelf);
 router.get("/shelf/work/:id", getOneUserWork);
 router.delete("/shelf/work/:id", removeWorkFromShelf);

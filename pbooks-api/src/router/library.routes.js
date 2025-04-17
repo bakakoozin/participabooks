@@ -1,6 +1,7 @@
 import { Router } from "express";
-import verifyToken from "../middlewares/verifyToken.js";
+
 import verifyTokenNoBlock from "../middlewares/verifyTokenNoBlock.js";
+import verifyToken from "../middlewares/verifyToken.js";
 
 import {
   getAll,
@@ -32,7 +33,7 @@ router.patch("/volumes/:id", verifyToken, updateVolume);
 router.delete("/volume/:id", verifyToken, removeVolume);
 router.post("/volumes/create", verifyToken, createVolume);
 
-//MODERATOR
+//MODERATOR ADMIN
 router.patch("/volumes/:id/status", verifyToken, updateStatus);
 
 export default router;

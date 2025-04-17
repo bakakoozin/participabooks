@@ -64,7 +64,7 @@ class Author {
     // Ajouter les nouveaux auteurs
     for (const author of authors) {
       let authorId;
-      
+
       // Si c'est un nouvel auteur, on le crée
       if (typeof author === "string") {
         authorId = await this.findOrCreateAuthor(author);

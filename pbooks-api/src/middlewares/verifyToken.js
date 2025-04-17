@@ -1,4 +1,4 @@
-import jwt, { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import User from "../models/users.model.js";
 
 const SECRET = process.env.JWT_SECRET;

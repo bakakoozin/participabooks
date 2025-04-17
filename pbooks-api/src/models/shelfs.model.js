@@ -5,7 +5,7 @@ class Shelf {
 
   static async findAll(search = "", user_id, page = 1, limit = 10) {
     const offset = (page - 1) * limit;
-  
+
     const FIND_ALL_WORKS = `
       SELECT 
         works.id AS works_id, 
@@ -40,7 +40,7 @@ class Shelf {
         works.format
       LIMIT ${limit} OFFSET ${offset}
     `;
-  
+
     const COUNT_QUERY = `
       SELECT COUNT(DISTINCT works.id) AS total
       FROM works
@@ -52,18 +52,17 @@ class Shelf {
         OR volumes.title LIKE CONCAT('%', ?, '%')
       )
     `;
-  
+
     const params = [user_id, search, search];
-  
+
     const [datas] = await pool.query(FIND_ALL_WORKS, params);
     const [countResult] = await pool.query(COUNT_QUERY, params);
-  
+
     return {
       datas: datas,
       count: countResult[0].total,
     };
   }
-  
 
   static async findOne({ users_id, works_id }) {
     const FIND_ONE_WORK = `SELECT 
@@ -126,7 +125,7 @@ class Shelf {
     return await pool.execute(DELETE_VOLUME, [volumes_id, users_id]);
   }
 
-  static async deleteAllVolumes( works_id, users_id ) {
+  static async deleteAllVolumes(works_id, users_id) {
     const DELETE_ALL_VOLUMES = `DELETE FROM shelfs
     WHERE volumes_id IN (
         SELECT id FROM volumes WHERE works_id = ?

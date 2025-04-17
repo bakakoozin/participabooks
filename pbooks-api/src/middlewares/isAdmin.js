@@ -3,6 +3,6 @@ export default (req, res, next) => {
     return res
       .status(403)
       .json({ message: "Accès refusé: vous devez être administrateur !" });
-      
+
   next();
 };

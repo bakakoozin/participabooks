@@ -20,7 +20,7 @@ export function Footer() {
         <NavLink to="CGU" end className={styles.footerLink}>
           CGU
         </NavLink>
-        <NavLink to="Legal" end lassName={styles.footerLink}>
+        <NavLink to="Legal" end className={styles.footerLink}>
           Mentions Légales
         </NavLink>
       </div>

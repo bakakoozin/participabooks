@@ -5,7 +5,7 @@ class Work {
 
   static async findAll(search = "", user_id, page = 1, limit = 10) {
     const offset = (page - 1) * limit;
-  
+
     const SELECT_FIELDS = `
       works.id AS works_id, 
       works.name AS works_name,
@@ -28,7 +28,7 @@ class Work {
         'role', users.role
       )) AS volumes
     `;
-  
+
     const MAIN_QUERY = `
       SELECT ${SELECT_FIELDS}
       FROM works
@@ -48,7 +48,7 @@ class Work {
       GROUP BY works.id
       LIMIT ${limit} OFFSET ${offset}
     `;
-  
+
     const COUNT_QUERY = `
       SELECT COUNT(DISTINCT works.id) AS total
       FROM works
@@ -64,19 +64,17 @@ class Work {
         OR volumes.title LIKE CONCAT('%', ?, '%')
       )
     `;
-  
+
     const params = [user_id, search, search];
-  
+
     const datas = await pool.query(MAIN_QUERY, params);
     const count = await pool.query(COUNT_QUERY, params);
-  
+
     return {
       datas: datas[0],
       count: count[0][0].total,
     };
   }
-  
-  
 
   static async findOne(id) {
     const SELECT_WORK = `SELECT 
