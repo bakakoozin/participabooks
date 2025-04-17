@@ -1,22 +1,23 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 import { scrollSlider } from "../utils/slider";
 import { useFetch } from "../hooks/useFetch";
-import { ButtonAddToShelf } from "../components/UI/ButtonAddToShelf";
-import { ButtonRemove } from "../components/UI/ButtonRemove";
-import { Pagination } from "../components/Pagination";
-import { Img } from "../components/Img";
-import { AuthorsList } from "../components/AuthorsList";
 import { useTitle } from "../hooks/useTitle";
 
+import { ButtonAddToShelf } from "../components/UI/ButtonAddToShelf";
+import { ButtonRemove } from "../components/UI/ButtonRemove";
+import { AuthorsList } from "../components/AuthorsList";
+import { Pagination } from "../components/Pagination";
+import { Img } from "../components/Img";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "../assets/style/scss/Library.module.scss";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Home() {
   const { infos } = useSelector((state) => state.auth);

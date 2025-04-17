@@ -1,5 +1,6 @@
-import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
+
 import styles from "../../assets/style/scss/Button.module.scss";
 
 export function ButtonSelectStatus({ item, onStatusUpdate }) {
@@ -10,7 +11,8 @@ export function ButtonSelectStatus({ item, onStatusUpdate }) {
   }
 
   const toggleStatus = async () => {
-    const newStatus = item.vol_status === "en attente" ? "validé" : "en attente";
+    const newStatus =
+      item.vol_status === "en attente" ? "validé" : "en attente";
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/works/volumes/${item.vol_id}/status`,
@@ -34,7 +36,9 @@ export function ButtonSelectStatus({ item, onStatusUpdate }) {
 
   return (
     <button onClick={toggleStatus} className={styles.btnAlert}>
-      {item.vol_status === "validé" ? "Passer en attente de validation" : "Valider"}
+      {item.vol_status === "validé"
+        ? "Passer en attente de validation"
+        : "Valider"}
     </button>
   );
 }

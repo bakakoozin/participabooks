@@ -1,10 +1,11 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
-import { API_URL } from "../../utils/constants";
-import styles from "../../assets/style/scss/Button.module.scss";
 import { useCanEditVolume } from "../../hooks/useCanEditVolume";
+import { API_URL } from "../../utils/constants";
+
+import styles from "../../assets/style/scss/Button.module.scss";
 
 const ButtonRemove = ({ item, type, onRemove }) => {
   const [showModal, setShowModal] = useState(false);
@@ -15,25 +16,25 @@ const ButtonRemove = ({ item, type, onRemove }) => {
 
   if (!isLogged) return null;
 
-if (isWork) {
-  const allVolumesEnAttente =
-    item.volumes &&
-    item.volumes.every((vol) => vol.vol_status === "en attente");
+  if (isWork) {
+    const allVolumesEnAttente =
+      item.volumes &&
+      item.volumes.every((vol) => vol.vol_status === "en attente");
 
-  if (!allVolumesEnAttente) return null;
+    if (!allVolumesEnAttente) return null;
 
-  const isCreator = item.users_id === infos?.id;
-  const isPrivileged = canEditVolume(item);
+    const isCreator = item.users_id === infos?.id;
+    const isPrivileged = canEditVolume(item);
 
-  if (!isCreator && !isPrivileged) return null;
-} else {
-  if (item.vol_status !== "en attente") return null;
+    if (!isCreator && !isPrivileged) return null;
+  } else {
+    if (item.vol_status !== "en attente") return null;
 
-  const isCreator = infos?.id === item.user_id;
-  const isPrivileged = canEditVolume(item);
+    const isCreator = infos?.id === item.user_id;
+    const isPrivileged = canEditVolume(item);
 
-  if (!isCreator && !isPrivileged) return null;
-}
+    if (!isCreator && !isPrivileged) return null;
+  }
 
   async function handleConfirmRemove() {
     const url = `${API_URL}/works/${isWork ? "work" : "volume"}/${

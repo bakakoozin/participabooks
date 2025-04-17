@@ -1,26 +1,40 @@
-import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import { API_URL, URL_MEDIAS } from "../utils/constants";
 import { toggleMenu } from "../features/menuSlice";
 import { logout } from "../features/authSlice";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styles from "../assets/style/scss/Layout.module.scss";
 import {
   faBars,
   faXmark,
   faCircleUser,
 } from "@fortawesome/free-solid-svg-icons";
-import styles from "../assets/style/scss/Layout.module.scss";
-import { useState } from "react";
 
 export function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [logoSrc, setLogoSrc] = useState("/logo_pbooks_light.png");
   const { infos } = useSelector((state) => state.auth);
   const { isLogged, pseudo } = useSelector((state) => state.auth);
   const { isMenuOpen } = useSelector((state) => state.menu);
+  const getTheme = () =>
+    document.documentElement.getAttribute("data-theme") || "clair";
+
+  const getDefaultLogo = (theme) =>
+    theme === "sombre" ? "/logo_pbooks_light.png" : "/logo_pbooks_dark.png";
+
+  const getHoverLogo = (theme) =>
+    theme === "sombre" ? "/logo_pbooks_dark.png" : "/logo_pbooks_light.png";
+
+  const [theme, setTheme] = useState(getTheme());
+  const [logoSrc, setLogoSrc] = useState(getDefaultLogo(theme));
+
+  const hoverLogo = getHoverLogo(theme);
+  const clickedLogo = hoverLogo;
+  const defaultLogo = getDefaultLogo(theme);
 
   async function handleLogout() {
     const response = await fetch(`${API_URL}/auth/logout`, {
@@ -36,10 +50,6 @@ export function Header() {
       navigate("/");
     }
   }
-
-  const defaultLogo = "/logo_pbooks_light.png";
-  const hoverLogo = "/logo_pbooks_dark.png";
-  const clickedLogo = "/logo_pbooks_dark.png";
 
   function handleClick() {
     const isMobile = window.innerWidth < 768;
@@ -63,6 +73,21 @@ export function Header() {
       setLogoSrc(defaultLogo);
     }, 300);
   }
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const newTheme = getTheme();
+      setTheme(newTheme);
+      setLogoSrc(getDefaultLogo(newTheme));
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <header className={styles.header}>

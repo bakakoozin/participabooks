@@ -1,12 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-
 import { useFetch } from "../../hooks/useFetch";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+
 import { API_URL } from "../../utils/constants";
-import styles from "../../assets/style/scss/Form.module.scss";
 import { useTitle } from "../../hooks/useTitle";
+
+import styles from "../../assets/style/scss/Form.module.scss";
 
 export function EditWork() {
   const navigate = useNavigate();
@@ -205,7 +206,9 @@ export function EditWork() {
             </div>
           </fieldset>
           <div className={styles.validateContainer}>
-            <button type="submit" className={styles.btn}>Valider</button>
+            <button type="submit" className={styles.btn}>
+              Valider
+            </button>
             <button
               type="button"
               className={`${styles.btn} ${styles.cancelBtn}`}

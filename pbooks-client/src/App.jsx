@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
+import { useSession } from "./hooks/useSession";
+
+import { toggleMenu } from "./features/menuSlice";
 import { AppRoutes } from "./routes/AppRoutes";
 import { Header } from "./layout/Header";
 import { Footer } from "./layout/Footer";
-import { useSession } from "./hooks/useSession";
-import { toggleMenu } from "./features/menuSlice";
 
 import styles from "./assets/style/scss/Layout.module.scss";
 

@@ -1,17 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    isMenuOpen: false,
+  isMenuOpen: false,
 };
 
 const menuSlice = createSlice({
-    name: "menu",
-    initialState,
-    reducers: {
-        toggleMenu(state) {
-            state.isMenuOpen = !state.isMenuOpen;
-        },
+  name: "menu",
+  initialState,
+  reducers: {
+    toggleMenu(state) {
+      state.isMenuOpen = !state.isMenuOpen;
     },
+  },
 });
 
 export const { toggleMenu } = menuSlice.actions;

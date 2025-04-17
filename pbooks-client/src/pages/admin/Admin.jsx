@@ -1,10 +1,11 @@
+import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
 
 import { API_URL } from "../../utils/constants";
-import { Pagination } from "../../components/Pagination";
 import { useTitle } from "../../hooks/useTitle";
+
+import { Pagination } from "../../components/Pagination";
 
 import styles from "../../assets/style/scss/Admin.module.scss";
 
@@ -140,6 +141,7 @@ export function AdminDashboard() {
   useTitle("Admin");
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   if (loading) return <p>Chargement...</p>;

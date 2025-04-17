@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isLogged: false,
   infos: { pseudo: "non connecté", avatar: "", email: "", role: "" },
-  isSessionLogin: false,
+  isSessionLogin: true,
   roles: { isAdmin: false, isModerator: false },
   login: false,
 };
@@ -33,14 +33,21 @@ const userSlice = createSlice({
       state.infos.avatar = action.payload;
     },
     setAdmin(state, action) {
-      state.roles.isAdmin = action.payload
+      state.roles.isAdmin = action.payload;
     },
     setModerator(state, action) {
-      state.roles.isModerator = action.payload
+      state.roles.isModerator = action.payload;
     },
   },
 });
 
-export const { login, logout,  updateAvatar, setAdmin, setModerator, setLoader } = userSlice.actions;
+export const {
+  login,
+  logout,
+  updateAvatar,
+  setAdmin,
+  setModerator,
+  setLoader,
+} = userSlice.actions;
 
 export default userSlice.reducer;

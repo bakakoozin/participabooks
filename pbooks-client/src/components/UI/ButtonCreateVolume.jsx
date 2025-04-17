@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
 
 import { useCanEditVolume } from "../../hooks/useCanEditVolume";
+
 import styles from "../../assets/style/scss/Button.module.scss";
 
 const ButtonCreateVolume = ({ item }) => {
@@ -10,13 +11,14 @@ const ButtonCreateVolume = ({ item }) => {
   const { canEditVolume } = useCanEditVolume();
   const { isLogged, infos } = useSelector((state) => state.auth);
 
-  // Vérifie si l'utilisateur a créé AU MOINS UN volume
   const isCreatorOfVolumeInWork = item.volumes?.some(
     (vol) => vol.user_id && String(vol.user_id) === String(infos.id)
   );
 
   const canCreateVolume =
-    isLogged && (isCreatorOfVolumeInWork || canEditVolume({ user_id: infos.id, vol_status: "en attente" }));
+    isLogged &&
+    (isCreatorOfVolumeInWork ||
+      canEditVolume({ user_id: infos.id, vol_status: "en attente" }));
 
   if (!canCreateVolume) return null;
 

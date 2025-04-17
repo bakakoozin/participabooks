@@ -11,11 +11,11 @@ import { scrollSlider } from "../../utils/slider";
 import { Img } from "../../components/Img";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styles from "../../assets/style/scss/Library.module.scss";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import styles from "../../assets/style/scss/Library.module.scss";
 
 export function Shelf() {
   const { data, isFetching, search, setSearch } = useFetch("/user/shelf", {

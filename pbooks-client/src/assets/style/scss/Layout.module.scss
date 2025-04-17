@@ -172,7 +172,12 @@
   background-color: var(--green-color);
   border-top: solid px var(--layout-border-color);
   box-shadow: 0 -4px 4px var(--layout-border-color);
-  color: #fff;
+  color: var(--secondary-text-color);
+
+  .footerLinks,
+  .footerBtnReturnWrapper {
+    display: none;
+  }
 }
 
 //MODE TABLETTE @media (max-width: 768px)
@@ -225,9 +230,9 @@
       height: 6rem;
     }
 
-    .navLinks .closeMenu {
-      display: none;
-    }
+    // .navLinks .closeMenu {
+    //   display: none;
+    // }
   }
 }
 
@@ -260,5 +265,29 @@
   }
   .logo {
     width: 10vw;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+
+    .footerLinks,
+    .footerBtnReturnWrapper {
+      display: flex;
+      justify-content: space-around;
+      width: 10%;
+    }
+    .footerLinks {
+      a {
+        color: var(--admin-text-color);
+        text-decoration: none;
+    
+        &:hover {
+          color: var(--dark-text-color);
+        }
+      }
+    }
   }
 }

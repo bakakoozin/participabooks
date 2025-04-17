@@ -1,8 +1,10 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { API_URL } from "../utils/constants";
+import { useState } from "react";
+
 import { updateAvatar } from "../features/authSlice";
+import { API_URL } from "../utils/constants";
+
 import styles from "../assets/style/scss/Dashboard.module.scss";
 
 export function FormAvatar() {

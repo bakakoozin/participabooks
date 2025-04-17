@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
-import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 
 import { API_URL } from "../../utils/constants";
-import styles from "../../assets/style/scss/Button.module.scss";
 
+import styles from "../../assets/style/scss/Button.module.scss";
 
 const ButtonAddToShelf = ({ item, type }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
@@ -40,7 +40,11 @@ const ButtonAddToShelf = ({ item, type }) => {
     }
   }
   if (!isLogged) return null;
-  return <button onClick={handleAddToShelf} className={styles.btn}>Ajouter à ma bibliothèque</button>;
+  return (
+    <button onClick={handleAddToShelf} className={styles.btn}>
+      Ajouter à ma bibliothèque
+    </button>
+  );
 };
 
 ButtonAddToShelf.propTypes = {

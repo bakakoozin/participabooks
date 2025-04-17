@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 import { API_URL } from "../../utils/constants";
-import styles from "../../assets/style/scss/Form.module.scss";
 import { useTitle } from "../../hooks/useTitle";
+
+import styles from "../../assets/style/scss/Form.module.scss";
 
 export function CreateWork() {
   const navigate = useNavigate();
@@ -189,7 +190,9 @@ export function CreateWork() {
             </div>
           </fieldset>
           <div className={styles.validateContainer}>
-            <button type="submit" className={styles.btn}>Valider</button>
+            <button type="submit" className={styles.btn}>
+              Valider
+            </button>
             <button
               type="button"
               className={`${styles.btn} ${styles.cancelBtn}`}

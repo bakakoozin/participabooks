@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
-import { useState } from "react";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 import { API_URL } from "../../utils/constants";
+
 import styles from "../../assets/style/scss/Button.module.scss";
 
 const ButtonRemoveFromShelf = ({ item, type, onRemove }) => {
