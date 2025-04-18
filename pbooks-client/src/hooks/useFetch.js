@@ -40,6 +40,7 @@ export const useFetch = (url, { initData }) => {
 
   useEffect(() => {
     fetcher();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchDebounced, page]);
 
   return { fetcher, search, setSearch, data, isFetching };

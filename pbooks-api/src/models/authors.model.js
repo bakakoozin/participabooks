@@ -58,21 +58,16 @@ class Author {
   //============================== UPDATE =======================================//
 
   static async updateAuthorsForVolume(volumesId, authors) {
-    // Supprimer tous les auteurs liés au volume
     await this.deleteAllAuthorsFromVolume(volumesId);
 
-    // Ajouter les nouveaux auteurs
     for (const author of authors) {
       let authorId;
 
-      // Si c'est un nouvel auteur, on le crée
       if (typeof author === "string") {
         authorId = await this.findOrCreateAuthor(author);
       } else {
-        authorId = author; // Sinon, c'est un ID existant
+        authorId = author;
       }
-
-      // Lier l'auteur au volume
       await this.linkAuthorToVolume(volumesId, authorId);
     }
   }

@@ -7,7 +7,7 @@ const handleUpload = (req, res, next, options) => {
     uploadDir:
       options.uploadDir || path.join(process.cwd(), "public/uploads/temp"),
     keepExtensions: true,
-    maxFileSize: options.maxFileSize || 5 * 1024 * 1024, // 5 Mo max
+    maxFileSize: options.maxFileSize || 5 * 1024 * 1024,
     allowEmptyFiles:
       options.allowEmptyFiles !== undefined ? options.allowEmptyFiles : false,
   });
