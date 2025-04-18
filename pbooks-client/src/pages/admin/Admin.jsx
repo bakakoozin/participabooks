@@ -206,28 +206,28 @@ export function AdminDashboard() {
               <td>{role}</td>
               <td>{status}</td>
               <td>
-                <select
-                  value={role}
-                  onChange={(e) => updateRole(id, e.target.value)}
-                >
-                  <option value="user">Utilisateur</option>
-                  <option value="moderator">Modérateur</option>
-                  <option value="admin">Admin</option>
-                </select>
-                <button onClick={() => handleToggleStatus({ id, status })}>
-                  {status === 1 ? "Bloquer" : "Activer"}
-                </button>
-                <button
-                  onClick={() => deleteUser(id)}
-                  disabled={infos?.id && id === infos.id}
-                  title={
-                    id === infos?.id
-                      ? "Vous ne pouvez pas vous supprimer vous-même"
-                      : ""
-                  }
-                >
-                  Supprimer
-                </button>
+                <div className={styles.actions}>
+                  {infos?.id === id ? (
+                    <i>Actions désactivées pour le compte admin</i>
+                  ) : (
+                    <>
+                      <select
+                        value={role}
+                        onChange={(e) => updateRole(id, e.target.value)}
+                      >
+                        <option value="user">Utilisateur</option>
+                        <option value="moderator">Modérateur</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                      <button
+                        onClick={() => handleToggleStatus({ id, status })}
+                      >
+                        {status === "actif" ? "Bloquer" : "Activer"}
+                      </button>
+                      <button onClick={() => deleteUser(id)}>Supprimer</button>
+                    </>
+                  )}
+                </div>
               </td>
             </tr>
           ))}
