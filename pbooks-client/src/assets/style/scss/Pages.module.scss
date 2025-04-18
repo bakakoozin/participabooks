@@ -1,0 +1,66 @@
+@import "mixins";
+@import "variables";
+
+.mainContainer {
+  padding-top: var(--header-height);
+  transition: background-color 0.3s;
+
+  h2 {
+    text-align: center;
+    background-color: var(--brown-color);
+    color: var(--secondary-text-color);
+    padding: 1rem;
+    border-radius: $border-radius;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 2rem;
+  }
+
+  h3 {
+    padding: 1rem 0;
+  }
+
+  a {
+    color: var(--admin-text-color);
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+      color: var(--dark-text-color);
+      border: 1px solid var(--layout-border-color);
+      padding : 0 0.5rem;
+      border-radius: $border-radius;
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 1rem 2rem;
+    background-color: var(--green-color);
+    border-radius: 8px;
+    border-radius: $border-radius;
+    box-shadow: $card-shadow;
+  }
+}
+
+@include respond-to(tablet) {
+  .mainContainer {
+    padding-top: 9rem;
+    margin: auto;
+    width: 80%;
+
+    .card {
+      gap: $gap-xl;
+      padding: 2rem 3rem;
+    }
+  }
+}
+
+@include respond-to(desktop) {
+  .mainContainer {
+    padding-top: 11rem;
+    padding-bottom: 3rem;
+    width: 60%;
+  }
+}

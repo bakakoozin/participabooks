@@ -5,7 +5,6 @@ import { UpdateUserForm } from "../pages/user/UpdateUserForm";
 import { CreateVolume } from "../pages/user/CreateVolume";
 import { AdminDashboard } from "../pages/admin/Admin";
 import { EditVolume } from "../pages/user/EditVolume";
-import { LegalNotices } from "../pages/LegalNotices";
 import { Dashboard } from "../pages/user/Dashboard";
 import { ProtectedRoute } from "./ProtectedRoutes";
 import { CreateWork } from "../pages/user/Create";
@@ -14,6 +13,7 @@ import { Register } from "../pages/auth/Register";
 import { NotFound } from "../pages/NotFound";
 import { Shelf } from "../pages/user/Shelf";
 import { Login } from "../pages/auth/Login";
+import { Legal } from "../pages/Legal";
 import { Home } from "../pages/Home";
 import { Work } from "../pages/Work";
 import { CGU } from "../pages/CGU";
@@ -106,7 +106,7 @@ export function AppRoutes() {
         }
       />
       <Route path="CGU" element={<CGU />} />
-      <Route path="Legal" element={<LegalNotices />} />
+      <Route path="Legal" element={<Legal />} />
       <Route path="/admin/*" element={<NotFound />} />
       <Route path="/not-found" element={<NotFound />} />
       <Route path="*" element={<NotFound />} />
