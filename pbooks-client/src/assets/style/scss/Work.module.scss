@@ -35,10 +35,21 @@
     justify-content: space-between;
     padding: 0.5rem 2rem 1rem 2rem;
 
+    .volumeCardHeaderInfos {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+
+      .isbn {
+        font-size: $font-sm;
+        font-family: $font-family-alt;
+      }
+    }
+
     .statusRadios {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: start;
       align-items: center;
       accent-color: var(--light-color);
       gap: $gap-lg;
@@ -53,10 +64,6 @@
         font-weight: $font-weight-bold;
         text-transform: uppercase;
       }
-    }
-
-    .authorsList {
-      font-size: $font-sm;
     }
   }
 
@@ -90,8 +97,14 @@
 
       .summary {
         padding-top: 1rem;
+
         p {
           text-align: justify;
+        }
+
+        .authors p {
+          font-size: $font-sm;
+          text-align: right;
         }
       }
     }
@@ -121,7 +134,8 @@
 
 @include respond-to(desktop) {
   .mainContainer {
-    padding-top: 10rem;
+    padding-top: 11rem;
+    padding-bottom: 3rem;
 
     .cardContainer {
       grid-template-columns: repeat(auto-fit, minmax(20vw, 1fr));

@@ -128,12 +128,9 @@ const createVolume = async (req, res, next) => {
     try {
       await connection.beginTransaction();
 
-      const [existingVolume] = await connection.query(
-        "SELECT * FROM volumes WHERE isbn = ?",
-        [isbn]
-      );
+      const existingVolume = await Volume.isbnExist(isbn);
 
-      if (existingVolume.length > 0) {
+      if (existingVolume) {
         return res
           .status(400)
           .json({ error: `Le volume avec l'ISBN ${isbn} existe déjà.` });

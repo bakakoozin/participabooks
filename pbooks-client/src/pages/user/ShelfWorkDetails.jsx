@@ -88,11 +88,15 @@ export function ShelfWorkDetails() {
         </section>
       )}
       <div className={styles.btnContainer}></div>
-      <section className={styles.cardContainer}>
+      <section
+              className={`${styles.cardContainer} ${
+                volumes.length === 1 ? styles.singleCard : ""
+              }`}
+            >
         {volumes.map((volume) => (
           <section key={volume.vol_id} className={styles.volumeCard}>
             <header className={styles.volumeCardHeader}>
-              <section>
+              <section className={styles.volumeCardHeaderInfos}>
                 <h3>
                   {volume.vol_num}. {volume.vol_title}
                 </h3>
@@ -129,19 +133,22 @@ export function ShelfWorkDetails() {
                   </label>
                 </div>
               </section>
-              <article className={styles.authorsList}>
-                {volume.authors_name &&
-                  volume.authors_name
-                    .split(",")
-                    .map((author, index) => <p key={index}>{author.trim()}</p>)}
-              </article>
+              <div className={styles.isbnContainer}>
+              <p className={styles.isbn}>ISBN : </p>
+              <p>{volume.vol_isbn}</p>
+              </div>
             </header>
             <figure>
               <Img src={volume.url_media} alt={volume.vol_title} />
             </figure>
             <footer className={styles.volumeCardFooter}>
-              <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
               <article className={styles.summary}>
+              <article className={styles.authors}>
+                {volume.authors_name &&
+                  volume.authors_name
+                    .split(",")
+                    .map((author, index) => <p key={index}>{author.trim()}</p>)}
+              </article>
                 <h3>Résumé</h3>
                 <ReadMore text={volume.vol_summary} maxLength={200} />
               </article>

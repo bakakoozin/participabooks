@@ -1,17 +1,14 @@
-import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
 export function ProtectedRoute({ children }) {
-  const { isLogged, isSessionLogin } = useSelector((state) => state.auth);
-  if (isSessionLogin) {
-    return <p>Chargement...</p>;
+  const { loading, noSession } = useSelector((state) => state.auth);
+  if (loading) {
+    return <p style={{marginTop:"200px"}}>Chargement...</p>;
   }
-
-  if (!isLogged) {
-    return <Navigate to="/auth/login" />;
+if (noSession) {
+    return <p style={{marginTop:"200px"}} >{"Vous n'êtes pas connecté"}</p>;
   }
-
   return children;
 }
 

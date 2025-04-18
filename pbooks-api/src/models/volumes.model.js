@@ -43,6 +43,13 @@ class Volume {
     }
   }
 
+  static async isbnExist(isbn) {
+    const FIND_ISBN = `SELECT COUNT(id) FROM volumes WHERE isbn = ?`;
+    const [rows] = await pool.query(FIND_ISBN, [isbn]);
+    const count = rows[0]["COUNT(id)"];
+    return count > 0;
+  }
+
   //============================== INSERT =======================================//
 
   static async insertVolume({

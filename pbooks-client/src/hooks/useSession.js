@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { API_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
-import { login, setLoader } from "../features/authSlice";
+import { login, setLoader, setNoSession } from "../features/authSlice";
 
 const LS_THEME = "pb_theme";
 
@@ -26,6 +26,9 @@ export function useSession() {
       dispatch(login(resJSON.user));
       document.documentElement.setAttribute("data-theme", resJSON.user.theme);
       localStorage.setItem(LS_THEME, resJSON.user.theme);
+    }
+    else {
+      dispatch(setNoSession(true));
     }
 
     dispatch(setLoader(false));

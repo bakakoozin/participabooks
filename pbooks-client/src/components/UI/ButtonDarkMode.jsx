@@ -1,14 +1,18 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 import { API_URL } from "../../utils/constants";
 
 import styles from "../../assets/style/scss/Button.module.scss";
+import { useSelector } from "react-redux";
+import { setTheme } from "../../features/authSlice";
 
 const LS_THEME = "pb_theme";
 
-export function ThemeToggle({ defaultTheme }) {
-  const [theme, setTheme] = useState(defaultTheme || "clair");
+export function ThemeToggle() {
+  const dispatch = useDispatch();
+  const { theme } = useSelector((state => state.auth.infos));
+
 
   async function handleThemeChange(newTheme) {
     document.documentElement.setAttribute("data-theme", newTheme);
@@ -26,7 +30,7 @@ export function ThemeToggle({ defaultTheme }) {
 
       if (response.ok) {
         const resJSON = await response.json();
-        setTheme(resJSON.theme);
+        dispatch(setTheme(resJSON.theme));
       } else {
         console.error("Échec de la mise à jour du thème. Veuillez réessayer.");
       }
