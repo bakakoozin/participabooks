@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useState } from "react";
 
@@ -11,8 +11,6 @@ export function FormAvatar() {
   const dispatch = useDispatch();
   const [avatarFile, setAvatarFile] = useState(null);
   const [preview, setPreview] = useState(null);
-
-  const { infos } = useSelector((state) => state.auth);
 
   function handleFile(e) {
     const file = e.target.files[0];
@@ -38,7 +36,6 @@ export function FormAvatar() {
     }
     const formData = new FormData();
     formData.append("avatar", avatarFile);
-    formData.append("id", infos.id);
 
     try {
       const response = await fetch(`${API_URL}/user/profile/avatar`, {

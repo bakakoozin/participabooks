@@ -12,9 +12,10 @@ class Work {
       works.edition AS works_edition,
       works.type AS works_type,
       works.format AS works_format,
-      COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name,
+      COALESCE(GROUP_CONCAT(DISTINCT authors.name ORDER BY authors.name SEPARATOR ','),
+      'Inconnu') AS authors_name,
       (
-        SELECT DISTINCT medias.url
+        SELECT medias.url
         FROM volumes
         LEFT JOIN medias ON medias.volumes_id = volumes.id
         WHERE volumes.works_id = works.id

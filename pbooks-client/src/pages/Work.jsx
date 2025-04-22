@@ -88,23 +88,25 @@ export function Work() {
                 <h3>
                   {volume.vol_num}. {volume.vol_title}
                 </h3>
-                <article className={styles.authorsList}>
-                  {volume.authors_name &&
-                    volume.authors_name
-                      .split(",")
-                      .map((author, index) => (
-                        <p key={index}>{author.trim()}</p>
-                      ))}
-                </article>
+                <div className={styles.isbnContainer}>
+                  <p className={styles.isbn}>ISBN : </p>
+                  <p>{volume.vol_isbn}</p>
+                </div>
               </header>
               <figure>
                 <Img src={volume.url_media} alt={volume.vol_title} />
               </figure>
 
               <footer className={styles.volumeCardFooter}>
-                <p className={styles.isbn}>ISBN : {volume.vol_isbn}</p>
-
                 <article className={styles.summary}>
+                  <article className={styles.authors}>
+                    {volume.authors_name &&
+                      volume.authors_name
+                        .split(",")
+                        .map((author, index) => (
+                          <p key={index}>{author.trim()}</p>
+                        ))}
+                  </article>
                   <h3>Résumé</h3>
                   <ReadMore text={volume.vol_summary} maxLength={200} />
                 </article>

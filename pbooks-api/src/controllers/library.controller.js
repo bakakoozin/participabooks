@@ -1,13 +1,14 @@
+import handleUpload from "../config/formidable.js";
 import pool from "../config/db.js";
 import path from "path";
 import fs from "fs";
 
-import Volume from "../models/volumes.model.js";
-import Work from "../models/works.model.js";
-import Media from "../models/medias.model.js";
-import Author from "../models/authors.model.js";
-import handleUpload from "../config/formidable.js";
 import { getPage } from "../utils/getPage.js";
+
+import Volume from "../models/volumes.model.js";
+import Author from "../models/authors.model.js";
+import Media from "../models/medias.model.js";
+import Work from "../models/works.model.js";
 
 //============================== GET =======================================//
 
@@ -24,7 +25,7 @@ const getAll = async (req, res, next) => {
       limit
     );
 
-    res.json({ datas, totalPages: Math.ceil(count/limit) });
+    res.json({ datas, totalPages: Math.ceil(count / limit) });
   } catch (error) {
     next(error);
   }
@@ -52,20 +53,6 @@ const getVolumeDetails = async (req, res, next) => {
         message: "Aucun volume trouvé.",
       });
     res.json({ datas: volume });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getAuthorsBySearch = async (req, res, next) => {
-  try {
-    const searchTerm = req.query.q ? req.query.q.trim() : "";
-
-    if (!searchTerm)
-      res.status(400).json({ message: "Paramètre de recherche requis." });
-
-    const authors = await Author.findByName(searchTerm);
-    res.json(authors);
   } catch (error) {
     next(error);
   }
@@ -405,13 +392,12 @@ export {
   getAll,
   getOne,
   getVolumeDetails,
-  getAuthorsBySearch,
   createWork,
   createVolume,
+  uploadMedia,
   updateWork,
   updateVolume,
   updateStatus,
   removeWork,
   removeVolume,
-  uploadMedia,
 };

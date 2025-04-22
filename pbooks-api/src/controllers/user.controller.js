@@ -124,9 +124,18 @@ const uploadAvatar = async (req, res, next) => {
       const fileExt = path
         .extname(avatarFile.originalFilename || "")
         .toLowerCase();
-      const validExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+      const validExtensions = [".jpg", ".jpeg", ".png", ".webp", ".svg"];
       if (!validExtensions.includes(fileExt)) {
-        fs.unlink(avatarFile.path, () => {});
+        if (avatarFile.filepath) {
+          fs.unlink(avatarFile.filepath, (err) => {
+            if (err) {
+              console.error(
+                "Erreur lors de la suppression du fichier invalide :",
+                err
+              );
+            }
+          });
+        }
         return res
           .status(400)
           .json({ message: "Format de fichier non autorisé." });

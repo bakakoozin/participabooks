@@ -113,7 +113,7 @@
   .btnContainer {
     display: flex;
     flex-direction: column;
-    gap: $gap-lg;
+    gap: $gap;
     padding: 2rem 0;
   }
 }
@@ -138,7 +138,7 @@
     padding-bottom: 3rem;
 
     .cardContainer {
-      grid-template-columns: repeat(auto-fit, minmax(20vw, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 
       &.singleCard {
         width: 40%;
@@ -150,6 +150,7 @@
     .btnContainer {
       flex-direction: row;
       justify-content: space-between;
+      max-width:in;
     }
   }
 }
