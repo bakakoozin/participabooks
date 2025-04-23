@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+import { ConfirmModal } from "../../components/UI/ConfirmModal";
 import { logout } from "../../features/authSlice";
 import { useTitle } from "../../hooks/useTitle";
 import { API_URL } from "../../utils/constants";
@@ -63,31 +64,17 @@ export function Dashboard() {
           </article>
           <div>
             <button
-              className={styles.btnDelete}
               onClick={() => setShowModal(true)}
+              className={styles.btnDelete}
             >
               Supprimer mon compte
             </button>
             {showModal && (
-              <div className={styles.modalOverlay}>
-                <div className={styles.modal}>
-                  <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
-                  <div className={styles.modalActions}>
-                    <button
-                      onClick={handleConfirmRemove}
-                      className={styles.btnAlert}
-                    >
-                      Oui, supprimer
-                    </button>
-                    <button
-                      onClick={() => setShowModal(false)}
-                      className={styles.btnCancel}
-                    >
-                      Annuler
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <ConfirmModal
+                message="Êtes-vous sûr de vouloir supprimer votre compte ?"
+                onConfirm={handleConfirmRemove}
+                onCancel={() => setShowModal(false)}
+              />
             )}
           </div>
         </section>

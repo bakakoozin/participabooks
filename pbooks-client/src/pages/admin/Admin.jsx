@@ -1,16 +1,20 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import { API_URL } from "../../utils/constants";
 import { useTitle } from "../../hooks/useTitle";
 
+import { ConfirmModal } from "../../components/UI/ConfirmModal";
 import { Pagination } from "../../components/Pagination";
 
 import styles from "../../assets/style/scss/Admin.module.scss";
 
 export function AdminDashboard() {
   const [users, setUsers] = useState([]);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [userToRemove, setUserToRemove] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -113,9 +117,17 @@ export function AdminDashboard() {
     await fetchUsers();
   };
 
-  const deleteUser = async (id) => {
-    if (!window.confirm("Supprimer cet utilisateur ?")) return;
+  const confirmRemoveUser = (user) => {
+    setUserToRemove(user);
+    setShowRemoveModal(true);
+  };
 
+  const handleRemoveConfirmed = async () => {
+    if (!userToRemove?.id) {
+      console.error("Aucun ID utilisateur à supprimer.");
+      return;
+    }
+  
     try {
       const res = await fetch(`${API_URL}/admin/users`, {
         method: "DELETE",
@@ -123,20 +135,25 @@ export function AdminDashboard() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id: userToRemove.id }),
       });
-
+  
       const data = await res.json();
       if (res.ok) {
-        setUsers((prev) => prev.filter((user) => user.id !== id));
+        setUsers((prev) => prev.filter((user) => user.id !== userToRemove.id));
+        toast.success(`Utilisateur "${userToRemove.pseudo}" supprimé.`);
       } else {
-        alert(data.message || "Erreur lors de la suppression.");
+        toast.error(data.message || "Erreur lors de la suppression.");
       }
     } catch (error) {
       console.error(error);
-      alert("Erreur lors de la suppression.");
+      toast.error("Erreur lors de la suppression.");
+    } finally {
+      setShowRemoveModal(false);
+      setUserToRemove(null);
     }
   };
+  
 
   useTitle("Admin");
   useEffect(() => {
@@ -224,7 +241,16 @@ export function AdminDashboard() {
                       >
                         {status === "actif" ? "Bloquer" : "Activer"}
                       </button>
-                      <button onClick={() => deleteUser(id)}>Supprimer</button>
+                      <button onClick={() => confirmRemoveUser({ id, pseudo })}>
+                        Supprimer
+                      </button>
+                      {showRemoveModal && (
+                        <ConfirmModal
+                          message={`Êtes-vous sûr de vouloir supprimer l'utilisateur "${userToRemove?.pseudo}" ?`}
+                          onConfirm={handleRemoveConfirmed}
+                          onCancel={() => setShowRemoveModal(false)}
+                        />
+                      )}
                     </>
                   )}
                 </div>

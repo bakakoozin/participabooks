@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
+import { ConfirmModal } from "./ConfirmModal";
 import { API_URL } from "../../utils/constants";
 
 import styles from "../../assets/style/scss/Button.module.scss";
@@ -50,22 +51,11 @@ const ButtonRemoveFromShelf = ({ item, type, onRemove }) => {
         Supprimer de ma bibliothèque
       </button>
       {showModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <p>Êtes-vous sûr de vouloir supprimer cet élément ?</p>
-            <div className={styles.modalActions}>
-              <button onClick={handleConfirmRemove} className={styles.btnAlert}>
-                Oui, supprimer
-              </button>
-              <button
-                onClick={() => setShowModal(false)}
-                className={styles.btnCancel}
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          message="Êtes-vous sûr de vouloir supprimer cet élément ?"
+          onConfirm={handleConfirmRemove}
+          onCancel={() => setShowModal(false)}
+        />
       )}
     </>
   );

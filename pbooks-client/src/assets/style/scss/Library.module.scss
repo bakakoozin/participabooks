@@ -48,7 +48,7 @@
       align-items: center;
       $nav-button-size: 30px;
       position: absolute;
-      top: 50%;
+      top: 60%;
       transform: translateY(-50%);
       background: var(--button-bg);
       color: var(--secondary-text-color);
@@ -62,11 +62,11 @@
       transition: background 0.3s ease;
 
       &.left {
-        left: 6rem;
+        left: 2rem;
       }
 
       &.right {
-        right: 6rem;
+        right: 2rem;
       }
 
       &:hover {
@@ -76,7 +76,6 @@
   }
 
   .sliderContainer {
-    position: relative;
     overflow: hidden;
     padding: 1.5rem 0;
 
@@ -213,7 +212,6 @@
     }
 
     .sliderContainer {
-      position: relative;
       overflow: hidden;
       padding: 1.5rem 0;
 
