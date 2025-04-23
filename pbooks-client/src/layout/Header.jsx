@@ -97,22 +97,57 @@ export function Header() {
             <FontAwesomeIcon icon={faXmark} />
           </button>
         )}
-        <NavLink to="/" end onClick={handleClick}>
+        <NavLink
+          to="/"
+          end
+          onClick={handleClick}
+          className={({ isActive }) =>
+            `${styles.navLink} ${isActive ? styles.active : ""}`
+          }
+        >
           Bibliothèque
         </NavLink>
         {!isLogged ? (
-          <NavLink to="auth/login" end onClick={handleClick}>
+          <NavLink
+            to="auth/login"
+            end
+            onClick={handleClick}
+            className={({ isActive }) =>
+              `${styles.navLink} ${isActive ? styles.active : ""}`
+            }
+          >
             Se connecter
           </NavLink>
         ) : (
           <>
-            <NavLink to="shelf" end onClick={handleClick}>
+            <NavLink
+              to="shelf"
+              end
+              onClick={handleClick}
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.active : ""}`
+              }
+            >
               Ma bibliothèque
             </NavLink>
-            <NavLink to="creator" end onClick={handleClick}>
+            <NavLink
+              to="creator"
+              end
+              onClick={handleClick}
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.active : ""}`
+              }
+            >
               Créer
             </NavLink>
-            <NavLink to="dashboard" end onClick={handleClick}>
+            <NavLink
+              to="dashboard"
+              end
+              onClick={handleClick}
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.active : ""}`
+              }
+            >
               Mon Profil
             </NavLink>
             {infos.role === "admin" && (
@@ -120,7 +155,11 @@ export function Header() {
                 to="admin"
                 end
                 onClick={handleClick}
-                className={styles.adminLink}
+                className={({ isActive }) =>
+                  `${styles.adminLink} ${styles.navLink} ${
+                    isActive ? styles.active : ""
+                  }`
+                }
               >
                 Admin
               </NavLink>
@@ -128,6 +167,28 @@ export function Header() {
             <button onClick={handleLogout}>Se déconnecter</button>
           </>
         )}
+        <div className={styles.legalLinkContainer}>
+          <NavLink
+            to="CGU"
+            end
+            onClick={handleClick}
+            className={({ isActive }) =>
+              `${styles.navLink} ${isActive ? styles.active : ""}`
+            }
+          >
+            CGU
+          </NavLink>
+          <NavLink
+            to="Legal"
+            end
+            onClick={handleClick}
+            className={({ isActive }) =>
+              `${styles.navLink} ${isActive ? styles.active : ""}`
+            }
+          >
+            Mentions Légales
+          </NavLink>
+        </div>
       </nav>
       <div className={styles.burgerMenu} onClick={handleClick}>
         <FontAwesomeIcon icon={faBars} />

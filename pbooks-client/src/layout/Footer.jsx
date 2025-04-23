@@ -16,11 +16,23 @@ export function Footer() {
         </div>
       )}
       <p>&copy; 2025 - Baka Dev - Participabooks</p>
-      <div className={styles.footerLinks}>
-        <NavLink to="CGU" end className={styles.footerLink}>
+      <div className={styles.footerLinkContainer}>
+        <NavLink
+          to="CGU"
+          end
+          className={({ isActive }) =>
+            `${styles.navLink} ${isActive ? styles.active : ""}`
+          }
+        >
           CGU
         </NavLink>
-        <NavLink to="Legal" end className={styles.footerLink}>
+        <NavLink
+          to="Legal"
+          end
+          className={({ isActive }) =>
+            `${styles.navLink} ${isActive ? styles.active : ""}`
+          }
+        >
           Mentions Légales
         </NavLink>
       </div>

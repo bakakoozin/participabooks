@@ -49,7 +49,6 @@ button {
 
 :root {
   --header-height: 8rem;
-  --footer-height: 2rem;
 
   @include respond-to(tablet) {
     --header-height: 5rem;

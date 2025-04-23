@@ -85,6 +85,12 @@
   box-shadow: var(--button-shadow);
   cursor: pointer;
   transition: background-color 0.3s;
+  &:focus,
+  &:active {
+    outline: none;
+    background-color: var(--light-color); // même que le fond normal
+    color: var(--secondary-text-color);   // idem
+  }
 }
 
 // MODALE SUPPRESSION
