@@ -43,7 +43,6 @@
     top: 0;
     left: 0;
     width: 70vw;
-    height: 80vh;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -52,11 +51,7 @@
     text-transform: uppercase;
     font-size: 2.5rem;
     font-weight: $font-weight-bold;
-    transform: scale(0);
-    transform-origin: top left;
-    opacity: 0;
     pointer-events: none;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
     z-index: 1000;
     box-shadow: var(--card-shadow);
 
@@ -118,7 +113,7 @@
       align-items: start;
       row-gap: 2rem;
       padding: 6rem 1rem 2rem;
-      max-height: 65vh;
+      max-height: 80vh;
       overflow-y: auto;
 
       background-color: $brown-color-transparent;

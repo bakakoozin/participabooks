@@ -60,6 +60,7 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    font-size: 1rem;
 
     th,
     td {
@@ -125,7 +126,11 @@
 @include respond-to(tablet) {
   .mainContainer {
     padding-top: 9rem;
-    margin: auto;    
+    margin: auto;
+    
+    .userTable {
+      font-size: $font-size;
+    }
     
     .hideMobile {
       display: table-cell;

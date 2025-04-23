@@ -161,6 +161,7 @@
 @include respond-to(tablet) {
   .mainContainer {
     padding-top: 8rem;
+    padding-bottom: 1rem;;
 
     .searchBar {
       input {
