@@ -127,7 +127,7 @@ export function AdminDashboard() {
       console.error("Aucun ID utilisateur à supprimer.");
       return;
     }
-  
+
     try {
       const res = await fetch(`${API_URL}/admin/users`, {
         method: "DELETE",
@@ -137,7 +137,7 @@ export function AdminDashboard() {
         credentials: "include",
         body: JSON.stringify({ id: userToRemove.id }),
       });
-  
+
       const data = await res.json();
       if (res.ok) {
         setUsers((prev) => prev.filter((user) => user.id !== userToRemove.id));
@@ -153,7 +153,6 @@ export function AdminDashboard() {
       setUserToRemove(null);
     }
   };
-  
 
   useTitle("Admin");
   useEffect(() => {
@@ -205,9 +204,9 @@ export function AdminDashboard() {
         <thead>
           <tr>
             <th>Email</th>
-            <th>ID</th>
-            <th>Pseudo</th>
-            <th>Date de création</th>
+            <th className={styles.hideMobile}>ID</th>
+            <th className={styles.hideMobile}>Pseudo</th>
+            <th className={styles.hideMobile}>Date de création</th>
             <th>Rôle</th>
             <th>Status</th>
             <th>Actions</th>
@@ -217,9 +216,11 @@ export function AdminDashboard() {
           {users.map(({ id, email, pseudo, role, created_at, status }) => (
             <tr key={id}>
               <td>{email}</td>
-              <td>{id}</td>
-              <td>{pseudo}</td>
-              <td>{new Date(created_at).toLocaleDateString()}</td>
+              <td className={styles.hideMobile}>{id}</td>
+              <td className={styles.hideMobile}>{pseudo}</td>
+              <td className={styles.hideMobile}>
+                {new Date(created_at).toLocaleDateString()}
+              </td>
               <td>{role}</td>
               <td>{status}</td>
               <td>

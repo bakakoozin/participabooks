@@ -52,6 +52,10 @@
     }
   }
 
+  .hideMobile {
+    display: none;
+  }
+
   .userTable {
     width: 100%;
     border-collapse: collapse;
@@ -117,10 +121,15 @@
     }
   }
 }
+
 @include respond-to(tablet) {
   .mainContainer {
     padding-top: 9rem;
-    margin: auto;
+    margin: auto;    
+    
+    .hideMobile {
+      display: table-cell;
+    }
   }
 }
 
