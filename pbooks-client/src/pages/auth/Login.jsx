@@ -34,16 +34,17 @@ export function Login() {
           credentials: "include",
         });
 
+        const resJson = await response.json();
+        
         if (!response.ok) {
-          throw new Error("Erreur lors de la connexion.");
+        throw new Error(resJson.msg || "Erreur lors de la connexion.");
         }
 
-        const resJson = await response.json();
         dispatch(login(resJson.user));
         navigate("/");
       } catch (error) {
+        toast.error(error.message);
         console.error("Erreur lors de la connexion:", error);
-        toast.error("Adresse email ou mot de passe invalide.");
       }
     } else {
       setMessage("Veuillez remplir tous les champs.");

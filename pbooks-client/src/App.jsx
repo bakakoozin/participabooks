@@ -37,7 +37,10 @@ function App() {
         <AppRoutes />
       </section>
       <Footer />
-      <ToastContainer />
+      <ToastContainer
+      autoClose={1500}
+      limit={2}
+       />
     </main>
   );
 }

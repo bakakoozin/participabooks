@@ -28,6 +28,14 @@ const login = async (req, res, next) => {
   try {
     const [[user]] = await Auth.findUserForAuth(email);
 
+    if (!user) {
+      return res.status(400).json({ msg: "Identifiants invalides." });
+    }
+
+    if (user.status === "bloqué") {
+      return res.status(403).json({ msg: "Votre compte est actuellement bloqué." });
+    }
+
     if (user && (await compare(password, user.password))) {
       const token = createToken(user);
 
