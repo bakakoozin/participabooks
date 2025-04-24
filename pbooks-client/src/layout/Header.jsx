@@ -18,7 +18,7 @@ export function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { infos } = useSelector((state) => state.auth);
-  const { isLogged, pseudo } = useSelector((state) => state.auth);
+  const { isLogged } = useSelector((state) => state.auth);
   const { isMenuOpen } = useSelector((state) => state.menu);
   const getTheme = () =>
     document.documentElement.getAttribute("data-theme") || "clair";
@@ -208,7 +208,10 @@ export function Header() {
         {!isLogged || infos.avatar === null ? (
           <FontAwesomeIcon icon={faCircleUser} />
         ) : (
-          <img src={`${URL_MEDIAS}avatars/${infos.avatar}`} alt={pseudo} />
+          <img
+            src={`${URL_MEDIAS}avatars/${infos.avatar}`}
+            alt={`avatar de ${infos.pseudo}`}
+          />
         )}
       </div>
     </header>

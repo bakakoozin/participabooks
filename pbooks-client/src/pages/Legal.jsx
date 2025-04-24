@@ -1,9 +1,12 @@
+
 import { useTitle } from "../hooks/useTitle";
 
+import { useMetaDescription } from "../hooks/useMetaDescription";
 import styles from "../assets/style/scss/Pages.module.scss";
 
 export function Legal() {
   useTitle("Mentions Légales");
+  useMetaDescription("Mentions légales de Participabooks. Informations légales et éditeur du site.");
 
   return (
     <main className={styles.mainContainer}>

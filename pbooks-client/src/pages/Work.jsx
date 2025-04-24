@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
+import { useMetaDescription } from "../hooks/useMetaDescription";
 import { useFetch } from "../hooks/useFetch";
 import { useTitle } from "../hooks/useTitle";
 
@@ -48,6 +49,8 @@ export function Work() {
   };
 
   useTitle(`${workInfo.works_name} détails`);
+  useMetaDescription(`${workInfo.works_name} - Détails et différents volumes.`);
+
   useEffect(() => {
     if (data.datas.length > 0) {
       setVolumes(data.datas);
@@ -94,7 +97,10 @@ export function Work() {
                 </div>
               </header>
               <figure>
-                <Img src={volume.url_media} alt={volume.vol_title} />
+                <Img
+                  src={volume.url_media}
+                  alt={`image de couverture de ${volume.vol_title}`}
+                />
               </figure>
 
               <footer className={styles.volumeCardFooter}>

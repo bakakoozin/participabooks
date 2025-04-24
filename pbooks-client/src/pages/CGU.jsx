@@ -1,9 +1,11 @@
 import { useTitle } from "../hooks/useTitle";
 
+import { useMetaDescription } from "../hooks/useMetaDescription";
 import styles from "../assets/style/scss/Pages.module.scss";
 
 export function CGU() {
   useTitle("CGU");
+  useMetaDescription("Conditions générales d'utilisation de Participabooks. Règles d'usage du service et droits des utilisateurs.");
 
   return (
     <main className={styles.mainContainer}>

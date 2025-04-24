@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+import { useMetaDescription } from "../hooks/useMetaDescription";
 import { scrollSlider } from "../utils/slider";
 import { useFetch } from "../hooks/useFetch";
 import { useTitle } from "../hooks/useTitle";
@@ -51,6 +52,7 @@ export function Home() {
   };
 
   useTitle("Bibliothèque");
+  useMetaDescription("Bibliothèque publique de participabooks.");
 
   useEffect(() => {
     setUpdatedData(data?.datas || []);
@@ -99,7 +101,10 @@ export function Home() {
                 </header>
                 <figure>
                   <Link to={`/works/${work.works_id}`}>
-                    <Img src={work.cover_url} alt={work.works_name} />
+                    <Img
+                      src={work.cover_url}
+                      alt={`image de couverture de ${work.works_name}`}
+                    />
                   </Link>
                 </figure>
                 <footer className={styles.workFooter}>

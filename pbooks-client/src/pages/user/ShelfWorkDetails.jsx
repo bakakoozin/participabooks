@@ -89,10 +89,10 @@ export function ShelfWorkDetails() {
       )}
       <div className={styles.btnContainer}></div>
       <section
-              className={`${styles.cardContainer} ${
-                volumes.length === 1 ? styles.singleCard : ""
-              }`}
-            >
+        className={`${styles.cardContainer} ${
+          volumes.length === 1 ? styles.singleCard : ""
+        }`}
+      >
         {volumes.map((volume) => (
           <section key={volume.vol_id} className={styles.volumeCard}>
             <header className={styles.volumeCardHeader}>
@@ -134,21 +134,26 @@ export function ShelfWorkDetails() {
                 </div>
               </section>
               <div className={styles.isbnContainer}>
-              <p className={styles.isbn}>ISBN : </p>
-              <p>{volume.vol_isbn}</p>
+                <p className={styles.isbn}>ISBN : </p>
+                <p>{volume.vol_isbn}</p>
               </div>
             </header>
             <figure>
-              <Img src={volume.url_media} alt={volume.vol_title} />
+              <Img
+                src={volume.url_media}
+                alt={`image de couverture de ${volume.vol_title}`}
+              />
             </figure>
             <footer className={styles.volumeCardFooter}>
               <article className={styles.summary}>
-              <article className={styles.authors}>
-                {volume.authors_name &&
-                  volume.authors_name
-                    .split(",")
-                    .map((author, index) => <p key={index}>{author.trim()}</p>)}
-              </article>
+                <article className={styles.authors}>
+                  {volume.authors_name &&
+                    volume.authors_name
+                      .split(",")
+                      .map((author, index) => (
+                        <p key={index}>{author.trim()}</p>
+                      ))}
+                </article>
                 <h3>Résumé</h3>
                 <ReadMore text={volume.vol_summary} maxLength={200} />
               </article>
