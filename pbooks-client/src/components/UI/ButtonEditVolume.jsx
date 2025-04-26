@@ -9,9 +9,11 @@ const ButtonEditVolume = ({ item, ariaLabel }) => {
   const navigate = useNavigate();
   const { canEditVolume } = useCanEditVolume();
 
+  // Vérifie si le volume est éditable
   const isEditable = item.vol_status === "en attente" && canEditVolume(item);
   if (!isEditable) return null;
 
+  // Fonction pour gérer le clic sur le bouton d'édition
   const handleEditVolume = () => {
     navigate(`/editVol/${item.vol_id}`);
   };

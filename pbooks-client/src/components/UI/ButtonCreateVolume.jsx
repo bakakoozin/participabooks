@@ -11,6 +11,7 @@ const ButtonCreateVolume = ({ item, ariaLabel }) => {
   const { canEditVolume } = useCanEditVolume();
   const { isLogged, infos } = useSelector((state) => state.auth);
 
+  // Vérification si l'utilisateur est connecté et s'il est le créateur d'un volume en cours
   const isCreatorOfVolumeInWork = item.volumes?.some(
     (vol) => vol.user_id && String(vol.user_id) === String(infos.id)
   );
@@ -22,6 +23,7 @@ const ButtonCreateVolume = ({ item, ariaLabel }) => {
 
   if (!canCreateVolume) return null;
 
+  // Fonction de gestion du clic sur le bouton
   const handleCreateVolume = () => {
     navigate(`/createVol/${item.works_id}`);
   };

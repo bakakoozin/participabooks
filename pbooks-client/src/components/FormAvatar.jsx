@@ -12,11 +12,13 @@ export function FormAvatar() {
   const [avatarFile, setAvatarFile] = useState(null);
   const [preview, setPreview] = useState(null);
 
+  // Sélection d'un fichier image pour l'avatar.
   function handleFile(e) {
     const file = e.target.files[0];
     if (file) {
       setAvatarFile(file);
 
+      // Aperçu de l'image sélectionnée
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -28,6 +30,7 @@ export function FormAvatar() {
     }
   }
 
+  // Soumission du formulaire pour mettre à jour l'avatar.
   async function handleSubmit(e) {
     e.preventDefault();
     if (!avatarFile) {

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+// Pour mettre à jour la balise meta "description" de la page
 export function useMetaDescription(description) {
   useEffect(() => {
     if (!description) return;

@@ -30,6 +30,7 @@ export function UpdateUserForm() {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [message, setMessage] = useState("");
 
+  //Fonction pour gérer les changements dans les champs du formulaire
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -45,6 +46,7 @@ export function UpdateUserForm() {
     }
   }
 
+  // Fonction pour gérer la soumission du formulaire
   async function handleSubmit(e) {
     e.preventDefault();
     if (!isPseudoValid || !isEmailValid || !isPasswordValid) {

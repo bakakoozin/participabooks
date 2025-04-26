@@ -9,6 +9,7 @@ import styles from "../../assets/style/scss/Button.module.scss";
 const ButtonAddToShelf = ({ item, type, ariaLabel }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
 
+  // Vérifie si l'utilisateur est connecté
   async function handleAddToShelf() {
     const isWork = type === "work";
     const url = `${API_URL}/user/shelf/${isWork ? "work" : "volume"}`;

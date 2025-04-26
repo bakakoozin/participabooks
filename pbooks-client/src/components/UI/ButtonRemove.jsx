@@ -17,6 +17,7 @@ const ButtonRemove = ({ item, type, onRemove, ariaLabel }) => {
 
   if (!isLogged) return null;
 
+  // Vérification de l'élément à supprimer
   if (isWork) {
     const allVolumesEnAttente =
       item.volumes &&
@@ -37,6 +38,7 @@ const ButtonRemove = ({ item, type, onRemove, ariaLabel }) => {
     if (!isCreator && !isPrivileged) return null;
   }
 
+  // Fonction de suppression de l'élément avec vérification de connexion de l'utilisateur avant permission de suppression
   async function handleConfirmRemove() {
     const url = `${API_URL}/works/${isWork ? "work" : "volume"}/${
       isWork ? item.works_id : item.vol_id

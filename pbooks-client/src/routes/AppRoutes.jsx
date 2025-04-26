@@ -105,8 +105,8 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="CGU" element={<CGU />} />
-      <Route path="Legal" element={<Legal />} />
+      <Route path="cgu" element={<CGU />} />
+      <Route path="legal" element={<Legal />} />
       <Route path="/admin/*" element={<NotFound />} />
       <Route path="/not-found" element={<NotFound />} />
       <Route path="*" element={<NotFound />} />

@@ -23,6 +23,7 @@ export function Header() {
   const getTheme = () =>
     document.documentElement.getAttribute("data-theme") || "clair";
 
+  // Affichage du logo par défaut
   const getDefaultLogo = (theme) =>
     theme === "sombre" ? "/logo_pbooks_light.png" : "/logo_pbooks_dark.png";
 
@@ -36,6 +37,7 @@ export function Header() {
   const clickedLogo = hoverLogo;
   const defaultLogo = getDefaultLogo(theme);
 
+  // Fonction pour gérer la déconnexion
   async function handleLogout() {
     const response = await fetch(`${API_URL}/auth/logout`, {
       method: "POST",
@@ -51,6 +53,7 @@ export function Header() {
     }
   }
 
+  // Fonction pour gérer l'ouverture et la fermeture du menu
   function handleClick() {
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
@@ -58,6 +61,7 @@ export function Header() {
     }
   }
 
+  // Fonction pour gérer le survol du logo
   function handleMouseEnter() {
     setLogoSrc(hoverLogo);
   }
@@ -66,6 +70,7 @@ export function Header() {
     setLogoSrc(defaultLogo);
   }
 
+  // Fonction pour gérer le clic sur le logo
   function handleClickLogo() {
     setLogoSrc(clickedLogo);
 
@@ -74,6 +79,7 @@ export function Header() {
     }, 300);
   }
 
+  // Fonction pour surveiller le changement de thème
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const newTheme = getTheme();

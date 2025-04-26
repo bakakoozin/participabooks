@@ -13,6 +13,7 @@ const ButtonRemoveFromShelf = ({ item, type, onRemove, ariaLabel }) => {
 
   const isWork = type === "work";
 
+  // Fonction pour gérer la suppression de l'élément de la bibliothèque
   async function handleConfirmRemove() {
     const url = `${API_URL}/user/shelf/${isWork ? "work" : "volume"}/${
       isWork ? item.works_id : item.vol_id

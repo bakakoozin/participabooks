@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 
+// Limitation de l'affichage des auteurs à 3
 export function AuthorsList({ workAuthors }) {
   if (!workAuthors) return null;
 

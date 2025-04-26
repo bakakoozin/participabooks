@@ -11,6 +11,7 @@ export const useFetch = (url, { initData }) => {
   const [searchParams] = useSearchParams({ page: 1 });
   const page = parseInt(searchParams.get("page")) || 1;
 
+  // Fonction pour effectuer la requête API
   async function fetcher() {
     if (isFetching) return;
     setIsFetching(true);

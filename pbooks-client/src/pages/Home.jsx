@@ -33,6 +33,7 @@ export function Home() {
     );
   };
 
+  // Fonction pour vérifier si l'utilisateur peut voir un ouvrage
   const canSeeWork = (work) => {
     const isLogged = !!infos;
     const isAdmin = infos?.isAdmin || infos?.role === "admin";

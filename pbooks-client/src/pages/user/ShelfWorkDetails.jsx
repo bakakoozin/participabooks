@@ -20,6 +20,7 @@ export function ShelfWorkDetails() {
 
   const [volumes, setVolumes] = useState([]);
 
+  // Fonction pour gérer le changement de statut
   const handleStatusToggle = async (volumeId, newStatus) => {
     try {
       const response = await fetch(
@@ -50,6 +51,7 @@ export function ShelfWorkDetails() {
     }
   };
 
+  // Fonction pour gérer la suppression d'un volume de la collection
   const handleRemove = (id) => {
     setVolumes((prevVolumes) =>
       prevVolumes.filter(

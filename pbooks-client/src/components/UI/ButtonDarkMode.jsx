@@ -13,6 +13,12 @@ export function ThemeToggle() {
   const dispatch = useDispatch();
   const { theme } = useSelector((state) => state.auth.infos);
 
+  //   Gère le changement de thème de l'application :
+  //  * - Met à jour l'attribut `data-theme` du document pour appliquer immédiatement le nouveau thème.
+  //  * - Sauvegarde le thème choisi dans le `localStorage`.
+  //  * - Envoie une requête PATCH à l'API pour enregistrer la préférence de thème côté serveur.
+  //  * - Met à jour l'état global avec le nouveau thème si la requête réussit.
+  //  * - Gère et affiche les erreurs éventuelles en cas d'échec de la requête.
   async function handleThemeChange(newTheme) {
     document.documentElement.setAttribute("data-theme", newTheme);
     localStorage.setItem(LS_THEME, newTheme);
@@ -38,6 +44,7 @@ export function ThemeToggle() {
     }
   }
 
+  // Gère le changement de thème au clic sur le bouton.
   function toggleTheme() {
     const newTheme = theme === "clair" ? "sombre" : "clair";
     handleThemeChange(newTheme);

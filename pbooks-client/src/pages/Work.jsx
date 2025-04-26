@@ -27,6 +27,7 @@ export function Work() {
   const { infos } = useSelector((state) => state.auth);
   const workInfo = volumes.length > 0 ? volumes[0] : {};
 
+  // Fonction pour mettre à jour le statut d'un volume
   const handleStatusUpdate = (volId, newStatus) => {
     setVolumes((prevVolumes) =>
       prevVolumes.map((vol) =>
@@ -35,12 +36,14 @@ export function Work() {
     );
   };
 
+  // Fonction pour supprimer un volume de la liste
   const handleRemove = (id) => {
     setVolumes((prevVolumes) =>
       prevVolumes.filter((volume) => volume.vol_id !== id)
     );
   };
 
+  // Fonction pour vérifier si l'utilisateur peut voir un volume
   const canSeeVolume = (volume) => {
     if (volume.vol_status === "validé") {
       return true;

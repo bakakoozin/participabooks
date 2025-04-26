@@ -8,6 +8,7 @@ const LS_THEME = "pb_theme";
 export function useSession() {
   const dispatch = useDispatch();
 
+  // Fonction pour récupérer la session utilisateur depuis l'API et le thème depuis le localStorage
   const getSession = async () => {
     const theme = localStorage.getItem(LS_THEME) || "clair";
     document.documentElement.setAttribute("data-theme", theme);
@@ -26,8 +27,7 @@ export function useSession() {
       dispatch(login(resJSON.user));
       document.documentElement.setAttribute("data-theme", resJSON.user.theme);
       localStorage.setItem(LS_THEME, resJSON.user.theme);
-    }
-    else {
+    } else {
       dispatch(setNoSession(true));
     }
 
@@ -37,5 +37,5 @@ export function useSession() {
   useEffect(() => {
     getSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // Dépendances vides : l'effet s'exécute uniquement au montage
 }

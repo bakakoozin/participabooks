@@ -16,9 +16,9 @@ export function Footer() {
         </div>
       )}
       <p>&copy; 2025 - Baka Dev - Participabooks</p>
-      <div className={styles.footerLinkContainer}>
+      <nav aria-label="Liens légaux" className={styles.footerLinkContainer}>
         <NavLink
-          to="CGU"
+          to="cgu"
           end
           className={({ isActive }) =>
             `${styles.navLink} ${isActive ? styles.active : ""}`
@@ -27,7 +27,7 @@ export function Footer() {
           CGU
         </NavLink>
         <NavLink
-          to="Legal"
+          to="legal"
           end
           className={({ isActive }) =>
             `${styles.navLink} ${isActive ? styles.active : ""}`
@@ -35,7 +35,7 @@ export function Footer() {
         >
           Mentions Légales
         </NavLink>
-      </div>
+      </nav>
     </footer>
   );
 }
