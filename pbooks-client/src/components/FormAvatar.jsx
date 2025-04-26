@@ -67,7 +67,11 @@ export function FormAvatar() {
       <h3>Avatar</h3>
       <form onSubmit={handleSubmit}>
         <div className={styles.btnContainer}>
-          <label htmlFor="avatar" className={styles.btn}>
+          <label
+            htmlFor="avatar"
+            className={styles.btn}
+            aria-label="Choisir un fichier image pour modifier votre avatar"
+          >
             Choisir un fichier
           </label>
         </div>
@@ -89,7 +93,11 @@ export function FormAvatar() {
         )}
         <div className={styles.btnContainer}>
           {avatarFile && (
-            <button className={styles.btn} type="submit">
+            <button
+              className={styles.btn}
+              type="submit"
+              aria-label="Envoyer l'avatar"
+            >
               Envoyer
             </button>
           )}

@@ -19,6 +19,7 @@ export function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const { infos } = useSelector((state) => state.auth);
 
+  // Fonction de suppression de compte
   async function handleConfirmRemove() {
     try {
       const response = await fetch(`${API_URL}/user/profile`, {
@@ -42,6 +43,7 @@ export function Dashboard() {
   return (
     <main className={styles.mainContainer}>
       <h2>Profil</h2>
+      {/* Donnéees personnelles */}
       {infos && (
         <section>
           <article>
@@ -59,9 +61,11 @@ export function Dashboard() {
             </div>
           </article>
           <FormAvatar />
+          {/* Choix de l'avatar */}
           <article>
             {infos.theme && <ThemeToggle defaultTheme={infos.theme} />}
           </article>
+          {/* SUppression de compte */}
           <div>
             <button
               onClick={() => setShowModal(true)}

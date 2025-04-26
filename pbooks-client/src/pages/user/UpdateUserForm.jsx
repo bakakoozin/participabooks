@@ -107,6 +107,7 @@ export function UpdateUserForm() {
         {message && <p>{message}</p>}
 
         <form onSubmit={handleSubmit}>
+          <label htmlFor="pseudo">Pseudo</label>
           <input
             type="text"
             id="pseudo"
@@ -121,6 +122,7 @@ export function UpdateUserForm() {
             </p>
           )}
           <div>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
@@ -132,7 +134,11 @@ export function UpdateUserForm() {
               <p className="auth-alert">Veuillez entrer un email valide.</p>
             )}
           </div>
-          <button className={styles.btn} type="submit">
+          <button
+            className={styles.btn}
+            type="submit"
+            aria-label="Mettre à jour mes informations"
+          >
             Mettre à jour
           </button>
           <hr className={styles.separator} />
@@ -164,13 +170,18 @@ export function UpdateUserForm() {
             )}
           </div>
           <div className={styles.validateContainer}>
-            <button className={styles.btn} type="submit">
+            <button
+              className={styles.btn}
+              type="submit"
+              aria-label="Valider la mise à jour du mot de passe"
+            >
               Valider
             </button>
             <button
               type="button"
               className={`${styles.btn} ${styles.cancelBtn}`}
               onClick={() => navigate(-1)}
+              aria-label="Annuler la mise à jour"
             >
               Annuler
             </button>

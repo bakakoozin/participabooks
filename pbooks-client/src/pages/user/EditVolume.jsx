@@ -30,6 +30,7 @@ export function EditVolume() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Fonction pour gérer les changements dans le formulaire
   function handleChange(e) {
     const { name, value, checked, files } = e.target;
 
@@ -65,6 +66,7 @@ export function EditVolume() {
     }
   }
 
+  // Fonction pour ajouter un auteur
   function addAuthor() {
     setFormData((prevData) => ({
       ...prevData,
@@ -72,6 +74,7 @@ export function EditVolume() {
     }));
   }
 
+  // Fonction pour supprimer un auteur
   function removeAuthor(index) {
     setFormData((prevData) => {
       const newAuthors = [...prevData.authors];
@@ -80,6 +83,7 @@ export function EditVolume() {
     });
   }
 
+  // Fonction pour gérer la soumission du formulaire
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -113,6 +117,7 @@ export function EditVolume() {
     }
   }
 
+  // Fonction pour mettre à jour le média
   async function updateMedia() {
     const fileData = new FormData();
     fileData.append("media", refMedia.current.files[0]);
@@ -130,6 +135,7 @@ export function EditVolume() {
   }
 
   useTitle(`Editition du volume ${formData.number} ${formData.title}`);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -179,7 +185,7 @@ export function EditVolume() {
     fetchData();
   }, [volumeId, infos?.id]);
 
-  if (isFetching) return <p>Chargement...</p>;
+  if (isFetching) return <p className={styles.loading}>Chargement...</p>;
   if (error) return <p>{error}</p>;
 
   return (
@@ -191,6 +197,7 @@ export function EditVolume() {
       )}
       <section className={styles.formCard}>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
+          {/* Numéro du volume */}
           <div className={styles.inputContainer}>
             <label htmlFor="number">Numéro du volume</label>
             <input
@@ -202,6 +209,7 @@ export function EditVolume() {
               placeholder={"Numéro du volume"}
             />
           </div>
+          {/* Titre du volume */}
           <div className={styles.inputContainer}>
             <label htmlFor="title">Titre du volume</label>
             <input
@@ -213,6 +221,7 @@ export function EditVolume() {
               placeholder={"Titre du volume"}
             />
           </div>
+          {/* ISBN du volume */}
           <div className={styles.inputContainer}>
             <label htmlFor="isbn">ISBN</label>
             <input
@@ -224,6 +233,7 @@ export function EditVolume() {
               placeholder={"ISBN du volume"}
             />
           </div>
+          {/* Résumé du volume */}
           <div>
             <label htmlFor="summary">Résumé</label>
             <textarea
@@ -234,6 +244,7 @@ export function EditVolume() {
               placeholder={"Résumé du volume"}
             />
           </div>
+          {/* Formulaire pour les auteurs */}
           <fieldset>
             <legend>Auteur(s)</legend>
             {formData.authors.map((author, index) => (
@@ -251,6 +262,7 @@ export function EditVolume() {
                     type="button"
                     className={styles.btnClose}
                     onClick={() => removeAuthor(index)}
+                    aria-label="Supprimer l’auteur"
                   >
                     <FontAwesomeIcon icon={faXmark} />
                   </button>
@@ -260,6 +272,7 @@ export function EditVolume() {
                     type="button"
                     className={styles.btnAuthor}
                     onClick={addAuthor}
+                    aria-label="Ajouter un auteur supplémentaire"
                   >
                     Ajouter un auteur
                   </button>
@@ -267,6 +280,7 @@ export function EditVolume() {
               </div>
             ))}
           </fieldset>
+          {/* Validation visibilité du créateur */}
           <div>
             <input
               className={styles.checkbox}
@@ -281,6 +295,7 @@ export function EditVolume() {
               volume
             </label>
           </div>
+          {/* Validation du formulaire */}
           <div className={styles.validateContainer}>
             <button type="submit" className={styles.btn}>
               Valider modifications
@@ -295,10 +310,15 @@ export function EditVolume() {
           </div>
         </form>
         <hr className={styles.separator} />
+        {/* Ajout de la couverture */}
         <p>Image de couverture</p>
         {formData.volumes_id && (
           <div className={styles.uploadContainer}>
-            <label htmlFor="media" className={styles.btn}>
+            <label
+              htmlFor="media"
+              className={styles.btn}
+              aria-label="Choisir un fichier image pour modifier l'image de couverture"
+            >
               Choisir un fichier
             </label>
             <input

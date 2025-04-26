@@ -6,7 +6,7 @@ import { API_URL } from "../../utils/constants";
 
 import styles from "../../assets/style/scss/Button.module.scss";
 
-const ButtonAddToShelf = ({ item, type }) => {
+const ButtonAddToShelf = ({ item, type, ariaLabel }) => {
   const { isLogged, infos } = useSelector((state) => state.auth);
 
   async function handleAddToShelf() {
@@ -40,7 +40,11 @@ const ButtonAddToShelf = ({ item, type }) => {
   }
   if (!isLogged) return null;
   return (
-    <button onClick={handleAddToShelf} className={styles.btn}>
+    <button
+      onClick={handleAddToShelf}
+      className={styles.btn}
+      aria-label={ariaLabel}
+    >
       Ajouter à ma bibliothèque
     </button>
   );
@@ -49,6 +53,7 @@ const ButtonAddToShelf = ({ item, type }) => {
 ButtonAddToShelf.propTypes = {
   item: PropTypes.object.isRequired,
   type: PropTypes.oneOf(["work", "volume"]).isRequired,
+  ariaLabel: PropTypes.string,
 };
 
 export { ButtonAddToShelf };

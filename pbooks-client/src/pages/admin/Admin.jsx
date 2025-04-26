@@ -22,6 +22,7 @@ export function AdminDashboard() {
   const page = parseInt(searchParams.get("page")) || 1;
   const { infos } = useSelector((state) => state.auth);
 
+  // Fonction pour récupérer la liste des utilisateurs
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -46,6 +47,7 @@ export function AdminDashboard() {
     }
   };
 
+  // Fonction pour mettre à jour le rôle d'un utilisateur
   const updateRole = async (id, newRole) => {
     try {
       const res = await fetch(`${API_URL}/admin/users`, {
@@ -73,6 +75,7 @@ export function AdminDashboard() {
     }
   };
 
+  // Fonction pour gérer le changement de statut d'un utilisateur
   const handleToggleStatus = async (user) => {
     try {
       const newStatus = user.status === "actif" ? "bloqué" : "actif";
@@ -96,6 +99,7 @@ export function AdminDashboard() {
     }
   };
 
+  // Fonction pour gérer la recherche d'un utilisateur
   const handleSearch = async () => {
     try {
       const res = await fetch(`${API_URL}/admin/users/search?q=${search}`, {
@@ -122,6 +126,7 @@ export function AdminDashboard() {
     setShowRemoveModal(true);
   };
 
+  // Fonction pour gérer la suppression d'un utilisateur 
   const handleRemoveConfirmed = async () => {
     if (!userToRemove?.id) {
       console.error("Aucun ID utilisateur à supprimer.");
@@ -160,11 +165,13 @@ export function AdminDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
-  if (loading) return <p>Chargement...</p>;
+  if (loading) return <p className={styles.loading}>Chargement...</p>;
 
   if (infos?.role !== "admin") {
     return (
-      <p>{"Accès refusé. Vous n'avez pas les droits d'administrateur."}</p>
+      <p className={styles.message}>
+        {"Accès refusé. Vous n'avez pas les droits d'administrateur."}
+      </p>
     );
   }
 
@@ -174,7 +181,11 @@ export function AdminDashboard() {
       <Pagination totalPages={totalPages} />
 
       <div className={styles.searchControls}>
+        <label htmlFor="searchInput" className={styles.hiddenLabel}>
+          Rechercher un utilisateur
+        </label>
         <input
+          id="searchInput"
           type="text"
           placeholder="Rechercher un utilisateur..."
           value={search}

@@ -8,7 +8,7 @@ import { API_URL } from "../../utils/constants";
 
 import styles from "../../assets/style/scss/Button.module.scss";
 
-const ButtonRemove = ({ item, type, onRemove }) => {
+const ButtonRemove = ({ item, type, onRemove, ariaLabel }) => {
   const [showModal, setShowModal] = useState(false);
   const { isLogged, infos } = useSelector((state) => state.auth);
   const { canEditVolume } = useCanEditVolume();
@@ -71,7 +71,11 @@ const ButtonRemove = ({ item, type, onRemove }) => {
 
   return (
     <>
-      <button onClick={() => setShowModal(true)} className={styles.btnAlert}>
+      <button
+        onClick={() => setShowModal(true)}
+        className={styles.btnAlert}
+        aria-label={ariaLabel}
+      >
         Supprimer
       </button>
       {showModal && (
@@ -89,6 +93,7 @@ ButtonRemove.propTypes = {
   item: PropTypes.object.isRequired,
   type: PropTypes.oneOf(["work", "volume"]).isRequired,
   onRemove: PropTypes.func,
+  ariaLabel: PropTypes.string,
 };
 
 export { ButtonRemove };

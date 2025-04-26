@@ -6,7 +6,7 @@ import { useCanEditVolume } from "../../hooks/useCanEditVolume";
 
 import styles from "../../assets/style/scss/Button.module.scss";
 
-const ButtonCreateVolume = ({ item }) => {
+const ButtonCreateVolume = ({ item, ariaLabel }) => {
   const navigate = useNavigate();
   const { canEditVolume } = useCanEditVolume();
   const { isLogged, infos } = useSelector((state) => state.auth);
@@ -27,7 +27,11 @@ const ButtonCreateVolume = ({ item }) => {
   };
 
   return (
-    <button onClick={handleCreateVolume} className={styles.btnEdit}>
+    <button
+      onClick={handleCreateVolume}
+      className={styles.btnEdit}
+      aria-label={ariaLabel}
+    >
       Ajouter un volume
     </button>
   );
@@ -35,6 +39,7 @@ const ButtonCreateVolume = ({ item }) => {
 
 ButtonCreateVolume.propTypes = {
   item: PropTypes.object.isRequired,
+  ariaLabel: PropTypes.string,
 };
 
 export { ButtonCreateVolume };

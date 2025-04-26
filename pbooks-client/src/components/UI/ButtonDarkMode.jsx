@@ -11,8 +11,7 @@ const LS_THEME = "pb_theme";
 
 export function ThemeToggle() {
   const dispatch = useDispatch();
-  const { theme } = useSelector((state => state.auth.infos));
-
+  const { theme } = useSelector((state) => state.auth.infos);
 
   async function handleThemeChange(newTheme) {
     document.documentElement.setAttribute("data-theme", newTheme);
@@ -48,10 +47,19 @@ export function ThemeToggle() {
     <div className={styles.themeToggle}>
       <span>Mode sombre :</span>
       <div
+        role="switch"
+        aria-checked={theme === "sombre"}
+        aria-label={`Activer le mode ${
+          theme === "sombre" ? "clair" : "sombre"
+        }`}
         className={`${styles.toggleSwitch} ${
           theme === "sombre" ? styles.dark : styles.light
         }`}
         onClick={toggleTheme}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") toggleTheme();
+        }}
       >
         <div className={styles.toggleSlider} />
       </div>

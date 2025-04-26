@@ -27,6 +27,7 @@ export function CreateVolume() {
   });
   const navigate = useNavigate();
 
+  // Fonction pour gérer les changements dans le formulaire
   function handleChange(e) {
     const { name, value, checked } = e.target;
 
@@ -51,6 +52,7 @@ export function CreateVolume() {
     }
   }
 
+  // Fonction pour ajouter un auteur
   function addAuthor() {
     setFormData((prevData) => ({
       ...prevData,
@@ -58,6 +60,7 @@ export function CreateVolume() {
     }));
   }
 
+  // Fonction pour supprimer un auteur
   function removeAuthor(index) {
     setFormData((prevData) => {
       const newAuthors = [...prevData.authors];
@@ -66,6 +69,7 @@ export function CreateVolume() {
     });
   }
 
+  // Fonction pour gérer la soumission du formulaire
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -107,7 +111,9 @@ export function CreateVolume() {
 
   const workInfo = data.datas.length > 0 ? data.datas[0] : {};
 
+
   useTitle("Création d'un volume");
+  // Mise à jour des données et préremplissage du formulaire
   useEffect(() => {
     if (data.datas.length > 0) {
       const workInfo = data.datas[0];
@@ -123,7 +129,7 @@ export function CreateVolume() {
     }
   }, [data]);
 
-  if (isFetching) return <p>Chargement...</p>;
+  if (isFetching) return <p className={styles.loading}>Chargement...</p>;
 
   return (
     <main className={styles.mainContainer}>
@@ -132,6 +138,7 @@ export function CreateVolume() {
       )}
       <section className={styles.formCard}>
         <form onSubmit={handleSubmit}>
+          {/* Numéro du volume */}
           <div className={styles.inputContainer}>
             <label htmlFor="number">Numéro du volume</label>
             <input
@@ -142,6 +149,7 @@ export function CreateVolume() {
               onChange={handleChange}
             />
           </div>
+          {/* Titre du volume */}
           <div className={styles.inputContainer}>
             <label htmlFor="title">Titre du volume</label>
             <input
@@ -152,6 +160,7 @@ export function CreateVolume() {
               onChange={handleChange}
             />
           </div>
+          {/* ISBN du volume */}
           <div className={styles.inputContainer}>
             <label htmlFor="isbn">ISBN</label>
             <input
@@ -162,6 +171,7 @@ export function CreateVolume() {
               onChange={handleChange}
             />
           </div>
+          {/* Résumé du volume */}
           <div>
             <label htmlFor="summary">Résumé</label>
             <textarea
@@ -171,6 +181,7 @@ export function CreateVolume() {
               onChange={handleChange}
             />
           </div>
+          {/* Formulaire pour les auteurs */}
           <fieldset>
             <legend>Auteur(s)</legend>
             {formData.authors.map((author, index) => (
@@ -203,6 +214,7 @@ export function CreateVolume() {
               </div>
             ))}
           </fieldset>
+          {/* Validation visibilité du créateur */}
           <div>
             <input
               className={styles.checkbox}
@@ -217,6 +229,7 @@ export function CreateVolume() {
               volume
             </label>
           </div>
+          {/* Validation du formulaire */}
           <div className={styles.validateContainer}>
             <button type="submit" className={styles.btn}>
               Ajouter volume

@@ -17,6 +17,7 @@ export function CreateWork() {
     format: "",
   });
 
+  // Fonction pour gérer les changements dans les champs du formulaire
   function handleChange(e) {
     const { name, value } = e.target;
 
@@ -28,6 +29,7 @@ export function CreateWork() {
     }
   }
 
+  // Fonction pour gérer la soumission du formulaire
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -79,6 +81,7 @@ export function CreateWork() {
       <h2>Créer un nouvel ouvrage</h2>
       <section className={styles.formCard}>
         <form onSubmit={handleSubmit}>
+          {/* Titre de l'ouvrage */}
           <div className={styles.inputContainer}>
             <label htmlFor="name">Titre de l&apos;ouvrage</label>
             <input
@@ -89,6 +92,7 @@ export function CreateWork() {
               onChange={handleChange}
             />
           </div>
+          {/* Nom de l'éditeur */}
           <div className={styles.inputContainer}>
             <label htmlFor="edition">Editions</label>
             <input
@@ -99,6 +103,7 @@ export function CreateWork() {
               onChange={handleChange}
             />
           </div>
+          {/* Choix du type d'ouvrage */}
           <fieldset>
             <legend>Type d&apos;ouvrage</legend>
             <div>
@@ -134,6 +139,7 @@ export function CreateWork() {
               <label htmlFor="Manga">Manga</label>
             </div>
           </fieldset>
+          {/* Choix du format */}
           <fieldset>
             <legend>Format</legend>
             <div>
@@ -189,6 +195,7 @@ export function CreateWork() {
               <label htmlFor="manga">manga</label>
             </div>
           </fieldset>
+          {/* Validation du formulaire */}
           <div className={styles.validateContainer}>
             <button type="submit" className={styles.btn}>
               Valider

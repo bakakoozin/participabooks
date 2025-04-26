@@ -65,6 +65,7 @@ export function Home() {
         <button
           className={`${styles.navButton} ${styles.left}`}
           onClick={() => scrollSlider(sliderRef, "left")}
+          aria-label="Faire défiler vers la gauche"
         >
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
@@ -79,6 +80,7 @@ export function Home() {
         <button
           className={`${styles.navButton} ${styles.right}`}
           onClick={() => scrollSlider(sliderRef, "right")}
+          aria-label="Faire défiler vers la droite"
         >
           <FontAwesomeIcon icon={faChevronRight} />
         </button>
@@ -113,7 +115,11 @@ export function Home() {
                   </aside>
                   <aside className={styles.buttons}>
                     <p>Editions {work.works_edition}</p>
-                    <ButtonAddToShelf item={work} type="work" />
+                    <ButtonAddToShelf
+                      item={work}
+                      type="work"
+                      ariaLabel={`Ajouter l'ouvrage ${work.works_name} à ma bibliothèque`}
+                    />
                     {work.volumes[0].vol_status === "en attente" &&
                       (work.volumes[0].user_id === infos?.id ||
                         infos?.role === "admin" ||
@@ -121,6 +127,7 @@ export function Home() {
                         <Link
                           to={`/works/${work.works_id}/edit`}
                           className={styles.btnEdit}
+                          aria-label={`Éditer l’ouvrage ${work.works_name}`}
                         >
                           Editer
                         </Link>
@@ -129,6 +136,7 @@ export function Home() {
                       item={work}
                       type="work"
                       onRemove={() => handleRemoveWork(work.works_id)}
+                      ariaLabel={`Supprimer le volume ${work.works_name}`}
                     />
                   </aside>
                 </footer>

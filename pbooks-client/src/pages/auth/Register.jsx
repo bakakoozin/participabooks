@@ -22,24 +22,28 @@ export function Register() {
 
   const navigate = useNavigate();
 
+  // Fonction pour gérer le changement de pseudo
   function handleChangePseudo(e) {
     const value = e.target.value;
     setPseudo(e.target.value);
     setIsPseudoValid(pseudoRegex.test(value));
   }
 
+  // Fonction pour gérer le changement d'email
   function handleChangeEmail(e) {
     const value = e.target.value;
     setEmail(value);
     setIsEmailValid(emailRegex.test(value));
   }
 
+  // Fonction pour gérer le changement de mot de passe
   function handleChangePassword(e) {
     const value = e.target.value;
     setPassword(value);
     setIsPasswordValid(passwordRegex.test(value));
   }
 
+  // Fonction pour gérer la soumission du formulaire d'inscription
   async function handleSubmit(e) {
     e.preventDefault();
     try {
@@ -75,61 +79,66 @@ export function Register() {
     <main id="register" className={styles.mainContainer}>
       <h2>Création du compte</h2>
       <section className={styles.authForm}>
-        <div className={styles.authDesktop}>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              id="pseudo"
-              value={pseudo}
-              onChange={handleChangePseudo}
-              placeholder="Entrer votre pseudo"
-              required
-            />
-            {!isPseudoValid && pseudo && (
-              <p className={styles.authAlert}>
-                Le pseudo doit contenir au moins 3 caractères, lettres, chiffres
-                et underscores.
-              </p>
-            )}
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={handleChangeEmail}
-              placeholder="Entrer votre email"
-              required
-            />
-            {!isEmailValid && email && (
-              <p className={styles.authAlert}>
-                Veuillez entrer un email valide.
-              </p>
-            )}
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={handleChangePassword}
-              placeholder="Choisir un mot de passe"
-              required
-            />
-            {!isPasswordValid && password && (
-              <p className={styles.authAlert}>
-                Le mot de passe doit contenir au moins 8 caractères, une lettre
-                et un chiffre.
-              </p>
-            )}
-            <button className={styles.btn} type="submit">
-              Créer compte
-            </button>
-            {message && <p className={styles.authAlert}>{message}</p>}
-          </form>
-          <p>
-            Déjà inscrit ?{" "}
-            <strong>
-              <Link to="/auth/login">Se connecter</Link>
-            </strong>
-          </p>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="pseudo">Pseudo</label>
+          <input
+            type="text"
+            id="pseudo"
+            value={pseudo}
+            onChange={handleChangePseudo}
+            placeholder="Entrez votre pseudo"
+            required
+            aria-required="true"
+            autoComplete="username"
+          />
+          {!isPseudoValid && pseudo && (
+            <p className={styles.authAlert}>
+              Le pseudo doit contenir au moins 3 caractères, lettres, chiffres
+              et underscores.
+            </p>
+          )}
+          <label htmlFor="email">Adresse email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={handleChangeEmail}
+            placeholder="Entrez votre email"
+            required
+            aria-required="true"
+            autoComplete="email"
+          />
+          {!isEmailValid && email && (
+            <p className={styles.authAlert}>Veuillez entrer un email valide.</p>
+          )}
+          <label htmlFor="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={handleChangePassword}
+            placeholder="Choisir un mot de passe"
+            required
+            aria-required="true"
+            autoComplete="new-password"
+          />
+          {!isPasswordValid && password && (
+            <p className={styles.authAlert}>
+              Le mot de passe doit contenir au moins 8 caractères, une lettre et
+              un chiffre.
+            </p>
+          )}
+          <button className={styles.btn} type="submit">
+            Créer compte
+          </button>
+          {message && <p className={styles.authAlert}>{message}</p>}
+        </form>
+        <p>
+          Déjà inscrit ?{" "}
+          <strong>
+            <Link to="/auth/login">Se connecter</Link>
+          </strong>
+        </p>
       </section>
     </main>
   );

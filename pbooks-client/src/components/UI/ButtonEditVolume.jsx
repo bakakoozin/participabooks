@@ -5,7 +5,7 @@ import { useCanEditVolume } from "../../hooks/useCanEditVolume";
 
 import styles from "../../assets/style/scss/Button.module.scss";
 
-const ButtonEditVolume = ({ item }) => {
+const ButtonEditVolume = ({ item, ariaLabel }) => {
   const navigate = useNavigate();
   const { canEditVolume } = useCanEditVolume();
 
@@ -17,7 +17,11 @@ const ButtonEditVolume = ({ item }) => {
   };
 
   return (
-    <button onClick={handleEditVolume} className={styles.btnEdit}>
+    <button
+      onClick={handleEditVolume}
+      className={styles.btnEdit}
+      aria-label={ariaLabel}
+    >
       Éditer
     </button>
   );
@@ -25,6 +29,7 @@ const ButtonEditVolume = ({ item }) => {
 
 ButtonEditVolume.propTypes = {
   item: PropTypes.object.isRequired,
+  ariaLabel: PropTypes.string,
 };
 
 export { ButtonEditVolume };

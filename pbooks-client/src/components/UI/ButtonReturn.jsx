@@ -10,6 +10,7 @@ const ButtonReturn = () => {
       type="button"
       className={`${styles.btn} ${styles.returnBtn}`}
       onClick={() => Navigate(-1)}
+      aria-label="Retour à la page précédente"
     >
       Retour
     </button>

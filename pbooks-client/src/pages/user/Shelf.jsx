@@ -90,6 +90,7 @@ export function Shelf() {
                     item={work}
                     type="work"
                     onRemove={() => handleRemoveWork(work.works_id)}
+                    ariaLabel={`Supprimer l'ouvrage ${work.works_name} de ma bibliothèque`}
                   />
                 </aside>
               </footer>

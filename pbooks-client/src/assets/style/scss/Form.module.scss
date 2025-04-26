@@ -204,6 +204,12 @@
     align-items: center;
     gap: 1rem;
   }
+
+.loading,
+.message {
+  margin-top: 30rem;
+}
+
 }
 
 @include respond-to(tablet) {

@@ -25,6 +25,7 @@ export function EditWork() {
   const [formData, setFormData] = useState(initData);
   const { infos } = useSelector((state) => state.auth);
 
+  // Fonction pour gérer les changements dans les champs du formulaire 
   function handleChange(e) {
     const { name, value } = e.target;
 
@@ -36,6 +37,7 @@ export function EditWork() {
     }
   }
 
+  // Fonction pour gérer la soumission du formulaire
   async function handleSubmit(e) {
     e.preventDefault();
     const jsonData = {
@@ -71,28 +73,33 @@ export function EditWork() {
   }
 
   useTitle(`Editer l'ouvrage ${formData.works_name}`);
+
+  // Mise à jour des données et préremplissage du formulaire
   useEffect(() => {
     if (data?.datas.length) {
       setFormData(data.datas[0]);
     }
   }, [data]);
 
-  if (isFetching) return <p>Chargement...</p>;
+  if (isFetching) return <p className={styles.loading}>Chargement...</p>;
 
   if (!data.datas.length) {
-    return <p>Ouvrage introuvable.</p>;
+    return <p className={styles.message}>Ouvrage introuvable.</p>;
   }
   if (
     data?.datas?.[0].vol_status !== "en attente" ||
     data?.datas?.[0].user_id !== infos?.id
   )
-    return <p>Vous ne pouvez pas modifier cet ouvrage.</p>;
+    return (
+      <p className={styles.message}>Vous ne pouvez pas modifier cet ouvrage.</p>
+    );
 
   return (
     <main className={styles.mainContainer}>
       <h2>Editer l&apos;ouvrage</h2>
       <section className={styles.formCard}>
         <form onSubmit={handleSubmit}>
+          {/* Titre de l'ouvrage */}
           <div className={styles.inputContainer}>
             <label htmlFor="name">Titre de l&apos;ouvrage</label>
             <input
@@ -104,6 +111,7 @@ export function EditWork() {
               placeholder={"Nom de l'ouvrage"}
             />
           </div>
+          {/* Nom de l'éditeur */}
           <div className={styles.inputContainer}>
             <label htmlFor="edition">Editions</label>
             <input
@@ -115,6 +123,7 @@ export function EditWork() {
               placeholder={"Editions"}
             />
           </div>
+          {/* Choix du type d'ouvrage */}
           <fieldset>
             <legend>Type d&apos;ouvrage</legend>
             <div>
@@ -150,6 +159,7 @@ export function EditWork() {
               <label htmlFor="Manga">Manga</label>
             </div>
           </fieldset>
+          {/* Choix du format */}
           <fieldset>
             <legend>Format</legend>
             <div>
@@ -205,6 +215,7 @@ export function EditWork() {
               <label htmlFor="manga">manga</label>
             </div>
           </fieldset>
+          {/* Validation du formulaire */}
           <div className={styles.validateContainer}>
             <button type="submit" className={styles.btn}>
               Valider

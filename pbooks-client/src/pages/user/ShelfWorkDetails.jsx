@@ -162,6 +162,7 @@ export function ShelfWorkDetails() {
                   item={volume}
                   type="volume"
                   onRemove={handleRemove}
+                  ariaLabel={`Supprimer le volume ${volume.vol_title} de ma collection`}
                 />
               </div>
             </footer>

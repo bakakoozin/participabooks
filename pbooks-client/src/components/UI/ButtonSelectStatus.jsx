@@ -35,7 +35,15 @@ export function ButtonSelectStatus({ item, onStatusUpdate }) {
   };
 
   return (
-    <button onClick={toggleStatus} className={styles.btnAlert}>
+    <button
+      onClick={toggleStatus}
+      className={styles.btnAlert}
+      aria-label={
+        item.vol_status === "validé"
+          ? `Passer le volume ${item.vol_title} en attente de validation`
+          : `Valider le volume ${item.vol_title}`
+      }
+    >
       {item.vol_status === "validé"
         ? "Passer en attente de validation"
         : "Valider"}

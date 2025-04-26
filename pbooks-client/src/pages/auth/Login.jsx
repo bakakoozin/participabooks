@@ -18,6 +18,7 @@ export function Login() {
 
   const [message, setMessage] = useState("");
 
+  // Fonction pour gérer la soumission du formulaire de connexion
   async function handleSubmit(e) {
     e.preventDefault();
     const email = emailRef.current.value;
@@ -35,9 +36,9 @@ export function Login() {
         });
 
         const resJson = await response.json();
-        
+
         if (!response.ok) {
-        throw new Error(resJson.msg || "Erreur lors de la connexion.");
+          throw new Error(resJson.msg || "Erreur lors de la connexion.");
         }
 
         dispatch(login(resJson.user));
@@ -57,21 +58,26 @@ export function Login() {
     <main id="login" className={styles.mainContainer}>
       <h2>Se connecter</h2>
       <section className={styles.authForm}>
-        <div className={styles.authDesktop}>
           <form onSubmit={handleSubmit}>
+            <label htmlFor="email">Adresse email</label>
             <input
               type="email"
               id="email"
               ref={emailRef}
-              placeholder="Email"
+              placeholder="Veuillez saisir votre email"
               required
+              aria-required="true"
+              autoComplete="email"
             />
+            <label htmlFor="password">Mot de passe</label>
             <input
               type="password"
               id="password"
               ref={passwordRef}
-              placeholder="Mot de passe"
+              placeholder="Veuillez saisir votre mot de passe"
               required
+              aria-required="true"
+              autoComplete="current-password"
             />
 
             {message && <p className="auth-alert">{message}</p>}
@@ -87,7 +93,6 @@ export function Login() {
               <Link to={"/auth/register"}>Créer un compte</Link>
             </strong>
           </p>
-        </div>
       </section>
     </main>
   );

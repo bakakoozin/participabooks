@@ -35,6 +35,12 @@
       }
     }
 
+    .hiddenLabel {
+      position: absolute;
+      width: 1px;
+      overflow: hidden;
+    }
+
     button {
       padding: 0.5rem 1rem;
       background-color: var(--red-color);
@@ -121,17 +127,22 @@
       }
     }
   }
+
+  .loading,
+  .message {
+    margin-top: 30rem;
+  }
 }
 
 @include respond-to(tablet) {
   .mainContainer {
     padding-top: 9rem;
     margin: auto;
-    
+
     .userTable {
       font-size: $font-size;
     }
-    
+
     .hideMobile {
       display: table-cell;
     }

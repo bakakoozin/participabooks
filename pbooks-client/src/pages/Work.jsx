@@ -74,7 +74,11 @@ export function Work() {
         </section>
       )}
       <div className={styles.btnContainer}>
-        <ButtonCreateVolume item={workInfo} type="work" />
+        <ButtonCreateVolume
+          item={workInfo}
+          type="work"
+          ariaLabel={`Ajouter un volume à l'ouvrage ${workInfo.works_name}`}
+        />
       </div>
       <section
         className={`${styles.cardContainer} ${
@@ -99,7 +103,7 @@ export function Work() {
               <figure>
                 <Img
                   src={volume.url_media}
-                  alt={`image de couverture de ${volume.vol_title}`}
+                  alt={`Couverture de ${volume.vol_title}`}
                 />
               </figure>
 
@@ -118,12 +122,21 @@ export function Work() {
                 </article>
 
                 <div className={styles.btnContainer}>
-                  <ButtonAddToShelf item={volume} type="volume" />
-                  <ButtonEditVolume item={volume} type="volume" />
+                  <ButtonAddToShelf
+                    item={volume}
+                    type="volume"
+                    ariaLabel={`Ajouter le volume ${volume.vol_title} à ma collection`}
+                  />
+                  <ButtonEditVolume
+                    item={volume}
+                    type="volume"
+                    ariaLabel={`Editer le volume ${volume.vol_title}`}
+                  />
                   <ButtonRemove
                     item={volume}
                     type="volume"
                     onRemove={handleRemove}
+                    ariaLabel={`Supprimer le volume ${volume.vol_title}`}
                   />
                   <ButtonSelectStatus
                     item={volume}

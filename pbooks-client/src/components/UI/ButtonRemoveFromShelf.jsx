@@ -7,7 +7,7 @@ import { API_URL } from "../../utils/constants";
 
 import styles from "../../assets/style/scss/Button.module.scss";
 
-const ButtonRemoveFromShelf = ({ item, type, onRemove }) => {
+const ButtonRemoveFromShelf = ({ item, type, onRemove, ariaLabel }) => {
   const [showModal, setShowModal] = useState(false);
   const { isLogged, infos } = useSelector((state) => state.auth);
 
@@ -47,7 +47,11 @@ const ButtonRemoveFromShelf = ({ item, type, onRemove }) => {
 
   return (
     <>
-      <button onClick={() => setShowModal(true)} className={styles.btnAlert}>
+      <button
+        onClick={() => setShowModal(true)}
+        className={styles.btnAlert}
+        aria-label={ariaLabel}
+      >
         Supprimer de ma bibliothèque
       </button>
       {showModal && (
@@ -65,5 +69,6 @@ ButtonRemoveFromShelf.propTypes = {
   item: PropTypes.object.isRequired,
   type: PropTypes.oneOf(["work", "volume"]).isRequired,
   onRemove: PropTypes.func,
+  ariaLabel: PropTypes.string,
 };
 export { ButtonRemoveFromShelf };
