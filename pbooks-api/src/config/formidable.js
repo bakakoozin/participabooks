@@ -1,6 +1,7 @@
 import formidable from "formidable";
 import path from "path";
 
+// Middleware pour gérer l'upload de fichiers avec la bibliothèque "formidable"
 const handleUpload = (req, res, next, options) => {
   const form = formidable({
     multiples: options.multiples || false,
@@ -12,6 +13,7 @@ const handleUpload = (req, res, next, options) => {
       options.allowEmptyFiles !== undefined ? options.allowEmptyFiles : false,
   });
 
+  // Analyse la requête pour extraire les fichiers et les champs
   form.parse(req, async (err, fields, files) => {
     if (err) {
       console.error("Erreur lors de l'upload", err);

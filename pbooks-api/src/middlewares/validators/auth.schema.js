@@ -1,5 +1,6 @@
 import Joi from "joi";
 
+// Validation des données d'inscription et de connexion
 const registerSchema = Joi.object({
   pseudo: Joi.string().alphanum().min(3).max(50).required().messages({
     "string.empty": "Pseudo est requis.",
@@ -17,6 +18,8 @@ const registerSchema = Joi.object({
     "string.min": "Mot de passe doit contenir au moins 8 caractères.",
   }),
 });
+
+// Validation des données de connexion
 const loginSchema = Joi.object({
   email: Joi.string().email().required().messages({
     "string.empty": "Adresse email est requise.",

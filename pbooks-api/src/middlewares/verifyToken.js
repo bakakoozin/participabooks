@@ -3,6 +3,7 @@ import User from "../models/users.model.js";
 
 const SECRET = process.env.JWT_SECRET;
 
+// Middleware pour vérifier le token JWT
 export default (req, res, next) => {
   const token = req.cookies.jwt;
   if (!token) {
@@ -12,6 +13,7 @@ export default (req, res, next) => {
     });
   }
   try {
+    // Vérifie et décode le token JWT
     jwt.verify(token, SECRET, async (err, decoded) => {
       if (err) {
         const message =

@@ -8,6 +8,7 @@ import { getPage } from "../utils/getPage.js";
 
 //============================== GET =======================================//
 
+// Récupérer tous les utilisateurs
 const getAll = async (req, res, next) => {
   const page = getPage(req);
   const search = req.query.q?.trim() || "";
@@ -22,6 +23,7 @@ const getAll = async (req, res, next) => {
   }
 };
 
+// Récupérer les informations d'un utilisateur
 const getInfos = async (req, res, next) => {
   const { userId } = req.user;
   try {
@@ -38,6 +40,7 @@ const getInfos = async (req, res, next) => {
   }
 };
 
+// Récupérer les utilisateurs par recherche
 const getBySearch = async (req, res) => {
   const { q } = req.query;
 
@@ -62,6 +65,7 @@ const getBySearch = async (req, res) => {
 
 //============================== PATCH =======================================//
 
+// Mettre à jour les informations d'un utilisateur
 const update = async (req, res, next) => {
   const { email, pseudo, password } = req.body;
   const userId = req.user.id;
@@ -100,6 +104,7 @@ const update = async (req, res, next) => {
   }
 };
 
+// Mettre à jour l'avatar d'un utilisateur
 const uploadAvatar = async (req, res, next) => {
   const userId = req.user?.id;
   if (!userId) {
@@ -174,6 +179,7 @@ const uploadAvatar = async (req, res, next) => {
   );
 };
 
+// Mettre à jour les informations d'un utilisateur par un admin 
 const updateByAdmin = async (req, res, next) => {
   const { id, status, role } = req.body;
 
@@ -206,6 +212,7 @@ const updateByAdmin = async (req, res, next) => {
   }
 };
 
+// Mettre à jour le thème d'un utilisateur
 const updateTheme = async (req, res, next) => {
   const { theme } = req.body;
   const id = req.user.id;
@@ -226,6 +233,7 @@ const updateTheme = async (req, res, next) => {
 
 //============================== DELETE =======================================//
 
+// Supprimer un utilisateur
 const remove = async (req, res, next) => {
   const id = req.body.id || req.user.id;
 

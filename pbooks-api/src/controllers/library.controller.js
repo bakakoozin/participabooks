@@ -12,47 +12,52 @@ import Work from "../models/works.model.js";
 
 //============================== GET =======================================//
 
+// Récupérer tous les ouvrages
 const getAll = async (req, res, next) => {
-  const formattedSearch = req.query.q?.trim() || "";
-  const page = getPage(req);
-  const limit = parseInt(req.query.limit, 10) || 10;
+  const formattedSearch = req.query.q?.trim() || ""; // Recherche formatée
+  const page = getPage(req); // Récupère la page actuelle
+  const limit = parseInt(req.query.limit, 10) || 10; // Limite par page (par défaut : 10)
 
   try {
+    // Récupère les ouvrages et le nombre total d'ouvrages
     const { datas, count } = await Work.findAll(
       formattedSearch,
-      req?.user?.id || "",
+      req?.user?.id || "", // ID de l'utilisateur connecté (si disponible)
       page,
       limit
     );
 
+    // Retourne les ouvrages et le nombre total de pages
     res.json({ datas, totalPages: Math.ceil(count / limit) });
   } catch (error) {
-    next(error);
+    next(error); // Passe l'erreur au middleware d'erreur
   }
 };
 
+// Récupérer un ouvrage par son ID
 const getOne = async (req, res, next) => {
   try {
-    const [datas] = await Work.findOne(req.params.id);
+    const [datas] = await Work.findOne(req.params.id); // Recherche l'ouvrage par ID
 
     if (!datas.length)
-      res.status(400).json({ message: "Aucun ouvrage trouvé." });
-    res.json({ datas });
+      res.status(400).json({ message: "Aucun ouvrage trouvé." }); // Aucun ouvrage trouvé
+    res.json({ datas }); // Retourne les données de l'ouvrage
   } catch (error) {
     next(error);
   }
 };
 
+// Récupérer les détails d'un volume par son ID
 const getVolumeDetails = async (req, res, next) => {
   try {
     const volumeId = req.params.id;
-    const volume = await Volume.findById(volumeId);
+    const volume = await Volume.findById(volumeId); // Recherche le volume par ID
 
     if (!volume)
       res.status(404).json({
         message: "Aucun volume trouvé.",
-      });
-    res.json({ datas: volume });
+      }); // Aucun volume trouvé
+    res.json({ datas: volume }); // Retourne les détails du volume
   } catch (error) {
     next(error);
   }
@@ -60,15 +65,17 @@ const getVolumeDetails = async (req, res, next) => {
 
 //============================== POST =======================================//
 
+// Créer un nouvel ouvrage
 const createWork = async (req, res, next) => {
   try {
     const { name, edition, type, format } = req.body;
     if (!name || !type || !format) {
       return res
         .status(400)
-        .json({ error: "Les champs obligatoires sont manquants." });
+        .json({ error: "Les champs obligatoires sont manquants." }); // Vérifie les champs obligatoires
     }
-
+    
+    // Ajoute ou récupère l'ID de l'ouvrage
     const worksId = await Work.findOrCreateWork({
       name,
       edition,
@@ -83,6 +90,7 @@ const createWork = async (req, res, next) => {
   }
 };
 
+// Créer un nouveau volume
 const createVolume = async (req, res, next) => {
   try {
     const {
@@ -100,7 +108,7 @@ const createVolume = async (req, res, next) => {
     }
 
     const worksId = works_id;
-    const users_id = req.user.id;
+    const users_id = req.user.id; // ID de l'utilisateur connecté
     const volumeData = {
       worksId,
       number: number || null,
@@ -111,20 +119,22 @@ const createVolume = async (req, res, next) => {
       users_id,
     };
 
-    const connection = await pool.getConnection();
+    const connection = await pool.getConnection(); // Connexion à la base de données
     try {
-      await connection.beginTransaction();
+      await connection.beginTransaction(); // Démarre une transaction
 
-      const existingVolume = await Volume.isbnExist(isbn);
+      const existingVolume = await Volume.isbnExist(isbn); // Vérifie si l'ISBN existe déjà
 
       if (existingVolume) {
         return res
           .status(400)
           .json({ error: `Le volume avec l'ISBN ${isbn} existe déjà.` });
       }
+      // Insère le volume dans la base de données
       const volumesId = await Volume.insertVolume(volumeData);
       const parsedAuthors = authors ? JSON.parse(authors) : [];
 
+      // Ajoute les auteurs au volume
       if (Array.isArray(parsedAuthors) && parsedAuthors.length > 0) {
         await Promise.all(
           parsedAuthors.map(async (authorName) => {
@@ -134,7 +144,7 @@ const createVolume = async (req, res, next) => {
         );
       }
 
-      await connection.commit();
+      await connection.commit(); // Valide la transaction
       res.status(201).json({
         message: "Volume ajoutés avec succès.",
         worksId,
@@ -143,13 +153,13 @@ const createVolume = async (req, res, next) => {
     } catch (error) {
       console.error("Erreur interne du serveur :", error);
 
-      await connection.rollback();
+      await connection.rollback(); // Annule la transaction en cas d'erreur
       res.status(500).json({
         error: "Erreur lors de l'ajout du volume.",
         details: error.message,
       });
     } finally {
-      connection.release();
+      connection.release(); // Libère la connexion
     }
   } catch (error) {
     console.error("Erreur lors de la connexion à la base de données :", error);
@@ -160,6 +170,7 @@ const createVolume = async (req, res, next) => {
   }
 };
 
+// Uploader un média
 const uploadMedia = async (req, res, next) => {
   const formOptions = {
     multiples: false,
@@ -212,7 +223,6 @@ const uploadMedia = async (req, res, next) => {
           try {
             if (fs.unlink(oldMediaPath)) {
               fs.unlinkSync(oldMediaPath);
-              console.log(`Ancien fichier supprimé : ${existingMedia.url}`);
             }
           } catch (unlinkError) {
             console.error(
@@ -265,6 +275,7 @@ const uploadMedia = async (req, res, next) => {
 
 //============================== PATCH =======================================//
 
+// Mettre à jour un ouvrage
 const updateWork = async (req, res, next) => {
   try {
     const workId = req.params.id;
@@ -297,6 +308,7 @@ const updateWork = async (req, res, next) => {
   }
 };
 
+// Mettre à jour un volume
 const updateVolume = async (req, res, next) => {
   try {
     const volumeId = req.params.id;
@@ -339,6 +351,7 @@ const updateVolume = async (req, res, next) => {
   }
 };
 
+// Mettre à jour le statut d'un volume
 const updateStatus = async (req, res, next) => {
   try {
     const [response] = await Volume.updateStatus(
@@ -360,6 +373,7 @@ const updateStatus = async (req, res, next) => {
 
 //============================== DELETE =======================================//
 
+// Supprimer un ouvrage
 const removeWork = async (req, res, next) => {
   try {
     const [response] = await Work.deleteWork(req.params.id);
@@ -374,6 +388,7 @@ const removeWork = async (req, res, next) => {
   }
 };
 
+// Supprimer un volume
 const removeVolume = async (req, res, next) => {
   try {
     const [response] = await Volume.deleteVolume(req.params.id);

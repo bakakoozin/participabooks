@@ -5,34 +5,38 @@ import { getPage } from "../utils/getPage.js";
 
 //============================== GET =======================================//
 
+// Récupére tous les ouvrages de la bibliothèque personnelle d'un utilisateur
 const getAllUserWorks = async (req, res, next) => {
-  const formattedSearch = req.query.q?.trim() || "";
-  const page = getPage(req);
-  const limit = parseInt(req.query.limit, 10) || 10;
+  const formattedSearch = req.query.q?.trim() || ""; // Recherche formatée
+  const page = getPage(req); // Récupère la page actuelle
+  const limit = parseInt(req.query.limit, 10) || 10; // Limite par page (par défaut : 10)
 
   try {
+    // Récupère les ouvrages et le nombre total d'ouvrages
     const { datas, count } = await Shelf.findAll(
       formattedSearch,
-      req?.user?.id || "",
+      req?.user?.id || "", // ID de l'utilisateur connecté
       page
     );
 
+    // Retourne les ouvrages et le nombre total de pages
     res.json({ datas, totalPages: Math.ceil(count/limit) });
   } catch (error) {
-    next(error);
+    next(error); // Passe l'erreur au middleware d'erreur
   }
 };
 
+// Récupére un ouvrage de la bibliothèque personnelle d'un utilisateur
 const getOneUserWork = async (req, res, next) => {
   try {
     const [datas] = await Shelf.findOne({
-      users_id: req.user.id,
-      works_id: req.params.id,
+      users_id: req.user.id, // ID de l'utilisateur connecté
+      works_id: req.params.id, // ID de l'ouvrage
     });
 
     if (!datas.length)
-      res.status(400).json({ message: "Aucun ouvrage trouvé." });
-    res.json({ datas });
+      res.status(400).json({ message: "Aucun ouvrage trouvé." }); // Aucun ouvrage trouvé
+    res.json({ datas }); // Retourne les données de l'ouvrage
   } catch (error) {
     next(error);
   }
@@ -40,10 +44,12 @@ const getOneUserWork = async (req, res, next) => {
 
 //============================== POST =======================================//
 
+// Ajoute un volume à la bibliothèque personnelle d'un utilisateur
 const addVolumeToShelf = async (req, res, next) => {
-  const { users_id, volumes_id } = req.body;
+  const { users_id, volumes_id } = req.body; // Récupère l'ID de l'utilisateur et du volume
 
   try {
+    // Insère le volume dans la bibliothèque personnelle
     await Shelf.insertVolume({ users_id, volumes_id });
     res
       .status(201)
@@ -53,15 +59,18 @@ const addVolumeToShelf = async (req, res, next) => {
   }
 };
 
+// Ajoute tous les volumes d'un ouvrage à la bibliothèque personnelle d'un utilisateur
 const addAllVolumesToShelf = async (req, res, next) => {
-  const { users_id, works_id } = req.body;
-  const connection = await pool.getConnection();
-  await connection.beginTransaction();
+  const { users_id, works_id } = req.body; // Récupère l'ID de l'utilisateur et de l'ouvrage
+  const connection = await pool.getConnection(); // Connexion à la base de données
+  await connection.beginTransaction(); // Démarre une transaction
   try {
+    // Récupère tous les volumes associés à l'ouvrage
     const volumesIds = await Volume.findAllByWorkId(works_id);
     if (volumesIds.length === 0)
       return res.status(400).json({ message: "Aucun volume trouvé." });
 
+    // Ajoute chaque volume à la bibliothèque personnelle
     await Promise.all(
       volumesIds.map((volume_id) => {
         return Shelf.insertVolume(
@@ -77,21 +86,23 @@ const addAllVolumesToShelf = async (req, res, next) => {
     });
   } catch (error) {
     console.error("Erreur serveur:", error);
-    await connection.rollback();
+    await connection.rollback(); // Annule la transaction en cas d'erreur
     next(error);
   } finally {
-    connection.release();
+    connection.release(); // Libère la connexion
   }
 };
 
 //============================== PATCH =======================================//
 
+// Met à jour le statut d'un volume dans la bibliothèque personnelle d'un utilisateur
 const updateStatusOnShelf = async (req, res, next) => {
   try {
-    const { status } = req.body;
-    const volumes_id = req.params.id;
-    const users_id = req.user.id;
+    const { status } = req.body; // Nouveau statut
+    const volumes_id = req.params.id; // ID du volume
+    const users_id = req.user.id; // ID de l'utilisateur connecté
 
+    // Met à jour le statut du volume
     const [response] = await Shelf.updateStatus({
       status,
       volumes_id,
@@ -108,8 +119,10 @@ const updateStatusOnShelf = async (req, res, next) => {
 
 //============================== DELETE =======================================//
 
+// Supprime un volume de la bibliothèque personnelle d'un utilisateur
 const removeVolumeFromShelf = async (req, res, next) => {
   try {
+    // Supprime le volume en fonction de l'ID du volume et de l'utilisateur
     const [response] = await Shelf.deleteVolume(req.params.id, req.user.id);
 
     if (!response.affectedRows)
@@ -120,8 +133,10 @@ const removeVolumeFromShelf = async (req, res, next) => {
   }
 };
 
+// Supprime un ouvrage de la bibliothèque personnelle d'un utilisateur
 const removeWorkFromShelf = async (req, res, next) => {
   try {
+    // Supprime tous les volumes associés à l'ouvrage
     const [response] = await Shelf.deleteAllVolumes(req.params.id, req.user.id);
 
     if (!response.affectedRows)

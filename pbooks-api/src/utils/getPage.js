@@ -1,3 +1,4 @@
+// Retrouve le numéro de page à partir de la requête
 export function getPage(req) {
   const { page } = req.query;
   const pageNumber = parseInt(page, 10);

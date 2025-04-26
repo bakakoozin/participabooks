@@ -3,9 +3,11 @@ import pool from "../config/db.js";
 class Work {
   //============================== SELECT =======================================//
 
+  // Récupère tous les ouvrages avec pagination et recherche
   static async findAll(search = "", user_id, page = 1, limit = 10) {
-    const offset = (page - 1) * limit;
+    const offset = (page - 1) * limit; // Calcule l'offset pour la pagination
 
+    // Champs sélectionnés dans la requête principale
     const SELECT_FIELDS = `
       works.id AS works_id, 
       works.name AS works_name,
@@ -30,6 +32,7 @@ class Work {
       )) AS volumes
     `;
 
+    // Requête principale pour récupérer les ouvrages
     const MAIN_QUERY = `
       SELECT ${SELECT_FIELDS}
       FROM works
@@ -50,6 +53,7 @@ class Work {
       LIMIT ${limit} OFFSET ${offset}
     `;
 
+    // Requête pour compter le nombre total d'ouvrages correspondant à la recherche
     const COUNT_QUERY = `
       SELECT COUNT(DISTINCT works.id) AS total
       FROM works
@@ -66,17 +70,20 @@ class Work {
       )
     `;
 
-    const params = [user_id, search, search];
+    const params = [user_id, search, search]; // Paramètres pour les requêtes
 
+    // Exécute les requêtes
     const datas = await pool.query(MAIN_QUERY, params);
     const count = await pool.query(COUNT_QUERY, params);
 
+    // Retourne les ouvrages et le nombre total
     return {
       datas: datas[0],
       count: count[0][0].total,
     };
   }
 
+  // Récupère un ouvrage spécifique par son ID
   static async findOne(id) {
     const SELECT_WORK = `SELECT 
           works.id AS works_id,
@@ -109,6 +116,7 @@ class Work {
     return await pool.query(SELECT_WORK, [id]);
   }
 
+  // Recherche un ouvrage par ses propriétés (nom, édition, type, format)
   static async findWork({ name, edition, type, format }) {
     const FIND_WORK = `SELECT id FROM works WHERE name = ? AND edition = ? AND type = ? AND format = ? LIMIT 1`;
     const [rows] = await pool.execute(FIND_WORK, [name, edition, type, format]);
@@ -117,6 +125,7 @@ class Work {
 
   //============================== INSERT =======================================//
 
+  // Insère un nouvel ouvrage dans la base de données
   static async insertWork({ name, edition, type, format }) {
     const INSERT_WORK = `INSERT INTO works (name, edition, type, format) VALUES (?, ?, ?, ?)`;
     const [result] = await pool.execute(INSERT_WORK, [
@@ -128,16 +137,19 @@ class Work {
     return result.insertId; // Récupére l'ID de l'oeuvre insérée
   }
 
+  // Trouve un ouvrage ou le crée s'il n'existe pas
   static async findOrCreateWork(props) {
-    const worksId = await Work.findWork(props);
-    return worksId || (await Work.insertWork(props));
+    const worksId = await Work.findWork(props); // Recherche l'ouvrage
+    return worksId || (await Work.insertWork(props)); // Insère l'ouvrage si non trouvé
   }
 
   //============================== UPDATE =======================================//
 
+  // Met à jour les informations d'un ouvrage existant
   static async updateWork({ worksId, ...workData }) {
+    // Génère dynamiquement les champs à mettre à jour
     const fieldsToUpdate = Object.entries(workData)
-      .filter(([key, value]) => value !== undefined)
+      .filter(([key, value]) => value !== undefined) // Ignore les champs non définis
       .map(([key, value]) => `${key} = ?`);
 
     const UPDATE_WORK = `
@@ -148,17 +160,18 @@ class Work {
     const values = Object.values(workData).filter(
       (value) => value !== undefined
     );
-    values.push(worksId);
+    values.push(worksId); // Ajoute l'ID de l'ouvrage à la fin des valeurs
     try {
       const [result] = await pool.execute(UPDATE_WORK, values);
-      return result;
+      return result; // Retourne le résultat de la mise à jour
     } catch (error) {
-      throw error;
+      throw error; // Relance l'erreur pour la gérer ailleurs
     }
   }
 
   //============================== DELETE =======================================//
 
+  // Supprime un ouvrage de la base de données par son ID
   static async deleteWork(id) {
     const DELETE_WORK = `DELETE FROM works WHERE id =?`;
     return await pool.execute(DELETE_WORK, [id]);

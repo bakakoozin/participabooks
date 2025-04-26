@@ -1,3 +1,4 @@
+// Middleware de validation des données avec un schéma Joi
 const validate = (schema) => (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 

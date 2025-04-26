@@ -3,6 +3,7 @@ import { hash, genSalt, compare } from "bcrypt";
 import createToken from "../utils/token.js";
 import Auth from "../models/auth.model.js";
 
+// Enregistrer un nouvel utilisateur
 const register = async (req, res, next) => {
   const { email, pseudo, password } = req.body;
 
@@ -22,6 +23,7 @@ const register = async (req, res, next) => {
   }
 };
 
+// Authentifier un utilisateur
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -33,7 +35,9 @@ const login = async (req, res, next) => {
     }
 
     if (user.status === "bloqué") {
-      return res.status(403).json({ msg: "Votre compte est actuellement bloqué." });
+      return res
+        .status(403)
+        .json({ msg: "Votre compte est actuellement bloqué." });
     }
 
     if (user && (await compare(password, user.password))) {
@@ -69,6 +73,7 @@ const login = async (req, res, next) => {
   }
 };
 
+// Déconnexion de l'utilisateur
 const logout = (req, res, next) => {
   res.clearCookie("jwt", {
     httpOnly: true,
