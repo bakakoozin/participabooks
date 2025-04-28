@@ -48,7 +48,7 @@ export function Work() {
     if (volume.vol_status === "validé") {
       return true;
     }
-    return volume.user_id === infos.id || infos.isAdmin || infos.isModerator;
+    return volume.user_id === infos.id || infos.role.match(/admin|moderator/);
   };
 
   useTitle(`${workInfo.works_name} détails`);

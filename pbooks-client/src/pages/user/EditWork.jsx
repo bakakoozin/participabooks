@@ -88,7 +88,7 @@ export function EditWork() {
   }
   if (
     data?.datas?.[0].vol_status !== "en attente" ||
-    data?.datas?.[0].user_id !== infos?.id
+    (data?.datas?.[0].user_id !== infos?.id && infos.role !== "admin" && infos.role !== "moderator")
   )
     return (
       <p className={styles.message}>Vous ne pouvez pas modifier cet ouvrage.</p>

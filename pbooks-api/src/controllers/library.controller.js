@@ -20,9 +20,11 @@ const getAll = async (req, res, next) => {
 
   try {
     // Récupère les ouvrages et le nombre total d'ouvrages
+    console.log("formattedSearch", formattedSearch);
     const { datas, count } = await Work.findAll(
       formattedSearch,
       req?.user?.id || "", // ID de l'utilisateur connecté (si disponible)
+      req?.user?.role || "", 
       page,
       limit
     );

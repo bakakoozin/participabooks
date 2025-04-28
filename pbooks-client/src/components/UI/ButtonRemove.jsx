@@ -10,34 +10,26 @@ import styles from "../../assets/style/scss/Button.module.scss";
 
 const ButtonRemove = ({ item, type, onRemove, ariaLabel }) => {
   const [showModal, setShowModal] = useState(false);
-  const { isLogged, infos } = useSelector((state) => state.auth);
+  const { infos } = useSelector((state) => state.auth);
   const { canEditVolume } = useCanEditVolume();
 
   const isWork = type === "work";
-
-  if (!isLogged) return null;
-
   // Vérification de l'élément à supprimer
   if (isWork) {
     const allVolumesEnAttente =
       item.volumes &&
       item.volumes.every((vol) => vol.vol_status === "en attente");
-
     if (!allVolumesEnAttente) return null;
-
-    const isCreator = item.users_id === infos?.id;
-    const isPrivileged = canEditVolume(item);
-
-    if (!isCreator && !isPrivileged) return null;
+    const isPrivileged = canEditVolume(item.volumes[0]);
+    if (!isPrivileged) return null;
   } else {
     if (item.vol_status !== "en attente") return null;
 
-    const isCreator = infos?.id === item.user_id;
     const isPrivileged = canEditVolume(item);
 
-    if (!isCreator && !isPrivileged) return null;
+    if (!isPrivileged) return null;
   }
-
+  
   // Fonction de suppression de l'élément avec vérification de connexion de l'utilisateur avant permission de suppression
   async function handleConfirmRemove() {
     const url = `${API_URL}/works/${isWork ? "work" : "volume"}/${
@@ -69,8 +61,8 @@ const ButtonRemove = ({ item, type, onRemove, ariaLabel }) => {
     }
   }
 
-  if (!isLogged) return null;
-
+  // if (!isLogged) return null;
+  
   return (
     <>
       <button
@@ -80,6 +72,7 @@ const ButtonRemove = ({ item, type, onRemove, ariaLabel }) => {
       >
         Supprimer
       </button>
+      
       {showModal && (
         <ConfirmModal
           message="Êtes-vous sûr de vouloir supprimer cet élément ?"

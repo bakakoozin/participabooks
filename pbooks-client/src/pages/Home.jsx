@@ -32,6 +32,7 @@ export function Home() {
       prevData.filter((work) => work.works_id !== removedWorkId)
     );
   };
+  console.log(search)
 
   // Fonction pour vérifier si l'utilisateur peut voir un ouvrage
   const canSeeWork = (work) => {
@@ -104,9 +105,9 @@ export function Home() {
                 </header>
                 <figure>
                   <Link to={`/works/${work.works_id}`}>
-                    <Img
-                      src={work.cover_url}
-                      alt={`image de couverture de ${work.works_name}`}
+                    <Img 
+                      src={work.cover_url} 
+                      alt={`image de couverture de ${work.works_name}`} 
                     />
                   </Link>
                 </figure>

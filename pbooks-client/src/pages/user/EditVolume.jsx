@@ -89,6 +89,10 @@ export function EditVolume() {
 
     const updateData = { ...formData };
 
+    if (updateData.number === "") {
+      updateData.number = null;
+    }
+
     if (formData.creator_visibility !== (formData.creator_visibility === "1")) {
       updateData.creator_visibility = formData.creator_visibility ? "1" : "0";
     }
