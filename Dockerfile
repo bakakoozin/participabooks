@@ -1,11 +1,11 @@
 FROM node:20-alpine
 WORKDIR /usr/src/app
 
-COPY package*.json ./pbooks-api/
+COPY pbooks-api/package*.json ./
 
 RUN npm install --production
 
-COPY ./pbooks-api/ .
+COPY pbooks-api/ .
 
 EXPOSE 9000
 
