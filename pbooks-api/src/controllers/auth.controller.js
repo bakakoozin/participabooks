@@ -42,7 +42,7 @@ const login = async (req, res, next) => {
 
     if (user && (await compare(password, user.password))) {
       const token = createToken(user);
-
+// Création du token JWT pour l'utilisateur
       res.cookie("jwt", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
