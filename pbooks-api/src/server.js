@@ -17,10 +17,11 @@ const app = express(); // Initialise une application Express
 // Configuration de CORS pour autoriser les requêtes provenant du client
 app.use(
     cors({
-        origin: process.env.CLIENT_URL, // URL autorisée (définie dans les variables d'environnement)
-        credentials: true, // Autorise l'envoi de cookies dans les requêtes
-        methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"], // Méthodes HTTP autorisées
-        allowedHeaders: ["content-Type", "Accept"], // En-têtes HTTP autorisés
+        origin: process.env.CLIENT_URL,
+        credentials: true,
+        methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Accept", "Authorization", "Cookie"],
+        exposedHeaders: ["set-cookie"],
     })
 );
 
