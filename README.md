@@ -133,7 +133,7 @@ Script	Description
 `npm run start` Lance le serveur Express
 `npm run dev` Lance le serveur Express avec nodemon
 
-✨ Auteur
+✨
 Développé par bakaDev
 [Linktree](https://linktr.ee/bakadev)
 [GIT](https://github.com/bakakoozin)
