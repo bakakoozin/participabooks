@@ -3,7 +3,7 @@ import { Router } from "express";
 import verifyTokenNoBlock from "../middlewares/verifyTokenNoBlock.js";
 import { validate } from "../middlewares/validators/validate.js";
 import verifyToken from "../middlewares/verifyToken.js";
-import {isbnSchema} from "../middlewares/validators/auth.schema.js";
+import {isbnSchema} from "../middlewares/validators/isbn.schema.js";
 
 import {
   getAll,
