@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "../../assets/style/scss/Form.module.scss";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
+const isbnRegex = /^\d{13}$/;
+
 export function CreateVolume() {
   const { workId } = useParams();
   const [formData, setFormData] = useState({
@@ -84,6 +86,10 @@ export function CreateVolume() {
     };
 
     try {
+      if (!isbnRegex.test(formData.isbn)) {
+        toast.error("L'ISBN doit contenir exactement 13 chiffres.");
+        return;
+      }
       const response = await fetch(`${API_URL}/works/volumes/create`, {
         method: "POST",
         credentials: "include",
@@ -110,7 +116,6 @@ export function CreateVolume() {
   }
 
   const workInfo = data.datas.length > 0 ? data.datas[0] : {};
-
 
   useTitle("Création d'un volume");
   // Mise à jour des données et préremplissage du formulaire

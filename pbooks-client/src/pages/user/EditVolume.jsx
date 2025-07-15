@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "../../assets/style/scss/Form.module.scss";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
+const isbnRegex = /^\d{13}$/;
+
 export function EditVolume() {
   const { volumeId } = useParams();
   const refMedia = useRef(null);
@@ -88,6 +90,11 @@ export function EditVolume() {
     e.preventDefault();
 
     const updateData = { ...formData };
+
+    if (!isbnRegex.test(formData.isbn)) {
+      toast.error("L'ISBN doit contenir exactement 13 chiffres.");
+      return;
+    }
 
     if (updateData.number === "") {
       updateData.number = null;

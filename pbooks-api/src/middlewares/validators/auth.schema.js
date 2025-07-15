@@ -29,4 +29,4 @@ const loginSchema = Joi.object({
   }),
 });
 
-export { registerSchema, loginSchema, isbnSchema };
+export { registerSchema, loginSchema };
