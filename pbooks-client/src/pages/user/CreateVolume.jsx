@@ -46,6 +46,13 @@ export function CreateVolume() {
         ...prevData,
         [name]: checked,
       }));
+    } else if (name === "isbn") {
+      // Supprimer tous les caractères non numériques de l'ISBN (tirets, espaces, +, -, etc.)
+      const numericValue = value.replace(/[^0-9]/g, "");
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: numericValue,
+      }));
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -169,11 +176,13 @@ export function CreateVolume() {
           <div className={styles.inputContainer}>
             <label htmlFor="isbn">ISBN</label>
             <input
-              type="number"
+              type="text"
               id="isbn"
               name="isbn"
               value={formData.isbn}
               onChange={handleChange}
+              maxLength="13"
+              placeholder="(13 chiffres)"
             />
           </div>
           {/* Résumé du volume */}

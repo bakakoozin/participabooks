@@ -106,7 +106,17 @@ const createVolume = async (req, res, next) => {
     } = req.body;
 
     if (!works_id) {
-      return res.status(400).json({ error: "ID de l'ouvrage manquant." });
+      return res.status(400).json({ message: "ID de l'ouvrage manquant." });
+    }
+
+    // Validation du format ISBN
+    if (!isbn) {
+      return res.status(400).json({ message: "ISBN manquant." });
+    }
+    
+    const isbnRegex = /^\d{13}$/;
+    if (!isbnRegex.test(isbn)) {
+      return res.status(400).json({ message: "L'ISBN doit contenir exactement 13 chiffres." });
     }
 
     const worksId = works_id;
@@ -130,7 +140,7 @@ const createVolume = async (req, res, next) => {
       if (existingVolume) {
         return res
           .status(400)
-          .json({ error: `Le volume avec l'ISBN ${isbn} existe déjà.` });
+          .json({ message: `Le volume avec l'ISBN ${isbn} existe déjà.` });
       }
       // Insère le volume dans la base de données
       const volumesId = await Volume.insertVolume(volumeData);
@@ -157,7 +167,7 @@ const createVolume = async (req, res, next) => {
 
       await connection.rollback(); // Annule la transaction en cas d'erreur
       res.status(500).json({
-        error: "Erreur lors de l'ajout du volume.",
+        message: "Erreur lors de l'ajout du volume.",
         details: error.message,
       });
     } finally {
@@ -166,7 +176,7 @@ const createVolume = async (req, res, next) => {
   } catch (error) {
     console.error("Erreur lors de la connexion à la base de données :", error);
     res.status(500).json({
-      error: "Erreur lors de la connexion à la base de données.",
+      message: "Erreur lors de la connexion à la base de données.",
       details: error.message,
     });
   }
@@ -316,6 +326,14 @@ const updateVolume = async (req, res, next) => {
     const volumeId = req.params.id;
     if (!volumeId) {
       return res.status(400).json({ message: "ID de volume manquant." });
+    }
+
+    // Validation du format ISBN si fourni
+    if (req.body.isbn !== undefined) {
+      const isbnRegex = /^\d{13}$/;
+      if (!isbnRegex.test(req.body.isbn)) {
+        return res.status(400).json({ message: "L'ISBN doit contenir exactement 13 chiffres." });
+      }
     }
 
     const updateFields = {};
