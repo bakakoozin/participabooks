@@ -98,7 +98,7 @@ class Shelf {
       WHERE shelfs.users_id = ? AND works.id = ?
       GROUP BY volumes.id, works.id, users.id, medias.url
       ORDER BY vol_num;`; // Trie par numéro de volume
-    return await pool.query(FIND_ONE_WORK, [users_id, users_id, works_id]);
+    return await pool.query(FIND_ONE_WORK, [users_id, works_id]);
   }
 
   //============================== INSERT =======================================//
