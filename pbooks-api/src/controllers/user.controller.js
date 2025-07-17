@@ -154,20 +154,32 @@ const uploadAvatar = async (req, res, next) => {
       );
 
       try {
-        fs.renameSync(avatarFile.filepath, outputFilePath);
+        // Utiliser copyFileSync puis unlinkSync au lieu de renameSync pour éviter les problèmes cross-device
+        fs.copyFileSync(avatarFile.filepath, outputFilePath);
+        fs.unlinkSync(avatarFile.filepath);
 
         const [user] = await User.findOne(userId);
         const oldAvatar = user[0]?.avatar;
         if (oldAvatar && oldAvatar !== "default-avatar.png") {
-          fs.unlink(
-            path.join(process.cwd(), "public/uploads/avatars", oldAvatar),
-            () => {}
-          );
+          try {
+            fs.unlinkSync(path.join(process.cwd(), "public/uploads/avatars", oldAvatar));
+          } catch (unlinkError) {
+            console.error("Erreur lors de la suppression de l'ancien avatar:", unlinkError);
+          }
         }
 
         await User.updateAvatar(newFilename, userId);
         return res.send(newFilename);
       } catch (error) {
+        // Nettoyer le fichier temporaire en cas d'erreur
+        try {
+          if (fs.existsSync(avatarFile.filepath)) {
+            fs.unlinkSync(avatarFile.filepath);
+          }
+        } catch (cleanupError) {
+          console.error("Erreur lors du nettoyage du fichier temporaire:", cleanupError);
+        }
+
         return res.status(500).json({
           success: false,
           message: "Erreur lors du traitement de l'image.",
