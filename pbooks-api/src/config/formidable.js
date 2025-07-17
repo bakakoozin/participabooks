@@ -6,7 +6,7 @@ const handleUpload = (req, res, next, options) => {
   const form = formidable({
     multiples: options.multiples || false,
     uploadDir:
-      options.uploadDir || path.join(process.cwd(), "public/uploads/temp"),
+      options.uploadDir || path.join(process.cwd(), "public/uploads/avatars"),
     keepExtensions: true,
     maxFileSize: options.maxFileSize || 5 * 1024 * 1024,
     allowEmptyFiles:
