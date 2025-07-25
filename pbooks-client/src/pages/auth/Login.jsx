@@ -42,7 +42,7 @@ export function Login() {
         }
 
         dispatch(login(resJson.user));
-        navigate("/");
+        navigate("/shelf");
       } catch (error) {
         toast.error(error.message);
         console.error("Erreur lors de la connexion:", error);
