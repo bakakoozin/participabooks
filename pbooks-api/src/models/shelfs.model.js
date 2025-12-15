@@ -83,7 +83,6 @@ class Shelf {
         volumes.isbn AS vol_isbn,
         volumes.summary AS vol_summary,
         volumes.status AS vol_status,
-        shelfs.status AS vol_status_user,
         volumes.created_at AS created_at,
         volumes.creator_visibility AS creator_visibility,
         users.id AS user_id,
