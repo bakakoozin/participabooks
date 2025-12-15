@@ -29,21 +29,16 @@ const getAllUserWorks = async (req, res, next) => {
 // Récupére un ouvrage de la bibliothèque personnelle d'un utilisateur
 const getOneUserWork = async (req, res, next) => {
   try {
-    const users_id = req.user?.id;
-    if (!users_id) {
-      return res.status(401).json({ message: "Utilisateur non authentifié." });
-    }
-
-    const works_id = req.params.id;
-    const [datas] = await Shelf.findOne({ users_id, works_id });
+    const [datas] = await Shelf.findOne({
+      users_id: req.user.id, // ID de l'utilisateur connecté
+      works_id: req.params.id, // ID de l'ouvrage
+    });
 
     if (!datas.length) {
       return res.status(400).json({ message: "Aucun ouvrage trouvé." });
     }
-
-    res.json({ datas });
+    res.json({ datas }); // Retourne les données de l'ouvrage
   } catch (error) {
-    console.error("Erreur serveur:", error); // log détaillé pour debugger
     next(error);
   }
 };

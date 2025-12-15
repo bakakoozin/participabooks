@@ -81,12 +81,11 @@ class Shelf {
         volumes.number AS vol_num,
         volumes.title AS vol_title,
         volumes.isbn AS vol_isbn,
-        volumes.summary AS vol_summary,
         volumes.status AS vol_status,
         shelfs.status AS vol_status_user,
-        volumes.created_at AS created_at,
-        volumes.creator_visibility AS creator_visibility,
-        users.id AS user_id,
+        ANY_VALUE(volumes.summary) AS vol_summary,
+        ANY_VALUE(volumes.created_at) AS created_at,
+        ANY_VALUE(volumes.creator_visibility) AS creator_visibility,
         COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name,
         ANY_VALUE(medias.url) AS url_media
       FROM works
