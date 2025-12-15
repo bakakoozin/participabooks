@@ -72,31 +72,47 @@ class Shelf {
   // Récupère un ouvrage spécifique d'un utilisateur
   static async findOne({ users_id, works_id }) {
     const FIND_ONE_WORK = `SELECT 
-    works.id AS works_id, 
-    works.name AS works_name,
-    works.edition AS works_edition,
-    works.type AS works_type,
-    works.format AS works_format,
-    volumes.id AS vol_id,
-    volumes.number AS vol_num,
-    volumes.title AS vol_title,
-    volumes.isbn AS vol_isbn,
-    volumes.summary AS vol_summary,
-    volumes.status AS vol_status,
-    volumes.created_at AS created_at,
-    volumes.creator_visibility AS creator_visibility,
-    shelfs.status AS vol_status_user,
-    COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name,
-    medias.url AS url_media
-FROM works
-LEFT JOIN volumes ON volumes.works_id = works.id
-LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
-LEFT JOIN authors ON authors.id = volumes_authors.authors_id
-LEFT JOIN medias ON medias.volumes_id = volumes.id
-INNER JOIN shelfs ON shelfs.volumes_id = volumes.id AND shelfs.users_id = ?
-WHERE works.id = ?
-GROUP BY volumes.id, works.id, medias.url
-ORDER BY volumes.number;
+      works.id AS works_id, 
+      works.name AS works_name,
+      works.edition AS works_edition,
+      works.type AS works_type,
+      works.format AS works_format,
+
+      volumes.id AS vol_id,
+      volumes.number AS vol_num,
+      volumes.title AS vol_title,
+      volumes.isbn AS vol_isbn,
+      volumes.summary AS vol_summary,
+      volumes.status AS vol_status,
+      volumes.created_at AS created_at,
+      volumes.creator_visibility AS creator_visibility,
+
+      shelfs.status AS vol_status_user,
+
+      COALESCE(
+        GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 
+        'Inconnu'
+      ) AS authors_name,
+
+      medias.url AS url_media
+
+    FROM works
+    LEFT JOIN volumes ON volumes.works_id = works.id
+    LEFT JOIN shelfs ON shelfs.volumes_id = volumes.id
+    LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
+    LEFT JOIN authors ON authors.id = volumes_authors.authors_id
+    LEFT JOIN medias ON medias.volumes_id = volumes.id
+
+    WHERE shelfs.users_id = ?
+      AND works.id = ?
+
+    GROUP BY 
+      works.id,
+      volumes.id,
+      shelfs.status,
+      medias.url
+
+    ORDER BY volumes.number;
 `; // Trie par numéro de volume
     return await pool.query(FIND_ONE_WORK, [users_id, works_id]);
   }
