@@ -81,13 +81,13 @@ class Shelf {
         volumes.number AS vol_num,
         volumes.title AS vol_title,
         volumes.isbn AS vol_isbn,
+        volumes.summary AS vol_summary,
         volumes.status AS vol_status,
-        shelfs.status AS vol_status_user,
-        ANY_VALUE(volumes.summary) AS vol_summary,
-        ANY_VALUE(volumes.created_at) AS created_at,
-        ANY_VALUE(volumes.creator_visibility) AS creator_visibility,
+        volumes.created_at AS created_at,
+        volumes.creator_visibility AS creator_visibility,
+        users.id AS user_id,
         COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name,
-        ANY_VALUE(medias.url) AS url_media
+        medias.url AS url_media
       FROM works
       LEFT JOIN volumes ON volumes.works_id = works.id
       LEFT JOIN users ON volumes.users_id = users.id
@@ -96,7 +96,7 @@ class Shelf {
       LEFT JOIN medias ON medias.volumes_id = volumes.id
       LEFT JOIN shelfs ON shelfs.volumes_id = volumes.id AND shelfs.users_id = ?
       WHERE works.id = ?
-      GROUP BY volumes.id
+      GROUP BY volumes.id, works.id, users.id, medias.url
       ORDER BY vol_num;`; // Trie par numéro de volume
     return await pool.query(FIND_ONE_WORK, [users_id, works_id]);
   }
