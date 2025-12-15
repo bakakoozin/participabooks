@@ -83,11 +83,9 @@ class Shelf {
         volumes.isbn AS vol_isbn,
         volumes.summary AS vol_summary,
         volumes.status AS vol_status,
+        shelfs.status AS vol_status_user,
         volumes.created_at AS created_at,
         volumes.creator_visibility AS creator_visibility,
-        (SELECT status FROM shelfs 
-     WHERE volumes_id = volumes.id AND users_id = ? 
-     LIMIT 1) AS vol_status_user,
         users.id AS user_id,
         COALESCE(GROUP_CONCAT(DISTINCT authors.name SEPARATOR ','), 'Inconnu') AS authors_name,
         medias.url AS url_media
