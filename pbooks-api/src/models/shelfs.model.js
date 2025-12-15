@@ -95,7 +95,7 @@ class Shelf {
       LEFT JOIN volumes_authors ON volumes_authors.volumes_id = volumes.id
       LEFT JOIN authors ON authors.id = volumes_authors.authors_id
       LEFT JOIN medias ON medias.volumes_id = volumes.id
-      LEFT JOIN shelfs ON shelfs.volumes_id = volumes.id
+      LEFT JOIN shelfs ON shelfs.volumes_id = volumes.id AND shelfs.users_id = ?
       WHERE shelfs.users_id = ? AND works.id = ?
       GROUP BY volumes.id, works.id, users.id, medias.url
       ORDER BY vol_num;`; // Trie par numéro de volume
