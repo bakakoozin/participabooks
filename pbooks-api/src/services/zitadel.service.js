@@ -74,7 +74,6 @@ export const setProjectRole = async (subject, role) => {
     )
   );
 
-  if (role === "user") return null;
   return managementRequest(`/users/${subject}/grants`, {
     method: "POST",
     body: JSON.stringify({
@@ -82,4 +81,25 @@ export const setProjectRole = async (subject, role) => {
       roleKeys: [role],
     }),
   });
+};
+
+export const ensureDefaultProjectRole = async (subject) => {
+  const grants = await managementRequest("/users/grants/_search", {
+    method: "POST",
+    body: JSON.stringify({ query: { userIdQuery: { userId: subject } } }),
+  });
+  const hasProjectRole = (grants.result || []).some(
+    (grant) => grant.projectId === process.env.ZITADEL_PROJECT_ID
+  );
+
+  if (hasProjectRole) return false;
+
+  await managementRequest(`/users/${subject}/grants`, {
+    method: "POST",
+    body: JSON.stringify({
+      projectId: process.env.ZITADEL_PROJECT_ID,
+      roleKeys: ["user"],
+    }),
+  });
+  return true;
 };

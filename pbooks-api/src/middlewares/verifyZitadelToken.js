@@ -16,7 +16,7 @@ const getRoleClaim = (payload) => {
   const claimName = process.env.ZITADEL_ROLE_CLAIM ||
     `urn:zitadel:iam:org:project:${process.env.ZITADEL_PROJECT_ID}:roles`;
   const roles = payload[claimName] || {};
-  return ["admin", "moderator"].find((role) => roles[role]) || "user";
+  return ["admin", "moderator", "user"].find((role) => roles[role]) || "user";
 };
 
 const getUserInfo = async (accessToken) => {

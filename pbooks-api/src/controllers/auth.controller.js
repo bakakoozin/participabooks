@@ -1,6 +1,6 @@
 import { createChallenge, verifySolution } from "../services/altcha.service.js";
 import { assertSignupRateLimit } from "../services/signup-rate-limit.service.js";
-import { createHumanUser } from "../services/zitadel.service.js";
+import { createHumanUser, ensureDefaultProjectRole } from "../services/zitadel.service.js";
 
 // Enregistrer un nouvel utilisateur
 const register = async (req, res, next) => {
@@ -35,7 +35,12 @@ const registrationChallenge = (_req, res, next) => {
 };
 
 const getSession = async (req, res, next) => {
-  res.json({ user: req.user });
+  try {
+    await ensureDefaultProjectRole(req.auth.subject);
+    return res.json({ user: req.user });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 export { register, registrationChallenge, getSession };
