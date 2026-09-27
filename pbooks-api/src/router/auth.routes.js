@@ -1,23 +1,20 @@
 import { Router } from "express";
 
-import verifyTokenNoBlock from "../middlewares/verifyTokenNoBlock.js";
+import verifyZitadelToken from "../middlewares/verifyZitadelToken.js";
 import { validate } from "../middlewares/validators/validate.js";
 import {
   register,
-  login,
-  logout,
   getSession,
+  registrationChallenge,
 } from "../controllers/auth.controller.js";
 import {
   registerSchema,
-  loginSchema,
 } from "../middlewares/validators/auth.schema.js";
 
 const router = Router();
 
+router.get("/registration-challenge", registrationChallenge);
 router.post("/register", validate(registerSchema), register);
-router.post("/login", validate(loginSchema), login);
-router.post("/logout", logout);
-router.get("/session", verifyTokenNoBlock, getSession);
+router.get("/session", verifyZitadelToken(), getSession);
 
 export default router;

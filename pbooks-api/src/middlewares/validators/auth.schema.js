@@ -17,16 +17,10 @@ const registerSchema = Joi.object({
     "string.empty": "Mot de passe requis.",
     "string.min": "Mot de passe doit contenir au moins 8 caractères.",
   }),
+  altcha: Joi.object({
+    signature: Joi.string().required(),
+    number: Joi.number().integer().min(0).required(),
+  }).required(),
 });
 
-// Validation des données de connexion
-const loginSchema = Joi.object({
-  email: Joi.string().email().required().messages({
-    "string.empty": "Adresse email est requise.",
-  }),
-  password: Joi.string().required().messages({
-    "string.empty": "Mot de passe requis.",
-  }),
-});
-
-export { registerSchema, loginSchema };
+export { registerSchema };

@@ -1,7 +1,6 @@
 import "dotenv/config"; // Charge les variables d'environnement depuis un fichier .env
 import cors from "cors"; // Middleware pour gérer les politiques CORS
 import express from "express"; // Framework pour créer le serveur HTTP
-import cookieParser from "cookie-parser"; // Middleware pour parser les cookies
 import path from "path"; // Module pour gérer les chemins de fichiers
 
 import router from "./router/index.routes.js" // Importation des routes principales
@@ -20,12 +19,10 @@ app.use(
         origin: process.env.CLIENT_URL,
         credentials: true,
         methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Accept", "Authorization", "Cookie"],
-        exposedHeaders: ["set-cookie"],
+        allowedHeaders: ["Content-Type", "Accept", "Authorization"],
     })
 );
 
-app.use(cookieParser()); // Parse les cookies des requêtes entrantes
 app.use(express.json()); // Parse les corps des requêtes au format JSON
 app.use(express.urlencoded({ extended: true }));
 

@@ -1,7 +1,6 @@
 import { Router } from "express";
 
-import verifyTokenNoBlock from "../middlewares/verifyTokenNoBlock.js";
-import verifyToken from "../middlewares/verifyToken.js";
+import verifyZitadelToken from "../middlewares/verifyZitadelToken.js";
 
 import {
   getAll,
@@ -20,20 +19,20 @@ import {
 const router = Router();
 
 //PUBLIC
-router.get("/", verifyTokenNoBlock, getAll);
+router.get("/", verifyZitadelToken(false), getAll);
 router.get("/:id", getOne);
 
 //USERS
-router.patch("/:id", verifyToken, updateWork);
-router.post("/create", verifyToken, createWork);
-router.patch("/uploads/:id", verifyToken, uploadMedia);
-router.delete("/work/:id", verifyToken, removeWork);
-router.get("/volumes/:id", verifyToken, getVolumeDetails);
-router.patch("/volumes/:id", verifyToken, updateVolume);
-router.delete("/volume/:id", verifyToken, removeVolume);
-router.post("/volumes/create", verifyToken, createVolume);
+router.patch("/:id", verifyZitadelToken(), updateWork);
+router.post("/create", verifyZitadelToken(), createWork);
+router.patch("/uploads/:id", verifyZitadelToken(), uploadMedia);
+router.delete("/work/:id", verifyZitadelToken(), removeWork);
+router.get("/volumes/:id", verifyZitadelToken(), getVolumeDetails);
+router.patch("/volumes/:id", verifyZitadelToken(), updateVolume);
+router.delete("/volume/:id", verifyZitadelToken(), removeVolume);
+router.post("/volumes/create", verifyZitadelToken(), createVolume);
 
 //MODERATOR ADMIN
-router.patch("/volumes/:id/status", verifyToken, updateStatus);
+router.patch("/volumes/:id/status", verifyZitadelToken(), updateStatus);
 
 export default router;

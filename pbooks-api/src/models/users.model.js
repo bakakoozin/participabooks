@@ -9,7 +9,7 @@ class User {
 
     // Requête principale pour récupérer les utilisateurs
     const MAIN_QUERY = `
-      SELECT id, email, pseudo, created_at, role, status, avatar
+      SELECT id, zitadel_subject, email, pseudo, created_at, status, avatar
       FROM users
       WHERE email LIKE CONCAT('%', ?, '%') OR pseudo LIKE CONCAT('%', ?, '%')
       ORDER BY created_at DESC
@@ -39,23 +39,57 @@ class User {
 
   // Récupère un utilisateur par son ID
   static async findOne(id) {
-    const SELECT_USER = `SELECT id, email, pseudo, created_at, role, avatar, theme, status
+    const SELECT_USER = `SELECT id, zitadel_subject, email, pseudo, created_at, avatar, theme, status
 FROM users WHERE id = ?`;
     return await pool.query(SELECT_USER, [id]);
   }
 
+  static async findById(id) {
+    const [rows] = await pool.execute(
+      "SELECT id, zitadel_subject, email, pseudo, created_at, avatar, theme, status FROM users WHERE id = ?",
+      [id]
+    );
+    return rows[0] || null;
+  }
+
+  static async findByZitadelSubject(subject) {
+    const [rows] = await pool.execute(
+      "SELECT id, zitadel_subject, email, pseudo, created_at, avatar, theme, status FROM users WHERE zitadel_subject = ?",
+      [subject]
+    );
+    return rows[0] || null;
+  }
+
+  static async findUnlinkedByEmail(email) {
+    const [rows] = await pool.execute(
+      "SELECT id, zitadel_subject, email, pseudo, created_at, avatar, theme, status FROM users WHERE zitadel_subject IS NULL AND LOWER(email) = LOWER(?) LIMIT 1",
+      [email]
+    );
+    return rows[0] || null;
+  }
+
+  static async attachZitadelSubject(id, subject) {
+    return pool.execute("UPDATE users SET zitadel_subject = ? WHERE id = ? AND zitadel_subject IS NULL", [subject, id]);
+  }
+
+  static async createZitadelUser({ subject, email, pseudo }) {
+    const [result] = await pool.execute(
+      "INSERT INTO users (zitadel_subject, email, pseudo) VALUES (?, ?, ?)",
+      [subject, email, pseudo]
+    );
+    return result.insertId;
+  }
+
   // Recherche des utilisateurs par différents paramètres
   static async findBySearch(search) {
-    const SEARCH_USER = `SELECT id, email, pseudo, created_at, role, avatar, status
+    const SEARCH_USER = `SELECT id, zitadel_subject, email, pseudo, created_at, avatar, status
     FROM users
     WHERE pseudo LIKE ?
       OR email LIKE ?
       OR created_at LIKE ?
-      OR role LIKE ?
       OR status LIKE ?
   `;
     return await pool.query(SEARCH_USER, [
-      search,
       search,
       search,
       search,

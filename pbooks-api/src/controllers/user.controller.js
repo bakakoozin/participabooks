@@ -1,10 +1,10 @@
-import { hash, genSalt } from "bcrypt";
 import path from "path";
 import fs from "fs";
 
 import User from "../models/users.model.js";
 import handleUpload from "../config/formidable.js";
 import { getPage } from "../utils/getPage.js";
+import { setProjectRole, setUserActive } from "../services/zitadel.service.js";
 
 //============================== GET =======================================//
 
@@ -19,23 +19,28 @@ const getAll = async (req, res, next) => {
     const totalPages = Math.ceil(count / limit);
     res.json({ datas, totalPages });
   } catch (error) {
+    if (error.status) return res.status(error.status).json({ message: error.message });
     next(error);
   }
 };
 
 // Récupérer les informations d'un utilisateur
 const getInfos = async (req, res, next) => {
-  const { userId } = req.user;
+  const { id: userId } = req.user;
   try {
     const [response] = await User.findOne(userId);
     if (response.length) {
-      res.json({ message: "Utilisateur récupéré.", datas: response[0] });
+      res.json({
+        message: "Utilisateur récupéré.",
+        datas: { ...response[0], role: req.user.role },
+      });
       return;
     }
     res.status(400).json({
       message: "Utilisateur non trouvé.",
     });
   } catch (error) {
+    if (error.status) return res.status(error.status).json({ message: error.message });
     next(error);
   }
 };
@@ -67,41 +72,9 @@ const getBySearch = async (req, res) => {
 
 // Mettre à jour les informations d'un utilisateur
 const update = async (req, res, next) => {
-  const { email, pseudo, password } = req.body;
-  const userId = req.user.id;
-
-  const userInfos = {};
-  if (email) userInfos.email = email;
-  if (pseudo) userInfos.pseudo = pseudo;
-  if (password) {
-    const hashedPassword = await hash(password, await genSalt());
-    userInfos.password = hashedPassword;
-  }
-
-  if (Object.keys(userInfos).length === 0) {
-    return res.status(400).json({ message: "Aucune mise à jour à effectuer." });
-  }
-
-  const fields = Object.keys(userInfos)
-    .map((field) => `${field} = ?`)
-    .join(", ");
-  const values = Object.values(userInfos);
-  values.push(userId);
-
-  const UPDATE_USER = `UPDATE users SET ${fields} WHERE id = ?`;
-
-  try {
-    const result = await User.update(UPDATE_USER, values);
-
-    if (result.error) {
-      return res.status(500).json(result);
-    }
-
-    res.json({ success: "Utilisateur mis à jour." });
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour de l'utilisateur:", error);
-    next(error);
-  }
+  return res.status(400).json({
+    message: "Le pseudo, l'e-mail et le mot de passe se modifient dans Zitadel.",
+  });
 };
 
 // Mettre à jour l'avatar d'un utilisateur
@@ -194,32 +167,21 @@ const uploadAvatar = async (req, res, next) => {
 // Mettre à jour les informations d'un utilisateur par un admin 
 const updateByAdmin = async (req, res, next) => {
   const { id, status, role } = req.body;
-
-  const userInfos = {};
-  if (status) userInfos.status = status;
-  if (role) userInfos.role = role;
-
-  if (!id || Object.keys(userInfos).length === 0) {
+  if (!id || (!status && !role)) {
     return res.status(400).json({ message: "ID ou données manquantes" });
   }
 
-  const fields = Object.keys(userInfos)
-    .map((field) => `${field} = ?`)
-    .join(", ");
-  const values = Object.values(userInfos);
-  values.push(id);
-
-  const UPDATE_BY_ADMIN = `UPDATE users SET ${fields} WHERE id = ?`;
-
   try {
-    const result = await User.update(UPDATE_BY_ADMIN, values);
-
-    if (result.error) {
-      return res.status(500).json(result);
+    const target = await User.findById(id);
+    if (!target?.zitadel_subject) {
+      return res.status(404).json({ message: "Compte Zitadel introuvable." });
     }
+    if (status) await setUserActive(target.zitadel_subject, status === "actif");
+    if (role) await setProjectRole(target.zitadel_subject, role);
 
     res.json({ success: "Utilisateur mis à jour par l'admin." });
   } catch (error) {
+    if (error.status) return res.status(error.status).json({ message: error.message });
     next(error);
   }
 };
@@ -253,26 +215,19 @@ const remove = async (req, res, next) => {
     return res.status(400).json({ message: "ID utilisateur manquant." });
   }
 
-  if (req.user.role === "admin" && id === req.user.id) {
+  if (req.user.role === "admin" && Number(id) === Number(req.user.id)) {
     return res.status(400).json({
       message: "Un administrateur ne peut pas supprimer son propre compte.",
     });
   }
 
   try {
-    const [response] = await User.delete(id);
-
-    if (response.affectedRows) {
-      if (id === req.user.id) {
-        res.clearCookie("jwt", {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        });
-      }
-      return res.json({ message: "Compte supprimé." });
+    const target = await User.findById(id);
+    if (!target?.zitadel_subject) {
+      return res.status(400).json({ message: "Ce compte n'existe pas." });
     }
-    return res.status(400).json({ message: "Ce compte n'existe pas." });
+    await setUserActive(target.zitadel_subject, false);
+    return res.json({ message: "Compte désactivé." });
   } catch (error) {
     next(error);
   }

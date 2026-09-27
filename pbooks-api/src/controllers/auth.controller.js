@@ -1,90 +1,41 @@
-import { hash, genSalt, compare } from "bcrypt";
-
-import createToken from "../utils/token.js";
-import Auth from "../models/auth.model.js";
+import { createChallenge, verifySolution } from "../services/altcha.service.js";
+import { assertSignupRateLimit } from "../services/signup-rate-limit.service.js";
+import { createHumanUser } from "../services/zitadel.service.js";
 
 // Enregistrer un nouvel utilisateur
 const register = async (req, res, next) => {
-  const { email, pseudo, password } = req.body;
+  const { email, pseudo, password, altcha } = req.body;
 
   try {
-    const hashedPassword = await hash(password, await genSalt());
-    const response = await Auth.createUser({
-      email,
-      pseudo,
-      password: hashedPassword,
-    });
-    res.status(201).json({
-      msg: "Utilisateur créé.",
-      data: response,
+    await assertSignupRateLimit(req.ip);
+    if (!verifySolution({ payload: altcha, secret: process.env.ALTCHA_HMAC_KEY })) {
+      return res.status(400).json({ msg: "Validation anti-robot invalide." });
+    }
+    await createHumanUser({ email: email.toLowerCase(), pseudo, password });
+    return res.status(202).json({
+      msg: "Si l'adresse peut être enregistrée, un e-mail de vérification vous sera envoyé.",
     });
   } catch (error) {
+    if (error.status === 429) return res.status(429).json({ msg: error.message });
+    if (error.status === 409) {
+      return res.status(202).json({
+        msg: "Si l'adresse peut être enregistrée, un e-mail de vérification vous sera envoyé.",
+      });
+    }
     next(error);
   }
 };
 
-// Authentifier un utilisateur
-const login = async (req, res, next) => {
-  const { email, password } = req.body;
-
+const registrationChallenge = (_req, res, next) => {
   try {
-    const [[user]] = await Auth.findUserForAuth(email);
-
-    if (!user) {
-      return res.status(400).json({ msg: "Identifiants invalides." });
-    }
-
-    if (user.status === "bloqué") {
-      return res
-        .status(403)
-        .json({ msg: "Votre compte est actuellement bloqué." });
-    }
-
-    if (user && (await compare(password, user.password))) {
-      const token = createToken(user);
-
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 86400000,
-      });
-
-      res.json({
-        msg: "Utilisateur connecté",
-        user: {
-          id: user.id,
-          email: user.email,
-          pseudo: user.pseudo,
-          role: user.role,
-          avatar: user.avatar,
-          theme: user.theme,
-          status: user.status,
-        },
-      });
-      return;
-    }
-    return res.status(400).json({
-      msg: "Identifiants invalides.",
-    });
+    return res.json(createChallenge({ secret: process.env.ALTCHA_HMAC_KEY }));
   } catch (error) {
-    console.error("Erreur lors de la connexion:", error);
-    next(error);
+    return next(error);
   }
-};
-
-// Déconnexion de l'utilisateur
-const logout = (req, res, next) => {
-  res.clearCookie("jwt", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  });
-  res.json({ msg: "Utilisateur bien déconnecté." });
 };
 
 const getSession = async (req, res, next) => {
   res.json({ user: req.user });
 };
 
-export { register, login, logout, getSession };
+export { register, registrationChallenge, getSession };
