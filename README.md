@@ -2,7 +2,7 @@
 
 # ![favicon-32x32](https://github.com/user-attachments/assets/a21be71a-4f76-4eca-86b3-a4eee5a7b691) Participabooks
 
-**Participabooks** est une application web développée avec React (Vite) pour le front-end et Node.js / Express pour le back-end.
+**Participabooks** est l'API Node.js / Express de l'application Participabooks. Le front-end React est maintenu dans le dépôt distinct `participabooks-front`.
 Elle permet de répertorier l’ensemble des ouvrages d’une bibliothèque physique afin d’en faciliter la gestion.
 L’utilisateur peut également ajouter manuellement de nouveaux ouvrages s’ils ne sont pas encore présents dans la base.
 Elle permet ainsi d’avoir une vision rapide et accessible à tout moment de sa collection personnelle.
@@ -15,44 +15,30 @@ Elle permet ainsi d’avoir une vision rapide et accessible à tout moment de sa
 
  - 📱 Accès à sa collection en tout lieu
 
- - 🔐 Authentification sécurisée via JWT
+ - 🔐 Authentification sécurisée via Zitadel
 
  - 📦 API RESTful avec validation (Joi, express-validator)
 
 
 ## Stack technique
-### Frontend
- - React 18 (avec Vite)
-
- - React Router DOM
-
- - Redux Toolkit
-
- - FontAwesome
-
- - React Toastify
-
- - Sass
-
 ### Backend
  - Node.js
 
  - Express
 
- - JWT (authentification)
+ - Zitadel (authentification et rôles)
 
  - MySQL (via mysql2)
 
  - Joi / express-validator (validation)
 
- - dotenv, cors, bcrypt, cookie-parser
+ - dotenv, cors
 
 
 ## Structure des dossiers
 ```
 participabooks/
-├── pbooks-api       ← Backend Node/Express
-└── pbooks-client    ← Frontend React/Vite
+└── pbooks-api       ← API Node/Express
 ```
 
 
@@ -64,36 +50,19 @@ git clone https://github.com/bakakoozin/participabooks.git
 cd participabooks
 ```
 
-2. Installer les dépendances
- - Frontend
+2. Installer les dépendances de l'API
 ```
-bash:
-cd pbooks-client
+cd pbooks-api
 npm install
 ```
 
- - Backend
-bash:
-```
-cd ../pbooks-api
-npm install
-```
-
-3. Lancer le projet
-Dans deux terminaux séparés :
- - Backend
-bash:
+3. Lancer l'API
 ```
 cd pbooks-api
 npm run start
 ```
 
-- Frontend
-bash:
-```
-cd pbooks-client
-npm run dev
-```
+Le front-end se trouve dans le dépôt `participabooks-front`.
 
 
 ## Variables d’environnement
@@ -109,26 +78,14 @@ DB_NAME=
 DB_USER=
 DB_PASS=
 
-JWT_SECRET=
- ```
-
- - Frontend (pbooks-client/.env)
-```
-VITE_API_URL=
-VITE_BASE_URL_MEDIAS=
+ZITADEL_ISSUER=
+ZITADEL_API_AUDIENCE=
+ZITADEL_PROJECT_ID=
 ```
 
 
 ## Scripts utiles
 
- - Frontend
-Script	Description
-`npm run dev`	Lance le serveur Vite en développement
-`npm run build`	Build de l’app pour production
-`npm run preview`	Prévisualisation post-build
-`npm run lint`	Linter avec ESLint
-
- - Backend
 Script	Description
 `npm run start` Lance le serveur Express
 `npm run dev` Lance le serveur Express avec nodemon

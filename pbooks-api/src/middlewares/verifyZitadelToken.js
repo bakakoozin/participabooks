@@ -70,6 +70,8 @@ export default (required = true) => async (req, res, next) => {
     return next();
   } catch (error) {
     console.error("Vérification Zitadel impossible:", error.message);
-    return res.status(401).json({ error: "Jeton Zitadel invalide ou expiré." });
+    const response = { error: "Jeton Zitadel invalide ou expiré." };
+    if (process.env.NODE_ENV === "development") response.detail = error.message;
+    return res.status(401).json(response);
   }
 };

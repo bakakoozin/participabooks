@@ -51,10 +51,13 @@ app.use(base_url, router);
 //============================== GESTION DES ERREURS ===========================//
 
 // Middleware pour gérer les erreurs globales
-app.use((_err, _req, res, _next) => {
-    res.status(500).json({
-        msg: "Une erreur s'est produite. Veuillez réessayer plus tard.", // Message d'erreur générique
-    });
+app.use((error, _req, res, _next) => {
+    console.error("Erreur API:", error.message);
+    const response = {
+        msg: "Une erreur s'est produite. Veuillez réessayer plus tard.",
+    };
+    if (process.env.NODE_ENV === "development") response.detail = error.message;
+    res.status(500).json(response);
     return;
 });
 
