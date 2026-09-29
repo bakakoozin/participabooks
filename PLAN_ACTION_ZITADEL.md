@@ -12,11 +12,11 @@ Objectif : utiliser une organisation Zitadel dédiée à Participabooks pour l'a
 
 ## 2. Créer l'organisation Zitadel dédiée
 
-- [ ] Créer l'organisation `Participabooks` dans l'instance Zitadel existante.
-- [ ] Attribuer les droits d'administration de cette organisation aux personnes concernées.
-- [ ] Configurer le nom affiché et les e-mails envoyés aux utilisateurs.
-- [ ] Configurer la politique de connexion et exiger la vérification de l'adresse e-mail.
-- [ ] Vérifier que les utilisateurs de Participabooks sont isolés de ceux de l'autre projet.
+- [x] Créer l'organisation `Participabooks` dans l'instance Zitadel existante.
+- [x] Attribuer les droits d'administration de cette organisation aux personnes concernées.
+- [x] Configurer le nom affiché et les e-mails envoyés aux utilisateurs.
+- [x] Configurer la politique de connexion et exiger la vérification de l'adresse e-mail.
+- [x] Vérifier que les utilisateurs de Participabooks sont isolés de ceux de l'autre projet.
 
 ## 3. Créer le projet et les rôles Participabooks
 
