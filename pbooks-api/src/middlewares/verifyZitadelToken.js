@@ -66,6 +66,9 @@ export default (required = true) => async (req, res, next) => {
       pseudo: profile.preferred_username,
       role: getRoleClaim(payload),
     });
+    if (req.user.status !== "actif") {
+      return res.status(403).json({ error: "Votre compte est désactivé." });
+    }
     req.auth = { subject: payload.sub, claims: payload };
     return next();
   } catch (error) {

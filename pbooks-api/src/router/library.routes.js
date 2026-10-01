@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import verifyZitadelToken from "../middlewares/verifyZitadelToken.js";
+import hasProjectRole from "../middlewares/hasProjectRole.js";
 
 import {
   getAll,
@@ -33,6 +34,11 @@ router.delete("/volume/:id", verifyZitadelToken(), removeVolume);
 router.post("/volumes/create", verifyZitadelToken(), createVolume);
 
 //MODERATOR ADMIN
-router.patch("/volumes/:id/status", verifyZitadelToken(), updateStatus);
+router.patch(
+  "/volumes/:id/status",
+  verifyZitadelToken(),
+  hasProjectRole("moderator", "admin"),
+  updateStatus
+);
 
 export default router;

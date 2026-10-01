@@ -56,13 +56,13 @@ Objectif : utiliser une organisation Zitadel dédiée à Participabooks pour l'a
 
 ## 7. Finaliser l'authentification et les autorisations
 
-- [ ] Vérifier les jetons par leur signature, leur émetteur et leur audience.
-- [ ] Refuser toute session dont l'adresse e-mail n'est pas vérifiée.
-- [ ] Lire le rôle Participabooks depuis le jeton Zitadel.
-- [ ] Créer ou rattacher le profil MySQL uniquement lors de la première connexion valide.
-- [ ] Vérifier que les routes d'administration requièrent `admin`.
-- [ ] Vérifier que les routes de modération requièrent `moderator` ou `admin`.
-- [ ] Vérifier que la désactivation d'un compte via l'administration bloque son accès.
+- [x] Vérifier les jetons par leur signature, leur émetteur et leur audience.
+- [x] Refuser toute session dont l'adresse e-mail n'est pas vérifiée.
+- [x] Lire le rôle Participabooks depuis le jeton Zitadel.
+- [x] Créer ou rattacher le profil MySQL uniquement lors de la première connexion valide.
+- [x] Vérifier que les routes d'administration requièrent `admin`.
+- [x] Vérifier que les routes de modération requièrent `moderator` ou `admin`.
+- [x] Vérifier que la désactivation d'un compte via l'administration bloque son accès.
 
 ## 8. Adapter le client React
 
