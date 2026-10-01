@@ -20,39 +20,39 @@ Objectif : utiliser une organisation Zitadel dédiée à Participabooks pour l'a
 
 ## 3. Créer le projet et les rôles Participabooks
 
-- [ ] Créer le projet Zitadel `Participabooks` dans l'organisation dédiée.
-- [ ] Créer les rôles de projet `user`, `moderator` et `admin`.
-- [ ] Activer l'assertion des rôles dans les jetons et UserInfo.
-- [ ] Exiger une attribution de rôle au projet pour autoriser une connexion à Participabooks.
-- [ ] Attribuer manuellement le rôle `admin` au premier compte administrateur.
+- [x] Créer le projet Zitadel `Participabooks` dans l'organisation dédiée.
+- [x] Créer les rôles de projet `user`, `moderator` et `admin`.
+- [x] Activer l'assertion des rôles dans les jetons et UserInfo.
+- [x] Exiger une attribution de rôle au projet pour autoriser une connexion à Participabooks.
+- [x] Attribuer manuellement le rôle `admin` au premier compte administrateur.
 
 ## 4. Créer les applications Zitadel
 
-- [ ] Créer l'application SPA du client React avec Authorization Code et PKCE.
-- [ ] Ajouter les URI locales de redirection et de déconnexion, notamment `http://localhost:5173`.
+- [x] Créer l'application SPA du client React avec Authorization Code et PKCE.
+- [x] Ajouter les URI locales de redirection et de déconnexion, notamment `http://localhost:5173`.
 - [ ] Configurer les URI de production quand le domaine sera disponible.
 - [ ] Autoriser les scopes `openid`, `profile`, `email` et l'audience du projet Participabooks.
-- [ ] Créer un compte de service dédié à l'API Node.js.
-- [ ] Lui accorder les droits minimaux pour créer des utilisateurs et gérer leurs attributions de rôles dans l'organisation Participabooks.
-- [ ] Configurer son mode d'authentification Client Credentials et conserver son secret hors du dépôt.
+- [x] Créer un compte de service dédié à l'API Node.js.
+- [x] Lui accorder les droits minimaux pour créer des utilisateurs et gérer leurs attributions de rôles dans l'organisation Participabooks.
+- [x] Configurer son mode d'authentification Client Credentials et conserver son secret hors du dépôt.
 
 ## 5. Configurer l'API
 
-- [ ] Compléter les variables Zitadel dans `pbooks-api/.env` à partir de `.env.example`.
-- [ ] Configurer l'émetteur, l'audience, l'identifiant de projet et les URL Zitadel.
-- [ ] Configurer les identifiants du compte de service API.
-- [ ] Générer et configurer `ALTCHA_HMAC_KEY` et `SIGNUP_IP_HASH_KEY`.
-- [ ] Vérifier que les secrets ne sont ni committés ni exposés dans les journaux.
+- [x] Compléter les variables Zitadel dans `pbooks-api/.env` à partir de `.env.example`.
+- [x] Configurer l'émetteur, l'audience, l'identifiant de projet et les URL Zitadel.
+- [x] Configurer les identifiants du compte de service API.
+- [x] Générer et configurer `ALTCHA_HMAC_KEY` et `SIGNUP_IP_HASH_KEY`.
+- [x] Vérifier que les secrets ne sont ni committés ni exposés dans les journaux.
 
 ## 6. Finaliser le parcours d'inscription
 
-- [ ] Conserver ALTCHA et la limitation de débit avant toute création de compte.
-- [ ] Créer le compte humain dans Zitadel avec une adresse e-mail non vérifiée.
-- [ ] Récupérer l'identifiant Zitadel créé.
-- [ ] Attribuer immédiatement le rôle de projet `user` au nouveau compte.
-- [ ] Déclencher l'e-mail de vérification Zitadel.
-- [ ] Renvoyer une réponse neutre sans indiquer si l'adresse existe déjà.
-- [ ] Retirer l'attribution tardive du rôle `user` à la première session, puisqu'elle aura lieu à la création du compte.
+- [x] Conserver ALTCHA et la limitation de débit avant toute création de compte.
+- [x] Créer le compte humain dans Zitadel avec une adresse e-mail non vérifiée.
+- [x] Récupérer l'identifiant Zitadel créé.
+- [x] Attribuer immédiatement le rôle de projet `user` au nouveau compte.
+- [x] Déclencher l'e-mail de vérification Zitadel.
+- [x] Renvoyer une réponse neutre sans indiquer si l'adresse existe déjà.
+- [x] Retirer l'attribution tardive du rôle `user` à la première session, puisqu'elle aura lieu à la création du compte.
 
 ## 7. Finaliser l'authentification et les autorisations
 

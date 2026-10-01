@@ -7,13 +7,17 @@ const getManagementToken = async () => {
   const tokenUrl = process.env.ZITADEL_TOKEN_URL || `${issuer()}/oauth/v2/token`;
   const body = new URLSearchParams({
     grant_type: "client_credentials",
-    client_id: process.env.ZITADEL_SERVICE_CLIENT_ID || "",
-    client_secret: process.env.ZITADEL_SERVICE_CLIENT_SECRET || "",
     scope: process.env.ZITADEL_MANAGEMENT_SCOPE || "",
   });
+  const credentials = Buffer.from(
+    `${process.env.ZITADEL_SERVICE_CLIENT_ID || ""}:${process.env.ZITADEL_SERVICE_CLIENT_SECRET || ""}`
+  ).toString("base64");
   const response = await fetch(tokenUrl, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: {
+      Authorization: `Basic ${credentials}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
     body,
   });
   if (!response.ok) throw new Error("Impossible d'obtenir le jeton du compte technique Zitadel.");
@@ -45,8 +49,13 @@ export const createHumanUser = ({ email, pseudo, password }) =>
       userName: pseudo,
       profile: { firstName: pseudo, lastName: pseudo, displayName: pseudo },
       email: { email, isEmailVerified: false },
-      password: { password, changeRequired: false },
+      initialPassword: { password, changeRequired: false },
     }),
+  });
+
+export const sendEmailVerification = (subject) =>
+  managementRequest(`/users/${subject}/email/_resend_verification`, {
+    method: "POST",
   });
 
 export const setUserActive = (subject, active) =>
@@ -82,24 +91,18 @@ export const setProjectRole = async (subject, role) => {
     }),
   });
 };
+export const assignProjectRole = (subject, role) => {
+  if (!['user', 'moderator', 'admin'].includes(role)) {
+    const error = new Error('Rôle non autorisé.');
+    error.status = 400;
+    throw error;
+  }
 
-export const ensureDefaultProjectRole = async (subject) => {
-  const grants = await managementRequest("/users/grants/_search", {
-    method: "POST",
-    body: JSON.stringify({ query: { userIdQuery: { userId: subject } } }),
-  });
-  const hasProjectRole = (grants.result || []).some(
-    (grant) => grant.projectId === process.env.ZITADEL_PROJECT_ID
-  );
-
-  if (hasProjectRole) return false;
-
-  await managementRequest(`/users/${subject}/grants`, {
+  return managementRequest(`/users/${subject}/grants`, {
     method: "POST",
     body: JSON.stringify({
       projectId: process.env.ZITADEL_PROJECT_ID,
-      roleKeys: ["user"],
+      roleKeys: [role],
     }),
   });
-  return true;
 };

@@ -1,6 +1,10 @@
 import { createChallenge, verifySolution } from "../services/altcha.service.js";
 import { assertSignupRateLimit } from "../services/signup-rate-limit.service.js";
-import { createHumanUser, ensureDefaultProjectRole } from "../services/zitadel.service.js";
+import {
+  assignProjectRole,
+  createHumanUser,
+  sendEmailVerification,
+} from "../services/zitadel.service.js";
 
 // Enregistrer un nouvel utilisateur
 const register = async (req, res, next) => {
@@ -11,7 +15,9 @@ const register = async (req, res, next) => {
     if (!verifySolution({ payload: altcha, secret: process.env.ALTCHA_HMAC_KEY })) {
       return res.status(400).json({ msg: "Validation anti-robot invalide." });
     }
-    await createHumanUser({ email: email.toLowerCase(), pseudo, password });
+    const user = await createHumanUser({ email: email.toLowerCase(), pseudo, password });
+    await assignProjectRole(user.userId, "user");
+    await sendEmailVerification(user.userId);
     return res.status(202).json({
       msg: "Si l'adresse peut être enregistrée, un e-mail de vérification vous sera envoyé.",
     });
@@ -36,7 +42,6 @@ const registrationChallenge = (_req, res, next) => {
 
 const getSession = async (req, res, next) => {
   try {
-    await ensureDefaultProjectRole(req.auth.subject);
     return res.json({ user: req.user });
   } catch (error) {
     return next(error);
