@@ -66,11 +66,11 @@ Objectif : utiliser une organisation Zitadel dédiée à Participabooks pour l'a
 
 ## 8. Adapter le client React
 
-- [ ] Remplacer la connexion locale par le flux OIDC Zitadel.
-- [ ] Remplacer le JWT et le cookie locaux par l'access token Zitadel.
-- [ ] Envoyer l'access token via `Authorization: Bearer <token>` pour les routes protégées.
-- [ ] Conserver le formulaire d'inscription Participabooks avec ALTCHA.
-- [ ] Afficher une confirmation invitant l'utilisateur à vérifier son e-mail.
+- [x] Remplacer la connexion locale par le flux OIDC Zitadel.
+- [x] Remplacer le JWT et le cookie locaux par l'access token Zitadel.
+- [x] Envoyer l'access token via `Authorization: Bearer <token>` pour les routes protégées.
+- [x] Conserver le formulaire d'inscription Participabooks avec ALTCHA.
+- [x] Afficher une confirmation invitant l'utilisateur à vérifier son e-mail.
 
 ## 9. Tester sur la base de test
 
