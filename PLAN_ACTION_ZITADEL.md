@@ -31,7 +31,7 @@ Objectif : utiliser une organisation Zitadel dédiée à Participabooks pour l'a
 - [x] Créer l'application SPA du client React avec Authorization Code et PKCE.
 - [x] Ajouter les URI locales de redirection et de déconnexion, notamment `http://localhost:5173`.
 - [ ] Configurer les URI de production quand le domaine sera disponible.
-- [ ] Autoriser les scopes `openid`, `profile`, `email` et l'audience du projet Participabooks.
+- [x] Autoriser les scopes `openid`, `profile`, `email` et l'audience du projet Participabooks.
 - [x] Créer un compte de service dédié à l'API Node.js.
 - [x] Lui accorder les droits minimaux pour créer des utilisateurs et gérer leurs attributions de rôles dans l'organisation Participabooks.
 - [x] Configurer son mode d'authentification Client Credentials et conserver son secret hors du dépôt.
@@ -74,9 +74,9 @@ Objectif : utiliser une organisation Zitadel dédiée à Participabooks pour l'a
 
 ## 9. Tester sur la base de test
 
-- [ ] Inscription valide : compte Zitadel créé et rôle `user` attribué.
-- [ ] Compte non vérifié : accès à l'API refusé.
-- [ ] Compte vérifié : première connexion crée ou rattache un profil MySQL.
+- [x] Inscription valide : compte Zitadel créé et rôle `user` attribué.
+- [x] Compte non vérifié : accès à l'API refusé.
+- [x] Compte vérifié : première connexion crée ou rattache un profil MySQL.
 - [ ] Compte existant : réponse d'inscription neutre.
 - [ ] Tentatives répétées : ALTCHA ou la limitation de débit bloque l'inscription.
 - [ ] Rôle `moderator` et rôle `admin` : les routes correspondantes sont accessibles.

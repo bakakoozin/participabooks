@@ -3,7 +3,7 @@ import { assertSignupRateLimit } from "../services/signup-rate-limit.service.js"
 import {
   assignProjectRole,
   createHumanUser,
-  sendEmailVerification,
+  verifyEmail,
 } from "../services/zitadel.service.js";
 
 // Enregistrer un nouvel utilisateur
@@ -17,7 +17,6 @@ const register = async (req, res, next) => {
     }
     const user = await createHumanUser({ email: email.toLowerCase(), pseudo, password });
     await assignProjectRole(user.userId, "user");
-    await sendEmailVerification(user.userId);
     return res.status(202).json({
       msg: "Si l'adresse peut être enregistrée, un e-mail de vérification vous sera envoyé.",
     });
@@ -40,6 +39,32 @@ const registrationChallenge = (_req, res, next) => {
   }
 };
 
+const emailVerificationResultUrl = (status) => {
+  const clientUrl = new URL(process.env.CLIENT_URL);
+  clientUrl.pathname = "/auth/email-verified";
+  clientUrl.search = `?status=${status}`;
+  return clientUrl.toString();
+};
+
+const verifyEmailAddress = async (req, res, next) => {
+  const userId = typeof req.query.userID === "string" ? req.query.userID : "";
+  const verificationCode = typeof req.query.code === "string" ? req.query.code : "";
+
+  if (!userId || !verificationCode) {
+    return res.redirect(303, emailVerificationResultUrl("invalid"));
+  }
+
+  try {
+    await verifyEmail(userId, verificationCode);
+    return res.redirect(303, emailVerificationResultUrl("success"));
+  } catch (error) {
+    if (error.status === 400 || error.status === 404) {
+      return res.redirect(303, emailVerificationResultUrl("invalid"));
+    }
+    return next(error);
+  }
+};
+
 const getSession = async (req, res, next) => {
   try {
     return res.json({ user: req.user });
@@ -48,4 +73,4 @@ const getSession = async (req, res, next) => {
   }
 };
 
-export { register, registrationChallenge, getSession };
+export { register, registrationChallenge, verifyEmailAddress, getSession };

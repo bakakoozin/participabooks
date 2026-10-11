@@ -6,6 +6,7 @@ import {
   register,
   getSession,
   registrationChallenge,
+  verifyEmailAddress,
 } from "../controllers/auth.controller.js";
 import {
   registerSchema,
@@ -15,6 +16,7 @@ const router = Router();
 
 router.get("/registration-challenge", registrationChallenge);
 router.post("/register", validate(registerSchema), register);
+router.get("/verify-email", verifyEmailAddress);
 router.get("/session", verifyZitadelToken(), getSession);
 
 export default router;
